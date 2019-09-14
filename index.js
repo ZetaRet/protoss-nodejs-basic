@@ -18,6 +18,35 @@ var omit = {
 };
 var reqnum = 0;
 
+var sid, sfile = 'stats.json',
+	stats = {
+		reqnum: null
+	};
+
+function initFS() {
+	try {
+		if (fs.existsSync(sfile)) {
+			var sj = fs.readFileSync(sfile);
+			try {
+				sj = JSON.parse(sj) || {};
+				if (sj && sj.reqnum !== undefined && reqnum.constructor === Number) {
+					reqnum = sj.reqnum;
+					stats.reqnum = reqnum;
+				}
+			} catch (e) {}
+		}
+	} catch (e) {}
+	sid = setInterval(function() {
+		if (stats.reqnum !== reqnum) {
+			try {
+				stats.reqnum = reqnum;
+				fs.writeFile(sfile, JSON.stringify(stats), function(err) {});
+			} catch (e) {}
+		}
+	}, 5000);
+}
+initFS();
+
 class ProtoSSChe {
 	onRequest(request, response) {
 		var o = this;
