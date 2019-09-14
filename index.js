@@ -1,24 +1,34 @@
-var http = require('http');
-var fs = require('fs');
+/**
+ * Author: Zeta Ret
+ * Date: 2019 - Today
+ * XeltoSS Node Print of Basic ProtoSS Server
+ **/
 
-var dumpall = false;
-var dumpkeys = ['__reqid', 'complete', 'headers', 'url', 'method'];
-var omit = {
-	headers: {
-		"connection": 1,
-		"user-agent": 1,
-		"cache-control": 1,
-		"accept-encoding": 1,
-		"accept": 1,
-		"accept-language": 1,
-		"cookie": 1,
-		"host": 1,
-		"x-forwarded-proto": 1
-	}
-};
-var reqnum = 0;
+var http = require('http'),
+	fs = require('fs');
 
-var sid, sfile = 'stats.json',
+var dumpall = false,
+	dumpkeys = ['__reqid', 'complete', 'headers', 'url', 'method'],
+	omit = {
+		headers: {
+			"connection": 1,
+			"user-agent": 1,
+			"cache-control": 1,
+			"accept-encoding": 1,
+			"accept": 1,
+			"accept-language": 1,
+			"cookie": 1,
+			"host": 1,
+			"x-forwarded-proto": 1
+		}
+	},
+	maxBodyLength = 10000,
+	htport = 8888,
+	reqnum = 0,
+	contenttype = 'text/plain',
+	cookieid = 'zetaredpid',
+	sid, sidinterval = 5000,
+	sfile = 'stats.json',
 	stats = {
 		reqnum: null
 	};
@@ -43,7 +53,7 @@ function initFS() {
 				fs.writeFile(sfile, JSON.stringify(stats), function(err) {});
 			} catch (e) {}
 		}
-	}, 5000);
+	}, sidinterval);
 }
 initFS();
 
@@ -63,7 +73,7 @@ class ProtoSSChe {
 				try {
 					v = request[k];
 					if (v.constructor !== Function) {
-						response.__data.push(k + ':' + JSON.stringify(v));
+						response.__data.push(k + ': ' + JSON.stringify(v));
 						response.__data.push('\n');
 					}
 				} catch (e) {}
@@ -81,17 +91,48 @@ class ProtoSSChe {
 							}
 							v = vv;
 						}
-						response.__data.push(k + ':' + JSON.stringify(v));
+						response.__data.push(k + ': ' + JSON.stringify(v));
 						response.__data.push('\n');
 					}
 				} catch (e) {}
 			}
 		}
-		response.__data.push('Request body: \n');
+		if (request.url) {
+			response.__data.push('Route Object: ' + JSON.stringify(o.splitUrl(request.url)));
+			response.__data.push('\n');
+		}
+		response.__data.push('Request Body: \n');
 		response.__data.push(body);
 		response.__data.push('\n');
 		o.endResponse(request, response);
 		return o;
+	}
+
+	splitUrl(url) {
+		var i, vk, surl = {},
+			durl = decodeURI(url),
+			uro = durl.split('?'),
+			p = uro[0],
+			v = uro[1],
+			vs = v ? v.split('&') : [];
+
+		surl.url = durl;
+		surl.query = v;
+		surl.path = p;
+		surl.pages = p.split('/');
+		if (surl.pages[surl.pages.length - 1] === "") surl.pages.pop();
+		if (surl.pages[0] === "") surl.pages.shift();
+		surl.root = surl.pages[0];
+		surl.page = surl.pages[1];
+		surl.sub = surl.pages[2];
+		surl.param = surl.pages[3];
+		surl.vars = {};
+		for (i = 0; i < vs.length; i++) {
+			vk = vs[i].split('=');
+			surl.vars[vk[0]] = vk[1];
+		}
+
+		return surl;
 	}
 
 	rndstr(l) {
@@ -110,22 +151,33 @@ class ProtoSSChe {
 
 	pushProtoSSResponse(request, response) {
 		var o = this;
-		response.__data.push('ProtoSS Node.js Server\n');
-		response.__data.push('GitHub: https://github.com/ZetaRet/protoss \n');
+		response.__data.push('ProtoSS: https://github.com/ZetaRet/protoss \n');
+		response.__data.push('ProtoSS Node.js Server: https://github.com/ZetaRet/protoss-nodejs-basic \n');
 		response.__data.push('ProtoSS IDE for Atom: https://atom.io/packages/ide-protoss \n');
 		response.__data.push('ProtoSS Project: https://zetaret.com/projects/protoss/ \n');
-		response.__data.push('Request method: ' + request.method + ' \n');
+		response.__data.push('ProtoSS Website: https://protoss.zetaret.com/ \n');
+		response.__data.push('Request Method: ' + request.method + ' \n');
 		return o;
 	}
 
 	readRequestBody(request, response) {
 		var o = this;
-		var body = '';
+		var ended = false,
+			body = '';
 		request.on('data', function(data) {
+			if (ended) return;
 			body += data;
+			if (body.length > maxBodyLength) {
+				ended = true;
+				request.abort();
+				o.onReadRequestBody(request, body, response);
+			}
 		});
 		request.on('end', function() {
-			o.onReadRequestBody(request, body, response);
+			if (!ended) {
+				ended = true;
+				o.onReadRequestBody(request, body, response);
+			}
 		});
 		return o;
 	}
@@ -134,9 +186,9 @@ class ProtoSSChe {
 		var o = this;
 		var input = response.__data.join("");
 		var headers = {
-			'content-type': 'text/plain'
+			'content-type': contenttype
 		};
-		if (!request.headers.cookie) headers['set-cookie'] = "zetaretpid=" + o.rndstr(32);
+		if (!request.headers.cookie) headers['set-cookie'] = cookieid + "=" + o.rndstr(32);
 		response.writeHead(200, headers);
 		response.end(input);
 		return o;
@@ -149,4 +201,4 @@ http.createServer(function(req, res) {
 	try {
 		serverche.onRequest(req, res);
 	} catch (e) {}
-}).listen(8888);
+}).listen(htport);
