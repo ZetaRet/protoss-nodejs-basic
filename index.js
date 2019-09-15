@@ -196,8 +196,7 @@ class ProtoSSChe {
 }
 
 var serverche = new ProtoSSChe();
-
-http.createServer(function(req, res) {
+serverche.htserv = http.createServer(function(req, res) {
 	try {
 		serverche.onRequest(req, res);
 	} catch (e) {}
