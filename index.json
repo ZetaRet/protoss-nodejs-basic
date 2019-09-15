@@ -17,7 +17,7 @@
 			"htport": "Number: 8888",
 			"reqnum": "Number: 0",
 			"contenttype": "String: 'text/plain'",
-			"cookieid": "String: 'zetaredpid'",
+			"cookieid": "String: 'zetaretpid'",
 			"sidinterval": "Number: 5000",
 			"sfile": "String: 'stats.json'",
 			"stats": "Object: default"
