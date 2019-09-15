@@ -110,7 +110,7 @@ default 'text/plain',
 
 #  
 __cookieid__ String  
-default 'zetaredpid',   
+default 'zetaretpid',   
 
 #  
 __sidinterval__ Number  
