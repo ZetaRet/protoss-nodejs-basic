@@ -46,7 +46,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			var input = response.__data.join("");
 			var headers = o.addHeaders(request, response);
-			response.writeHead(200, headers);
+			response.writeHead(response.__rcode || 200, headers);
 			response.end(input);
 			return o;
 		}
