@@ -3,7 +3,7 @@
 	"type": "protossdox",
 	"path": "",
 	"src": "",
-	"namespace": "",
+	"namespace": "zetaret.node",
 	"relative": true,
 	"markdown": true
 }
