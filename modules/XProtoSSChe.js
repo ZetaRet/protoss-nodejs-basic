@@ -9,9 +9,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		constructor(routeCallback, routeScope, routeData) {
 			super();
 			var o = this;
-			o.routeCallback = routeCallback;
-			o.routeScope = routeScope;
-			o.routeData = routeData;
+			if (routeCallback) o.routeCallback = routeCallback;
+			if (routeScope) o.routeScope = routeScope;
+			if (routeData) o.routeData = routeData;
 			o.initRoute();
 		}
 
@@ -25,7 +25,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (request.url) {
 				response.__splitUrl = o.splitUrl(request.url);
 			}
-			if (this.routeCallback) {
+			if (o.routeCallback) {
 				o.routeCallback.call(o.routeScope, o.routeData, body, request, response);
 			}
 			o.endResponse(request, response);
