@@ -24,7 +24,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		addPathListener(path, callback) {
 			var o = this;
-			if (!callback) callback = o.pathListener;
+			if (!callback) callback = o.pathListenerX || o.pathListener.bind(o);
 			o.listener.on(path, callback);
 			return callback;
 		}
@@ -69,6 +69,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		initRouteListener() {
 			var o = this;
+			o.pathListenerX = o.pathListener.bind(o);
 			o.addPathListener(o.noRouteEvent);
 			return o;
 		}
