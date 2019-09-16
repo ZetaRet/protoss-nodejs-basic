@@ -1,0 +1,47 @@
+{
+	"author": "Zeta Ret",
+	"description": "Basic extender and nullifier",
+	"text": "Extended ProtoSSChe Server loaded as module",
+	"requires": null,
+	"version": "1.1.1",
+	"date": "2019 - Today",
+	"supername": "zetaret.node.modules::XProtoSSChe",
+	"inherits": ["zetaret.node::index"],
+	"interfaces": null,
+	"static": {
+		"public_properties": {},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {
+		"routeCallback": "Function: null",
+		"routeScope": "Object: null",
+		"routeData": "Object: null"
+	},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {
+		"XProtoSSChe": "routeCallback: Function, routeScope: Object, routeData: Object",
+		"initRoute": "; return zetaret.node.modules::XProtoSSChe",
+		"onReadRequestBody": "request*: http.ClientRequest, body*: String, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe",
+		"pushProtoSSResponse": "request*: http.ClientRequest, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe",
+		"addHeaders": "request*: http.ClientRequest, response*: http.ServerResponse; return Object",
+		"endResponse": "request*: http.ClientRequest, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe"
+	},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {
+		"onReadRequestBody": {
+			"this": "response.__splitUrl is decoded route object using splitUrl method of request.url"
+		},
+		"endResponse": {
+			"this": "response.__rcode property will be checked before setting 200"
+		}
+	},
+	"static_examples": {},
+	"examples": {}
+}
