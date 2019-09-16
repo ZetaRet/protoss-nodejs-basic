@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, fs*  
-> *Version: 1.0.3*  
+> *Version: 1.0.4*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -26,14 +26,14 @@ HTTP Server Constructor
 
 ##  
 __onRequest(*http.ClientRequest* request, *http.ServerResponse* response) : *void*__  
-
+  
 - __request*__ - __*http.ClientRequest*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __void__*  
 
 ##  
 __onReadRequestBody(*http.ClientRequest* request, *String* body, *http.ServerResponse* response) : *ProtoSSChe*__  
-
+  
 - __request*__ - __*http.ClientRequest*__,   
 - __body*__ - __*String*__,   
 - __response*__ - __*http.ServerResponse*__,   
@@ -41,38 +41,38 @@ __onReadRequestBody(*http.ClientRequest* request, *String* body, *http.ServerRes
 
 ##  
 __splitUrl(*String* url) : *Object*__  
-
+  
 - __url*__ - __*String*__,   
 > *return __Object__*  
 
 ##  
 __rndstr(*Number* l) : *String*__  
-
+  
 - __l*__ - __*Number*__,   
 > *return __String__*  
 
 ##  
 __getReqId() : *String*__  
-
+  
 > *return __String__*  
 
 ##  
 __pushProtoSSResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *ProtoSSChe*__  
-
+  
 - __request*__ - __*http.ClientRequest*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __ProtoSSChe__*  
 
 ##  
 __readRequestBody(*http.ClientRequest* request, *http.ServerResponse* response) : *ProtoSSChe*__  
-
+  
 - __request*__ - __*http.ClientRequest*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __ProtoSSChe__*  
 
 ##  
 __endResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *ProtoSSChe*__  
-
+  
 - __request*__ - __*http.ClientRequest*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __ProtoSSChe__*  
@@ -86,11 +86,11 @@ default false,
 
 #  
 __dumpkeys__ Array  
-default default,   
+default init,   
 
 #  
 __omit__ Object  
-default default,   
+default init,   
 
 #  
 __maxBodyLength__ Number  
@@ -121,15 +121,25 @@ __sfile__ String
 default 'stats.json',   
 
 #  
-__stats__ Object  
-default default,   
+__useXServer__ Boolean  
+default false,   
 
+#  
+__xserverModule__ String  
+default './modules/XProtoSSChe.js',   
+
+#  
+__stats__ Object  
+default init, JSON Object loaded and updated frequently.  
+```
+{reqnum:3, xserver:true, xserverModule: "./modules/MyServer.js", cookieid: "mycookie", htport: 3000}  
+```
 ##  
 ### *Static Methods*  
 
 ##  
 __initFS() : *void*__  
-
+  
 > *return __void__*  
 
 ---  
