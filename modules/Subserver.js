@@ -43,8 +43,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		routeCallback(routeData, body, request, response) {
 			var o = this;
 			var cp, p, i, r = o.routeMap,
-				robj = response.__splitUrl,
-				rawpath = robj.pages.join('/');
+				robj = response.__splitUrl;
 			for (i = 0; i < robj.pages.length; i++) {
 				p = robj.pages[i];
 				cp = cp ? cp + '/' + p : p;
@@ -58,7 +57,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				}
 			}
 			if (o.codeMap[rawpath]) response.__rcode = o.codeMap[rawpath];
-			o.listener.emit(rawpath, o, robj, routeData, request, response);
 		}
 
 		initRoute() {
