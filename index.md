@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, fs*  
-> *Version: 1.0.4*  
+> *Version: 1.1.0*  
 > *Date: 2019 - Today*  
 
 __required*__
