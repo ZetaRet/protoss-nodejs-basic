@@ -29,6 +29,8 @@ var dumpall = false,
 	cookieid = 'zetaretpid',
 	sid, sidinterval = 5000,
 	sfile = 'stats.json',
+	useXServer = false,
+	xserverModule = './modules/XProtoSSChe.js',
 	stats = {
 		reqnum: null
 	};
@@ -39,9 +41,27 @@ function initFS() {
 			var sj = fs.readFileSync(sfile);
 			try {
 				sj = JSON.parse(sj) || {};
-				if (sj && sj.reqnum !== undefined && reqnum.constructor === Number) {
-					reqnum = sj.reqnum;
-					stats.reqnum = reqnum;
+				if (sj) {
+					if (sj.reqnum !== undefined && sj.reqnum.constructor === Number) {
+						reqnum = sj.reqnum;
+						stats.reqnum = reqnum;
+					}
+					if (sj.xserver !== undefined && sj.xserver.constructor === Boolean) {
+						useXServer = sj.xserver;
+						stats.xserver = useXServer;
+					}
+					if (sj.xserverModule !== undefined && sj.xserverModule.constructor === String) {
+						xserverModule = sj.xserverModule;
+						stats.xserverModule = xserverModule;
+					}
+					if (sj.cookieid !== undefined && sj.cookieid.constructor === String) {
+						cookieid = sj.cookieid;
+						stats.cookieid = cookieid;
+					}
+					if (sj.htport !== undefined && sj.htport.constructor === Number) {
+						htport = sj.htport;
+						stats.htport = htport;
+					}
 				}
 			} catch (e) {}
 		}
@@ -194,8 +214,14 @@ class ProtoSSChe {
 		return o;
 	}
 }
-
-var serverche = new ProtoSSChe();
+var serverche;
+if (useXServer) {
+	var xpro = require(xserverModule),
+		xprocls = xpro.getExtendedServerProtoSS(ProtoSSChe);
+	serverche = new xprocls();
+} else {
+	serverche = new ProtoSSChe();
+}
 serverche.htserv = http.createServer(function(req, res) {
 	try {
 		serverche.onRequest(req, res);
