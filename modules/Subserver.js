@@ -13,9 +13,13 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		constructor() {
 			super(null, null, {});
 			var o = this;
-			o.routeScope = o;
+			o.routeMap = {};
+			o.codeMap = {};
+			o.noRouteCode = 404;
+			o.noRouteEvent = 'error404';
 			o.debugRoute = true;
 			o.listener = new events.EventEmitter();
+			o.initRouteListener();
 		}
 
 		addPathListener(path, callback) {
@@ -38,22 +42,45 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		routeCallback(routeData, body, request, response) {
 			var o = this;
-			var robj = response.__splitUrl;
-			o.listener.emit(robj.pages.join('/'), o, robj, routeData, request, response);
+			var cp, p, i, r = o.routeMap,
+				robj = response.__splitUrl,
+				rawpath = robj.pages.join('/');
+			for (i = 0; i < robj.pages.length; i++) {
+				p = robj.pages[i];
+				cp = cp ? cp + '/' + p : p;
+				r = r[p];
+				if (!r) {
+					response.__rcode = o.noRouteCode;
+					if (o.noRouteEvent) o.listener.emit(o.noRouteEvent, o, robj, routeData, request, response);
+					break;
+				} else {
+					o.listener.emit(cp, o, robj, routeData, request, response);
+				}
+			}
+			if (o.codeMap[rawpath]) response.__rcode = o.codeMap[rawpath];
+			o.listener.emit(rawpath, o, robj, routeData, request, response);
 		}
 
 		initRoute() {
 			var o = this;
+			o.routeScope = o;
+			return o;
+		}
+
+		initRouteListener() {
+			var o = this;
+			o.addPathListener(o.noRouteEvent);
 			return o;
 		}
 
 		pushProtoSSResponse(request, response) {
 			var o = this;
+			if (!response.__headers) response.__headers = {};
 			return o;
 		}
 
 		addHeaders(request, response) {
-			var headers = {};
+			var headers = response.__headers || {};
 			return headers;
 		}
 	}
