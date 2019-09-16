@@ -3,7 +3,7 @@
 	"description": "Basic ProtoSS Node.js Server",
 	"text": "Simple printed server from ProtoSS Packages using XeltoSS synthesis",
 	"requires": "http, fs",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"date": "2019 - Today",
 	"supername": "zetaret.node::ProtoSSChe",
 	"inherits": null,
@@ -11,8 +11,8 @@
 	"static": {
 		"public_properties": {
 			"dumpall": "Boolean: false",
-			"dumpkeys": "Array: default",
-			"omit": "Object: default",
+			"dumpkeys": "Array: init",
+			"omit": "Object: init",
 			"maxBodyLength": "Number: 10000",
 			"htport": "Number: 8888",
 			"reqnum": "Number: 0",
@@ -20,7 +20,9 @@
 			"cookieid": "String: 'zetaretpid'",
 			"sidinterval": "Number: 5000",
 			"sfile": "String: 'stats.json'",
-			"stats": "Object: default"
+			"useXServer": "Boolean: false",
+			"xserverModule": "String: './modules/XProtoSSChe.js'",
+			"stats": "Object: init"
 		},
 		"protected_properties": {},
 		"private_properties": {},
@@ -48,12 +50,16 @@
 	},
 	"protected_methods": {},
 	"private_methods": {},
-	"static_descriptions": {},
+	"static_descriptions": {
+		"stats": "JSON Object loaded and updated frequently."
+	},
 	"descriptions": {
 		"ProtoSSChe": {
 			"this": "HTTP Server Constructor"
 		}
 	},
-	"static_examples": {},
+	"static_examples": {
+		"stats": ["{reqnum:3, xserver:true, xserverModule: \"./modules/MyServer.js\", cookieid: \"mycookie\", htport: 3000}"]
+	},
 	"examples": {}
 }
