@@ -1,0 +1,51 @@
+{
+	"author": "Zeta Ret",
+	"description": "Route map listener server",
+	"text": "Subserver of extended Server loaded as module",
+	"requires": "events",
+	"version": "1.1.1",
+	"date": "2019 - Today",
+	"supername": "zetaret.node.modules::Subserver",
+	"inherits": ["zetaret.node.modules::XProtoSSChe"],
+	"interfaces": null,
+	"static": {
+		"public_properties": {},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {
+		"routeMap": "Object: {}",
+		"codeMap": "Object: {}",
+		"noRouteCode": "Number: 404",
+		"noRouteEvent": "String: 'error404'",
+		"debugRoute": "Boolean: true",
+		"listener": "events.EventEmitter: new"
+	},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {
+		"Subserver": "",
+		"addPathListener": "path*: String, callback: Function; return Function",
+		"removePathListener": "path*: String, callback*: Function; return zetaret.node.modules::Subserver",
+		"pathListener": "server*: zetaret.node.modules.Subserver, robj*: Object, routeData*: Object, request*: http.ClientReques, response*: http.ServerResponse",
+		"routeCallback": "routeData*: Object, body*: String, request*: http.ClientRequest, response*: http.ServerResponse",
+		"initRoute": "; return zetaret.node.modules::Subserver",
+		"pushProtoSSResponse": "request*: http.ClientRequest, response*: http.ServerResponse; return zetaret.node.modules::Subserver",
+		"addHeaders": "request*: http.ClientRequest, response*: http.ServerResponse; return Object"
+	},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {
+		"routeMap": "object map by route path id, if no map is extended due to new Subserver subclass, then noRouteCode and noRouteEvent will occur at all times",
+		"codeMap": "http codes based on raw path",
+		"initRoute": {
+			"this": "adds listener on xdebug-protoss-node"
+		}
+	},
+	"static_examples": {},
+	"examples": {}
+}
