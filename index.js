@@ -70,12 +70,14 @@ function stopFSInterval() {
 }
 
 function initFS() {
+	env.statsin = stats;
 	try {
 		if (fs.existsSync(sfile)) {
 			var sj = fs.readFileSync(sfile);
 			try {
 				sj = JSON.parse(sj) || {};
 				if (sj) {
+					env.statsout = sj;
 					if (sj.reqnum !== undefined && sj.reqnum.constructor === Number) {
 						reqnum = sj.reqnum;
 						stats.reqnum = reqnum;
@@ -255,7 +257,8 @@ serverche.htserv = http.createServer(function(req, res) {
 	try {
 		serverche.onRequest(req, res);
 	} catch (e) {}
-}).listen(htport);
+});
+if (htport >= 0) serverche.htserv.listen(htport);
 
 module.exports.serverclass = ProtoSSChe;
 module.exports.serverche = serverche;
