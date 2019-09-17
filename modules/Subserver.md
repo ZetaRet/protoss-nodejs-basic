@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.1.1*  
+> *Version: 1.1.2*  
 > *Date: 2019 - Today*  
 
 __required*__
