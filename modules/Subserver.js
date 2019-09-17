@@ -43,7 +43,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		routeCallback(routeData, body, request, response) {
 			var o = this;
 			var cp, p, i, r = o.routeMap,
-				robj = response.__splitUrl;
+				robj = response.__splitUrl,
+				rawpath = robj.pages.join("/");
 			for (i = 0; i < robj.pages.length; i++) {
 				p = robj.pages[i];
 				cp = cp ? cp + '/' + p : p;
