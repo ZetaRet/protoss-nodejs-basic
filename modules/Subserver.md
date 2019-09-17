@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.1.2*  
+> *Version: 1.1.3*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -71,7 +71,7 @@ __pathListener(*zetaret.node.modules.Subserver* server, *Object* robj, *Object* 
 
 ##  
 __routeCallback(*Object* routeData, *String* body, *http.ClientRequest* request, *http.ServerResponse* response) : *void*__  
-  
+reads response.__breakRoute to stop routing, augments route object  
 - __routeData*__ - __*Object*__,   
 - __body*__ - __*String*__,   
 - __request*__ - __*http.ClientRequest*__,   
@@ -80,7 +80,12 @@ __routeCallback(*Object* routeData, *String* body, *http.ClientRequest* request,
 
 ##  
 __initRoute() : *zetaret.node.modules::Subserver*__  
-adds listener on xdebug-protoss-node  
+set routeScope to self  
+> *return __zetaret.node.modules::Subserver__*  
+
+##  
+__initRouteListener() : *zetaret.node.modules::Subserver*__  
+  
 > *return __zetaret.node.modules::Subserver__*  
 
 ##  
