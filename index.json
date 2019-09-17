@@ -3,13 +3,14 @@
 	"description": "Basic ProtoSS Node.js Server",
 	"text": "Simple printed server from ProtoSS Packages using XeltoSS synthesis",
 	"requires": "http, fs",
-	"version": "1.1.0",
+	"version": "1.1.2",
 	"date": "2019 - Today",
 	"supername": "zetaret.node::ProtoSSChe",
 	"inherits": null,
 	"interfaces": null,
 	"static": {
 		"public_properties": {
+			"env": "Object: {}",
 			"dumpall": "Boolean: false",
 			"dumpkeys": "Array: init",
 			"omit": "Object: init",
@@ -27,12 +28,15 @@
 		"protected_properties": {},
 		"private_properties": {},
 		"public_methods": {
+			"setEnv": "_env*: Object",
+			"updateEnv": "",
 			"initFS": ""
 		},
 		"protected_methods": {},
 		"private_methods": {}
 	},
 	"public_properties": {
+		"env": "Object: {}",
 		"htserv": "http.Server: created"
 	},
 	"protected_properties": {},
