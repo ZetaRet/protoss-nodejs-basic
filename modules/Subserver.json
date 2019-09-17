@@ -3,7 +3,7 @@
 	"description": "Route map listener server",
 	"text": "Subserver of extended Server loaded as module",
 	"requires": "events",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.modules::Subserver",
 	"inherits": ["zetaret.node.modules::XProtoSSChe"],
