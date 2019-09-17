@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, fs*  
-> *Version: 1.1.0*  
+> *Version: 1.1.2*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -10,6 +10,10 @@ __required*__
 ## zetaret.node::ProtoSSChe  
 
 ### *Properties*  
+
+#  
+__env__ Object  
+default {},   
 
 #  
 __htserv__ http.Server  
@@ -81,6 +85,10 @@ __endResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *P
 ### *Static Properties*  
 
 #  
+__env__ Object  
+default {},   
+
+#  
 __dumpall__ Boolean  
 default false,   
 
@@ -136,6 +144,17 @@ default init, JSON Object loaded and updated frequently.
 ```
 ##  
 ### *Static Methods*  
+
+##  
+__setEnv(*Object* envobj) : *void*__  
+  
+- __envobj*__ - __*Object*__,   
+> *return __void__*  
+
+##  
+__updateEnv() : *void*__  
+  
+> *return __void__*  
 
 ##  
 __initFS() : *void*__  
