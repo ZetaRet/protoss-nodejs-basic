@@ -28,7 +28,7 @@
 		"protected_properties": {},
 		"private_properties": {},
 		"public_methods": {
-			"setEnv": "_env*: Object",
+			"setEnv": "envobj*: Object",
 			"updateEnv": "",
 			"initFS": ""
 		},
