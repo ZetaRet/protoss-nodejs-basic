@@ -36,8 +36,8 @@ var env = {},
 		reqnum: null
 	};
 
-function setEnv(_env) {
-	for (var k in _env) env[k] = _env[k];
+function setEnv(envobj) {
+	for (var k in envobj) env[k] = envobj[k];
 	updateEnv();
 }
 
