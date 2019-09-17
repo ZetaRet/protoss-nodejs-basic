@@ -7,7 +7,8 @@
 var http = require('http'),
 	fs = require('fs');
 
-var dumpall = false,
+var env = {},
+	dumpall = false,
 	dumpkeys = ['__reqid', 'complete', 'headers', 'url', 'method'],
 	omit = {
 		headers: {
@@ -34,6 +35,20 @@ var dumpall = false,
 	stats = {
 		reqnum: null
 	};
+
+function setEnv(_env) {
+	for (var k in _env) env[k] = _env[k];
+	updateEnv();
+}
+
+function updateEnv() {
+	if (env.dumpall !== undefined) dumpall = env.dumpall;
+	if (env.dumpkeys !== undefined) dumpkeys = env.dumpkeys;
+	if (env.omit !== undefined) omit = env.omit;
+	if (env.maxBodyLength !== undefined) maxBodyLength = env.maxBodyLength;
+	if (env.contenttype !== undefined) contenttype = env.contenttype;
+	if (env.sidinterval !== undefined) sidinterval = env.sidinterval;
+}
 
 function initFS() {
 	try {
@@ -222,8 +237,12 @@ if (useXServer) {
 } else {
 	serverche = new ProtoSSChe();
 }
+serverche.env = env;
 serverche.htserv = http.createServer(function(req, res) {
 	try {
 		serverche.onRequest(req, res);
 	} catch (e) {}
 }).listen(htport);
+
+module.exports.serverche = serverche;
+module.exports.setEnv = setEnv;
