@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, fs*  
-> *Version: 1.1.2*  
+> *Version: 1.1.3*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -158,6 +158,16 @@ __updateEnv() : *void*__
 
 ##  
 __initFS() : *void*__  
+  
+> *return __void__*  
+
+##  
+__resetFSInterval() : *void*__  
+  
+> *return __void__*  
+
+##  
+__stopFSInterval() : *void*__  
   
 > *return __void__*  
 

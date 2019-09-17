@@ -47,7 +47,26 @@ function updateEnv() {
 	if (env.omit !== undefined) omit = env.omit;
 	if (env.maxBodyLength !== undefined) maxBodyLength = env.maxBodyLength;
 	if (env.contenttype !== undefined) contenttype = env.contenttype;
-	if (env.sidinterval !== undefined) sidinterval = env.sidinterval;
+	if (env.sidinterval !== undefined) {
+		sidinterval = env.sidinterval;
+		resetFSInterval();
+	}
+}
+
+function resetFSInterval() {
+	clearInterval(sid);
+	sid = setInterval(function() {
+		if (stats.reqnum !== reqnum) {
+			try {
+				stats.reqnum = reqnum;
+				fs.writeFile(sfile, JSON.stringify(stats), function(err) {});
+			} catch (e) {}
+		}
+	}, sidinterval);
+}
+
+function stopFSInterval() {
+	clearInterval(sid);
 }
 
 function initFS() {
@@ -81,15 +100,9 @@ function initFS() {
 			} catch (e) {}
 		}
 	} catch (e) {}
-	sid = setInterval(function() {
-		if (stats.reqnum !== reqnum) {
-			try {
-				stats.reqnum = reqnum;
-				fs.writeFile(sfile, JSON.stringify(stats), function(err) {});
-			} catch (e) {}
-		}
-	}, sidinterval);
+	resetFSInterval();
 }
+
 initFS();
 
 class ProtoSSChe {
@@ -244,5 +257,8 @@ serverche.htserv = http.createServer(function(req, res) {
 	} catch (e) {}
 }).listen(htport);
 
+module.exports.serverclass = ProtoSSChe;
 module.exports.serverche = serverche;
 module.exports.setEnv = setEnv;
+module.exports.resetFSInterval = resetFSInterval;
+module.exports.stopFSInterval = stopFSInterval;
