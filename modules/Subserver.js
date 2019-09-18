@@ -44,21 +44,27 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			var cp, p, i, r = o.routeMap,
 				robj = response.__splitUrl,
+				l = robj.pages.length,
 				rawpath = robj.pages.join("/");
 			robj.rawpath = rawpath;
-			for (i = 0; i < robj.pages.length; i++) {
-				p = robj.pages[i];
-				cp = cp ? cp + '/' + p : p;
-				r = r[p] || r["*"];
-				if (!r) {
-					response.__rcode = o.noRouteCode;
-					if (o.noRouteEvent) o.listener.emit(o.noRouteEvent, o, robj, routeData, request, response);
-					break;
-				} else {
-					robj.exact = cp === robj.rawpath;
-					o.listener.emit(cp, o, robj, routeData, request, response);
-					if (response.__breakRoute) break;
+			if (l > 0) {
+				for (i = 0; i < l; i++) {
+					p = robj.pages[i];
+					cp = cp ? cp + '/' + p : p;
+					r = r[p] || r["*"];
+					if (!r) {
+						response.__rcode = o.noRouteCode;
+						if (o.noRouteEvent) o.listener.emit(o.noRouteEvent, o, robj, routeData, request, response);
+						break;
+					} else {
+						robj.exact = (cp === robj.rawpath);
+						o.listener.emit(cp, o, robj, routeData, request, response);
+						if (response.__breakRoute) break;
+					}
 				}
+			} else {
+				robj.exact = true;
+				o.listener.emit("", o, robj, routeData, request, response);
 			}
 			if (o.codeMap[rawpath]) response.__rcode = o.codeMap[rawpath];
 		}
