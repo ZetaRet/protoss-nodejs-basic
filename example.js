@@ -10,14 +10,19 @@ protossche.serverche.routeMap = {
 				"*": {}
 			}
 		},
-		"contacts": {
-
-		}
+		"contacts": {}
 	}
 };
 var htmlplates = {
 	home: "<html><head></head><body>$BODY</body></html>"
 };
+protossche.serverche.addPathListener("", function(server, robj, routeData, request, response) {
+	if (robj.exact && robj.pages.length === 0) {
+		response.__headers['content-type'] = 'text/plain';
+		response.__data.push('root or home content');
+	}
+	if (robj.pages.length > 0) response.__rcode = server.noRouteCode;
+});
 protossche.serverche.addPathListener("node", function(server, robj, routeData, request, response) {
 	if (robj.exact) {
 		response.__headers['content-type'] = 'text/html';
