@@ -8,7 +8,7 @@
 __required*__
 
 ## zetaret.node.modules::Subserver  
-> Inherits: zetaret.node.modules::XProtoSSChe  
+> Inherits: [zetaret.node.modules::XProtoSSChe](XProtoSSChe.md)  
 
 ### *Properties*  
 

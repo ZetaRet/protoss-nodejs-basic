@@ -1,0 +1,40 @@
+{
+	"author": "Zeta Ret",
+	"description": "Voyage model of Subserver",
+	"text": "Routes dynamically your server to a new destination",
+	"requires": null,
+	"version": "1.2.0",
+	"date": "2019 - Today",
+	"supername": "zetaret.node.modules::Voyage",
+	"inherits": ["[zetaret.node.modules::Subserver](Subserver.md)"],
+	"interfaces": null,
+	"static": {
+		"public_properties": {},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {
+		"Voyage": "",
+		"initVoyage": "",
+		"voya": "route*: Object, port:Number; return zetaret.node.modules::Voyage"
+	},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {
+		"voya": {
+			"this": "swiftly move to new destination by swapping ports and route maps",
+			"route": "extend map of current routeMap",
+			"port": "greater or equal to 0, zero means random port on some machines",
+			"return": "subjects self Voyage server"
+		}
+	},
+	"static_examples": {},
+	"examples": {}
+}

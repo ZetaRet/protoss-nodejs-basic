@@ -7,7 +7,7 @@
 __required*__
 
 ## zetaret.node.modules::XProtoSSChe  
-> Inherits: zetaret.node::index  
+> Inherits: [zetaret.node::index](../index.md)  
 
 ### *Properties*  
 

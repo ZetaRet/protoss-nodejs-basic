@@ -6,7 +6,7 @@
 	"version": "1.1.1",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.modules::XProtoSSChe",
-	"inherits": ["zetaret.node::index"],
+	"inherits": ["[zetaret.node::index](../index.md)"],
 	"interfaces": null,
 	"static": {
 		"public_properties": {},
