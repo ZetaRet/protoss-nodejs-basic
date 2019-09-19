@@ -1,8 +1,8 @@
 > __Author: Zeta Ret__  
 > __Lobby auth and rooms of Subserver__  
 # Distribute users after authentication into rooms or applications based on requirements  
-> *Requires: events*  
-> *Version: 1.2.1*  
+> *Requires: http, https, events*  
+> *Version: 1.2.2*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -61,10 +61,11 @@ __initApps() : *void*__
 > *return __void__*  
 
 ##  
-__connectTo(*Object* options, *String* data) : *http.ClientRequest*__  
-connect to another server or lobby  
+__connectTo(*Object* options, *String* data, *Boolean* secure) : *http.ClientRequest*__  
+connect to another server or lobby, auto-configure options{port, method}  
 - __options*__ - __*Object*__, default http server options per request  
 - data - __*String*__, data to send with request  
+- secure - __*Boolean*__, connect to SSL server port using https  
 > *return __http.ClientRequest__, ends automatically*  
 
 ##  
@@ -74,9 +75,9 @@ __onConnectError(*Error* e) : *void*__
 > *return __void__*  
 
 ##  
-__onConnected(*http.ServerResponse* res) : *void*__  
+__onConnected(*http.IncomingMessage* res) : *void*__  
   
-- __res*__ - __*http.ServerResponse*__,   
+- __res*__ - __*http.IncomingMessage*__,   
 > *return __void__*  
 
 ##  

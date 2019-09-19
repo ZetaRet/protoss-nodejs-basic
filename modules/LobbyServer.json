@@ -2,8 +2,8 @@
 	"author": "Zeta Ret",
 	"description": "Lobby auth and rooms of Subserver",
 	"text": "Distribute users after authentication into rooms or applications based on requirements",
-	"requires": "events",
-	"version": "1.2.1",
+	"requires": "http, https, events",
+	"version": "1.2.2",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.modules::LobbyServer",
 	"inherits": ["[zetaret.node.modules::Subserver](Subserver.md)"],
@@ -31,9 +31,9 @@
 		"initLobby": "",
 		"initRooms": "",
 		"initApps": "",
-		"connectTo": "options*: Object, data: String; return http.ClientRequest",
+		"connectTo": "options*: Object, data: String, secure: Boolean; return http.ClientRequest",
 		"onConnectError": "e*: Error",
-		"onConnected": "res*: http.ServerResponse",
+		"onConnected": "res*: http.IncomingMessage",
 		"lobby": "data*: Object; return zetaret.node.modules::LobbyServer",
 		"updateRemoveUser": "u*: LobbyUser, update: Boolean, remove: Boolean; return zetaret.node.modules::LobbyServer",
 		"updateRemoveRoom": "r*: LobbyRoom, update: Boolean, remove: Boolean; return zetaret.node.modules::LobbyServer",
@@ -50,9 +50,10 @@
 			"this": "implement application based lobby logic using provided objects"
 		},
 		"connectTo": {
-			"this": "connect to another server or lobby",
+			"this": "connect to another server or lobby, auto-configure options{port, method}",
 			"options": "default http server options per request",
 			"data": "data to send with request",
+			"secure": "connect to SSL server port using https",
 			"return": "ends automatically"
 		},
 		"lobby": {

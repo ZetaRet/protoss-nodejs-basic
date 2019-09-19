@@ -5,6 +5,8 @@
  **/
 
 var Subserver, xpros = require('./Subserver.js'),
+	http = require('http'),
+	https = require('https'),
 	events = require('events');
 
 class LobbyUser extends Array {
@@ -82,24 +84,49 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		initLobby() {
 			var o = this;
 			o.lobbyId = o.rndstr(10);
+			o.onConnectedX = o.onConnected.bind(o);
+			o.onConnectErrorX = o.onConnectError.bind(o);
 		}
 
 		initRooms() {}
 
 		initApps() {}
 
-		connectTo(options, data) {
+		connectTo(options, data, secure) {
 			var o = this;
-			var req = o.htserv.request(options, o.onConnectedToServer);
-			req.on('error', o.onConnectError);
+			if (!options.port) options.port = secure ? 443 : 80;
+			if (!options.method) options.method = 'GET';
+			var req = (secure ? https : http).request(options, o.onConnectedX || o.onConnected.bind(o));
+			req.on('error', o.onConnectErrorX || o.onConnectError.bind(o));
 			if (data) req.write(data);
 			req.end();
 			return req;
 		}
 
-		onConnectError(e) {}
+		onConnectError(e) {
+			var o = this;
+			o.lobbyEvents.emit('connectError', e, o);
+			if (o.debugRoute) {
+				console.log('Lobby connect error: ' + o.lobbyId);
+				console.log(e);
+			}
+		}
 
-		onConnected(res) {}
+		onConnected(res) {
+			var o = this;
+			var d = '';
+			res.setEncoding(res.req.__encoding || 'utf8');
+			res.on('data', (chunk) => {
+				d += chunk;
+			});
+			res.on('end', () => {
+				if (o.debugRoute) {
+					console.log('Lobby connect data: ');
+					console.log(d);
+				}
+				o.lobbyEvents.emit('onConnected', res, d, o);
+			});
+		}
 
 		lobby(data) {
 			var o = this;
