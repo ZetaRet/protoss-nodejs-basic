@@ -8,7 +8,7 @@
 __required*__
 
 ## zetaret.node.modules::LobbyServer  
-> Inherits: [zetaret.node.modules::SubServer](Subserver.md)  
+> Inherits: [zetaret.node.modules::Subserver](Subserver.md)  
 
 ### *Properties*  
 
