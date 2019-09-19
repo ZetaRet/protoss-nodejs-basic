@@ -1,8 +1,8 @@
 > __Author: Zeta Ret__  
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
-> *Requires: http, fs*  
-> *Version: 1.1.3*  
+> *Requires: http, https, fs*  
+> *Version: 1.2.3*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -140,7 +140,7 @@ default './modules/XProtoSSChe.js',
 __stats__ Object  
 default init, JSON Object loaded and updated frequently.  
 ```
-{reqnum:3, xserver:true, xserverModule: "./modules/MyServer.js", cookieid: "mycookie", htport: 3000}  
+{reqnum:3, xserver:true, xserverModule: "./modules/MyServer.js", cookieid: "mycookie", htport: 3000, https: true, httpsop: {keyPath, certPath, pfxPath, caPath, ...anyOtherHTTPSOptionsParameter}  
 ```
 ##  
 ### *Static Methods*  

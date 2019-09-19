@@ -15,3 +15,7 @@ Folder `modules` contains examples and base extends of the server, including sam
 Server executes requests non-stop and labels them by unique id **__reqid**, subclass server must extend functionality and create workers using [SkytoSS](https://github.com/ZetaRet/protoss/wiki/SkytoSS-Documentation).  
 
 [Preview server](https://protoss.zetaret.com/node/) in the browser using PING-shPONGle request returning omitted client data.  
+
+## [Wiki Pages](https://github.com/ZetaRet/protoss-nodejs-basic/wiki)  
+- [Change log](https://github.com/ZetaRet/protoss-nodejs-basic/wiki/Change-log)  
+- [HowTo](https://github.com/ZetaRet/protoss-nodejs-basic/wiki/HowTo)  
