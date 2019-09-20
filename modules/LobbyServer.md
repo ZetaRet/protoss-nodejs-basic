@@ -2,7 +2,7 @@
 > __Lobby auth and rooms of Subserver__  
 # Distribute users after authentication into rooms or applications based on requirements  
 > *Requires: http, https, events*  
-> *Version: 1.2.2*  
+> *Version: 1.2.3*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -130,6 +130,21 @@ add new app to lobby using default/custom Class
 - __appId*__ - __*String*__,   
 - appcls - __*Function*__,   
 > *return __LobbyApp__*  
+
+##  
+### *Static Properties*  
+
+#  
+__lobbyUserClass__ LobbyUser  
+default module,   
+
+#  
+__lobbyRoomClass__ LobbyRoom  
+default module,   
+
+#  
+__lobbyAppClass__ LobbyApp  
+default module,   
 
 ---  
 ### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

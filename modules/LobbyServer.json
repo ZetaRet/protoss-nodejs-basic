@@ -3,13 +3,17 @@
 	"description": "Lobby auth and rooms of Subserver",
 	"text": "Distribute users after authentication into rooms or applications based on requirements",
 	"requires": "http, https, events",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.modules::LobbyServer",
 	"inherits": ["[zetaret.node.modules::Subserver](Subserver.md)"],
 	"interfaces": null,
 	"static": {
-		"public_properties": {},
+		"public_properties": {
+			"lobbyUserClass": "LobbyUser: module",
+			"lobbyRoomClass": "LobbyRoom: module",
+			"lobbyAppClass": "LobbyApp: module"
+		},
 		"protected_properties": {},
 		"private_properties": {},
 		"public_methods": {},
