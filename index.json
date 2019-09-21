@@ -3,13 +3,19 @@
 	"description": "Basic ProtoSS Node.js Server",
 	"text": "Simple printed server from ProtoSS Packages using XeltoSS synthesis",
 	"requires": "http, https, fs",
-	"version": "1.2.3",
+	"version": "1.3.1",
 	"date": "2019 - Today",
 	"supername": "zetaret.node::ProtoSSChe",
 	"inherits": null,
 	"interfaces": null,
 	"static": {
 		"public_properties": {
+			"loadedModule": "Module: external",
+			"loadedModuleClass": "ProtoSSChe: extended",
+			"serverclass": "ProtoSSChe: index",
+			"serverche": "ProtoSSChe: serverche"
+		},
+		"protected_properties": {
 			"env": "Object: {}",
 			"dumpall": "Boolean: false",
 			"dumpkeys": "Array: init",
@@ -25,16 +31,16 @@
 			"xserverModule": "String: './modules/XProtoSSChe.js'",
 			"stats": "Object: init"
 		},
-		"protected_properties": {},
 		"private_properties": {},
 		"public_methods": {
 			"setEnv": "envobj*: Object",
-			"updateEnv": "",
-			"initFS": "",
 			"resetFSInterval": "",
 			"stopFSInterval": ""
 		},
-		"protected_methods": {},
+		"protected_methods": {
+			"updateEnv": "",
+			"initFS": ""
+		},
 		"private_methods": {}
 	},
 	"public_properties": {
@@ -52,6 +58,7 @@
 		"getReqId": "; return String",
 		"pushProtoSSResponse": "request*: http.ClientRequest, response*: http.ServerResponse; return ProtoSSChe",
 		"readRequestBody": "request*: http.ClientRequest, response*: http.ServerResponse; return ProtoSSChe",
+		"updateCookies": "request*: http.ClientRequest, response*: http.ServerResponse, headers*: Object; return ProtoSSChe",
 		"endResponse": "request*: http.ClientRequest, response*: http.ServerResponse; return ProtoSSChe"
 	},
 	"protected_methods": {},

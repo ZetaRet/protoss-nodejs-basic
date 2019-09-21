@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, https, fs*  
-> *Version: 1.2.3*  
+> *Version: 1.3.1*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -75,6 +75,14 @@ __readRequestBody(*http.ClientRequest* request, *http.ServerResponse* response) 
 > *return __ProtoSSChe__*  
 
 ##  
+__updateCookies(*http.ClientRequest* request, *http.ServerResponse* response, *Object* headers) : *ProtoSSChe*__  
+  
+- __request*__ - __*http.ClientRequest*__,   
+- __response*__ - __*http.ServerResponse*__,   
+- __headers*__ - __*Object*__,   
+> *return __ProtoSSChe__*  
+
+##  
 __endResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *ProtoSSChe*__  
   
 - __request*__ - __*http.ClientRequest*__,   
@@ -83,6 +91,25 @@ __endResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *P
 
 ##  
 ### *Static Properties*  
+
+#  
+__loadedModule__ Module  
+default external,   
+
+#  
+__loadedModuleClass__ ProtoSSChe  
+default extended,   
+
+#  
+__serverclass__ ProtoSSChe  
+default index,   
+
+#  
+__serverche__ ProtoSSChe  
+default serverche,   
+
+##  
+### *Static Protected Properties*  
 
 #  
 __env__ Object  
@@ -152,22 +179,25 @@ __setEnv(*Object* envobj) : *void*__
 > *return __void__*  
 
 ##  
-__updateEnv() : *void*__  
-  
-> *return __void__*  
-
-##  
-__initFS() : *void*__  
-  
-> *return __void__*  
-
-##  
 __resetFSInterval() : *void*__  
   
 > *return __void__*  
 
 ##  
 __stopFSInterval() : *void*__  
+  
+> *return __void__*  
+
+##  
+### *Static Protected Methods*  
+
+##  
+__updateEnv() : *void*__  
+  
+> *return __void__*  
+
+##  
+__initFS() : *void*__  
   
 > *return __void__*  
 

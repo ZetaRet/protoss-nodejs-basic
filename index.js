@@ -233,33 +233,41 @@ class ProtoSSChe {
 		return o;
 	}
 
+	updateCookies(request, response, headers) {
+		var o = this;
+		if (!request.headers.cookie) headers['set-cookie'] = cookieid + "=" + o.rndstr(32);
+		return o;
+	}
+
 	endResponse(request, response) {
 		var o = this;
 		var input = response.__data.join("");
 		var headers = {
 			'content-type': contenttype
 		};
-		if (!request.headers.cookie) headers['set-cookie'] = cookieid + "=" + o.rndstr(32);
+		o.updateCookies(request, response, headers);
 		response.writeHead(200, headers);
 		response.end(input);
 		return o;
 	}
 }
-var serverche, sk;
+var serverche, sk, xpro, xprocls;
 if (useXServer) {
-	var xpro = require(xserverModule),
-		xprocls = xpro.getExtendedServerProtoSS(ProtoSSChe);
+	xpro = require(xserverModule);
+	xprocls = xpro.getExtendedServerProtoSS(ProtoSSChe);
 	serverche = new xprocls();
 } else {
 	serverche = new ProtoSSChe();
 }
 serverche.env = env;
 if (env.statsout && env.statsout.https === true) {
+	env.statsin.https = true;
 	let httpsop = {};
 	if (!env.statsout.httpsop) {
 		httpsop.keyPath = 'key.pem';
 		httpsop.certPath = 'cert.pem';
 	} else {
+		env.statsin.httpsop = env.statsout.httpsop;
 		for (sk in env.statsout.httpsop) httsop[sk] = env.statsout.httpsop[sk];
 	}
 	if (httpsop.keyPath) httpsop.key = fs.readFileSync(httpsop.keyPath);
@@ -282,6 +290,8 @@ if (!serverche.htserv.request) serverche.htserv.request = http.request;
 if (!serverche.htserv.srequest) serverche.htserv.srequest = https.request;
 if (htport >= 0) serverche.htserv.listen(htport);
 
+module.exports.loadedModule = xpro;
+module.exports.loadedModuleClass = xprocls;
 module.exports.serverclass = ProtoSSChe;
 module.exports.serverche = serverche;
 module.exports.setEnv = setEnv;

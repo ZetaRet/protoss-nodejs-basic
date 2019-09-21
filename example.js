@@ -1,3 +1,11 @@
+/**
+ * Author: Zeta Ret
+ * Date: 2019 - Today
+ * Requires: Subserver and stats.json
+ * Example of Subserver
+ * load from terminal as "node example.js"
+ **/
+
 var protossche = require('./index.js');
 
 protossche.serverche.codeMap['node/login'] = 401;
