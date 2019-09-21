@@ -106,7 +106,7 @@ default index,
 
 #  
 __serverche__ ProtoSSChe  
-default serverche,   
+default new,   
 
 ##  
 ### *Static Protected Properties*  
