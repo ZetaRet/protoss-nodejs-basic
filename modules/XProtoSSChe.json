@@ -3,7 +3,7 @@
 	"description": "Basic extender and nullifier",
 	"text": "Extended ProtoSSChe Server loaded as module",
 	"requires": null,
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.modules::XProtoSSChe",
 	"inherits": ["[zetaret.node::index](../index.md)"],
@@ -36,10 +36,10 @@
 	"static_descriptions": {},
 	"descriptions": {
 		"onReadRequestBody": {
-			"this": "response.__splitUrl is decoded route object using splitUrl method of request.url"
+			"this": "*response.__splitUrl* is decoded route object using splitUrl method of request.url, *request.__body* is body"
 		},
 		"endResponse": {
-			"this": "response.__rcode property will be checked before setting 200"
+			"this": "*response.__rcode* property will be checked before setting 200"
 		}
 	},
 	"static_examples": {},

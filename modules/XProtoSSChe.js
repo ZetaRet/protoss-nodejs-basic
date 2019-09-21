@@ -25,6 +25,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (request.url) {
 				response.__splitUrl = o.splitUrl(request.url);
 			}
+			response.__body = body;
 			if (o.routeCallback) {
 				o.routeCallback.call(o.routeScope, o.routeData, body, request, response);
 			}

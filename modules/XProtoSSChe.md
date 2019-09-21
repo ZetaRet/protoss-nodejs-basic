@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.1.1*  
+> *Version: 1.1.2*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -42,7 +42,7 @@ __initRoute() : *zetaret.node.modules::XProtoSSChe*__
 
 ##  
 __onReadRequestBody(*http.ClientRequest* request, *String* body, *http.ServerResponse* response) : *zetaret.node.modules::XProtoSSChe*__  
-response.__splitUrl is decoded route object using splitUrl method of request.url  
+*response.__splitUrl* is decoded route object using splitUrl method of request.url, *request.__body* is body  
 - __request*__ - __*http.ClientRequest*__,   
 - __body*__ - __*String*__,   
 - __response*__ - __*http.ServerResponse*__,   
@@ -64,7 +64,7 @@ __addHeaders(*http.ClientRequest* request, *http.ServerResponse* response) : *Ob
 
 ##  
 __endResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *zetaret.node.modules::XProtoSSChe*__  
-response.__rcode property will be checked before setting 200  
+*response.__rcode* property will be checked before setting 200  
 - __request*__ - __*http.ClientRequest*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __zetaret.node.modules::XProtoSSChe__*  
