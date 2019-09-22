@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.1.3*  
+> *Version: 1.3.5*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -22,6 +22,10 @@ default null,
 #  
 __routeData__ Object  
 default null,   
+
+#  
+__autoCookie__ Boolean  
+default false, used in endResponse to call updateCookies  
 
 
 ##  

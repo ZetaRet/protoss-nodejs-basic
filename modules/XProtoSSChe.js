@@ -12,6 +12,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (routeCallback) o.routeCallback = routeCallback;
 			if (routeScope) o.routeScope = routeScope;
 			if (routeData) o.routeData = routeData;
+			o.autoCookie = false;
 			o.initRoute();
 		}
 
@@ -30,9 +31,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				o.routeCallback.call(o.routeScope, o.routeData, body, request, response);
 			}
 			if (!response.__async) o.endResponse(request, response);
-			else response.on('pushProtoSSAsyncResponse', () => {
-				o.endResponse(request, response);
-			});
+			else response.on('pushProtoSSAsyncResponse', () => o.endResponse(request, response));
 			return o;
 		}
 
@@ -48,9 +47,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		endResponse(request, response) {
 			var o = this;
-			var input = response.__data.join("");
-			var headers = o.addHeaders(request, response);
-			o.updateCookies(request, response, headers);
+			var input = response.__data.join(""),
+				headers = o.addHeaders(request, response);
+			if (o.autoCookie) o.updateCookies(request, response, headers);
 			response.writeHead(response.__rcode || 200, headers);
 			response.end(input);
 			return o;
