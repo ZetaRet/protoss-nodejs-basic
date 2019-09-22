@@ -216,21 +216,25 @@ class ProtoSSChe {
 		var o = this;
 		var ended = false,
 			body = '';
-		request.on('data', function(data) {
-			if (ended) return;
-			body += data;
-			if (body.length > maxBodyLength) {
-				ended = true;
-				request.abort();
-				o.onReadRequestBody(request, body, response);
-			}
-		});
-		request.on('end', function() {
-			if (!ended) {
-				ended = true;
-				o.onReadRequestBody(request, body, response);
-			}
-		});
+		if (!request.aborted) {
+			request.on('data', function(data) {
+				if (ended) return;
+				body += data;
+				if (body.length > maxBodyLength) {
+					ended = true;
+					request.abort();
+					o.onReadRequestBody(request, body, response);
+				}
+			});
+			request.on('end', function() {
+				if (!ended) {
+					ended = true;
+					o.onReadRequestBody(request, body, response);
+				}
+			});
+		} else {
+			o.onReadRequestBody(request, body, response);
+		}
 		return o;
 	}
 
