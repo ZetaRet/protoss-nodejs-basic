@@ -18,7 +18,10 @@ protossche.serverche.routeMap = {
 				"*": {}
 			}
 		},
-		"contacts": {}
+		"contacts": {},
+		"throttle": {
+
+		}
 	}
 };
 var htmlplates = {
@@ -38,6 +41,13 @@ protossche.serverche.addPathListener("node", function(server, robj, routeData, r
 	} else {
 		response.__headers['content-type'] = 'text/plain';
 	}
+});
+protossche.serverche.addPathListener("node/throttle", function(server, robj, routeData, request, response) {
+	response.__data.push('async response after 1 second');
+	response.__async = true;
+	setTimeout(function() {
+		response.emit('pushProtoSSAsyncResponse');
+	}, 1000);
 });
 protossche.serverche.addPathListener("node/contacts", function(server, robj, routeData, request, response) {
 	if (robj.exact) {
