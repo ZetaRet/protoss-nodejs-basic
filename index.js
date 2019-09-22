@@ -6,6 +6,7 @@
 
 var http = require('http'),
 	https = require('https'),
+	http2 = require('http2'),
 	fs = require('fs');
 
 var env = {},
@@ -251,49 +252,59 @@ class ProtoSSChe {
 		return o;
 	}
 }
-var serverche, sk, xpro, xprocls;
-if (useXServer) {
-	xpro = require(xserverModule);
-	xprocls = xpro.getExtendedServerProtoSS(ProtoSSChe);
-	serverche = new xprocls();
-} else {
-	serverche = new ProtoSSChe();
-}
-serverche.env = env;
-if (env.statsout && env.statsout.https === true) {
-	env.statsin.https = true;
-	let httpsop = {};
-	if (!env.statsout.httpsop) {
-		httpsop.keyPath = 'key.pem';
-		httpsop.certPath = 'cert.pem';
-	} else {
-		env.statsin.httpsop = env.statsout.httpsop;
-		for (sk in env.statsout.httpsop) httsop[sk] = env.statsout.httpsop[sk];
-	}
-	if (httpsop.keyPath) httpsop.key = fs.readFileSync(httpsop.keyPath);
-	if (httpsop.certPath) httpsop.cert = fs.readFileSync(httpsop.certPath);
-	if (httpsop.pfxPath) httpsop.pfx = fs.readFileSync(httpsop.pfxPath);
-	if (httpsop.caPath) httpsop.ca = [fs.readFileSync(httpsop.caPath)];
-	serverche.htserv = https.createServer(httpsop, function(req, res) {
-		try {
-			serverche.onRequest(req, res);
-		} catch (e) {}
-	});
-} else {
-	serverche.htserv = http.createServer(function(req, res) {
-		try {
-			serverche.onRequest(req, res);
-		} catch (e) {}
-	});
-}
-if (!serverche.htserv.request) serverche.htserv.request = http.request;
-if (!serverche.htserv.srequest) serverche.htserv.srequest = https.request;
-if (htport >= 0) serverche.htserv.listen(htport);
 
-module.exports.loadedModule = xpro;
-module.exports.loadedModuleClass = xprocls;
+function getModuleInstance(xmodule) {
+	var serverche, sk, xpro, xprocls;
+	if (xmodule) {
+		xpro = require(xmodule);
+		xprocls = xpro.getExtendedServerProtoSS(ProtoSSChe);
+		serverche = new xprocls();
+	} else {
+		serverche = new ProtoSSChe();
+	}
+	serverche.env = env;
+	if (env.statsout && env.statsout.https === true) {
+		env.statsin.https = true;
+		let httpsop = {};
+		if (!env.statsout.httpsop) {
+			httpsop.keyPath = 'key.pem';
+			httpsop.certPath = 'cert.pem';
+		} else {
+			env.statsin.httpsop = env.statsout.httpsop;
+			for (sk in env.statsout.httpsop) httsop[sk] = env.statsout.httpsop[sk];
+		}
+		if (httpsop.keyPath) httpsop.key = fs.readFileSync(httpsop.keyPath);
+		if (httpsop.certPath) httpsop.cert = fs.readFileSync(httpsop.certPath);
+		if (httpsop.pfxPath) httpsop.pfx = fs.readFileSync(httpsop.pfxPath);
+		if (httpsop.caPath) httpsop.ca = [fs.readFileSync(httpsop.caPath)];
+		serverche.htserv = (httpsop.h2 ? http2 : https).createServer(httpsop, function(req, res) {
+			try {
+				serverche.onRequest(req, res);
+			} catch (e) {}
+		});
+	} else {
+		serverche.htserv = http.createServer(function(req, res) {
+			try {
+				serverche.onRequest(req, res);
+			} catch (e) {}
+		});
+	}
+	if (!serverche.htserv.request) serverche.htserv.request = http.request;
+	if (!serverche.htserv.srequest) serverche.htserv.srequest = https.request;
+	if (htport >= 0) serverche.htserv.listen(htport);
+
+	return {
+		serverche, xpro, xprocls, xmodule
+	};
+}
+
+var instance = getModuleInstance(useXServer ? xserverModule : null);
+
+module.exports.loadedModule = instance.xpro;
+module.exports.loadedModuleClass = instance.xprocls;
 module.exports.serverclass = ProtoSSChe;
-module.exports.serverche = serverche;
+module.exports.serverche = instance.serverche;
 module.exports.setEnv = setEnv;
 module.exports.resetFSInterval = resetFSInterval;
 module.exports.stopFSInterval = stopFSInterval;
+module.exports.getModuleInstance = getModuleInstance;

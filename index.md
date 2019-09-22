@@ -1,8 +1,8 @@
 > __Author: Zeta Ret__  
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
-> *Requires: http, https, fs*  
-> *Version: 1.3.1*  
+> *Requires: http, https, http2, fs*  
+> *Version: 1.3.3*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -165,9 +165,9 @@ default './modules/XProtoSSChe.js',
 
 #  
 __stats__ Object  
-default init, JSON Object loaded and updated frequently.  
+default init, JSON Object loaded and updated frequently  
 ```
-{reqnum:3, xserver:true, xserverModule: "./modules/MyServer.js", cookieid: "mycookie", htport: 3000, https: true, httpsop: {keyPath, certPath, pfxPath, caPath, ...anyOtherHTTPSOptionsParameter}  
+{reqnum:3, xserver:true, xserverModule: "./modules/MyServer.js", cookieid: "mycookie", htport: 3000, https: true, httpsop: {keyPath, certPath, pfxPath, caPath, h2, ...anyOtherHTTPSOptionsParameter}}  
 ```
 ##  
 ### *Static Methods*  
@@ -187,6 +187,12 @@ __resetFSInterval() : *void*__
 __stopFSInterval() : *void*__  
   
 > *return __void__*  
+
+##  
+__getModuleInstance(*String* xmodule) : *Object*__  
+create module server instance as it is by default  
+- xmodule - __*String*__, external path to server module  
+> *return __Object__, {serverche: ProtoSSChe, xpro: Module, xprocls: ProtoSSChe, xmodule: String}*  
 
 ##  
 ### *Static Protected Methods*  

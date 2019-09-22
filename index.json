@@ -2,8 +2,8 @@
 	"author": "Zeta Ret",
 	"description": "Basic ProtoSS Node.js Server",
 	"text": "Simple printed server from ProtoSS Packages using XeltoSS synthesis",
-	"requires": "http, https, fs",
-	"version": "1.3.1",
+	"requires": "http, https, http2, fs",
+	"version": "1.3.3",
 	"date": "2019 - Today",
 	"supername": "zetaret.node::ProtoSSChe",
 	"inherits": null,
@@ -13,7 +13,7 @@
 			"loadedModule": "Module: external",
 			"loadedModuleClass": "ProtoSSChe: extended",
 			"serverclass": "ProtoSSChe: index",
-			"serverche": "ProtoSSChe: serverche"
+			"serverche": "ProtoSSChe: new"
 		},
 		"protected_properties": {
 			"env": "Object: {}",
@@ -35,7 +35,8 @@
 		"public_methods": {
 			"setEnv": "envobj*: Object",
 			"resetFSInterval": "",
-			"stopFSInterval": ""
+			"stopFSInterval": "",
+			"getModuleInstance": "xmodule: String; return Object"
 		},
 		"protected_methods": {
 			"updateEnv": "",
@@ -64,7 +65,12 @@
 	"protected_methods": {},
 	"private_methods": {},
 	"static_descriptions": {
-		"stats": "JSON Object loaded and updated frequently."
+		"stats": "JSON Object loaded and updated frequently",
+		"getModuleInstance": {
+			"this": "create module server instance as it is by default",
+			"xmodule": "external path to server module",
+			"return": "{serverche: ProtoSSChe, xpro: Module, xprocls: ProtoSSChe, xmodule: String}"
+		}
 	},
 	"descriptions": {
 		"ProtoSSChe": {
@@ -73,7 +79,7 @@
 	},
 	"static_examples": {
 		"stats": [
-			"{reqnum:3, xserver:true, xserverModule: \"./modules/MyServer.js\", cookieid: \"mycookie\", htport: 3000, https: true, httpsop: {keyPath, certPath, pfxPath, caPath, ...anyOtherHTTPSOptionsParameter}"
+			"{reqnum:3, xserver:true, xserverModule: \"./modules/MyServer.js\", cookieid: \"mycookie\", htport: 3000, https: true, httpsop: {keyPath, certPath, pfxPath, caPath, h2, ...anyOtherHTTPSOptionsParameter}}"
 		]
 	},
 	"examples": {}
