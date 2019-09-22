@@ -29,7 +29,10 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (o.routeCallback) {
 				o.routeCallback.call(o.routeScope, o.routeData, body, request, response);
 			}
-			o.endResponse(request, response);
+			if (!response.__async) o.endResponse(request, response);
+			else response.on('pushProtoSSAsyncResponse', () => {
+				o.endResponse(request, response);
+			});
 			return o;
 		}
 
@@ -47,6 +50,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			var input = response.__data.join("");
 			var headers = o.addHeaders(request, response);
+			o.updateCookies(request, response, headers);
 			response.writeHead(response.__rcode || 200, headers);
 			response.end(input);
 			return o;
