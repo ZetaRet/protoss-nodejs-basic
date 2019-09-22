@@ -167,7 +167,7 @@ default './modules/XProtoSSChe.js',
 __stats__ Object  
 default init, JSON Object loaded and updated frequently  
 ```
-{reqnum:3, xserver:true, xserverModule: "./modules/MyServer.js", cookieid: "mycookie", htport: 3000, https: true, httpsop: {keyPath, certPath, pfxPath, caPath, h2, ...anyOtherHTTPSOptionsParameter}}  
+{reqnum:3, xserver:true, xserverModule: "./modules/MyServer.js", cookieid: "mycookie", htport: 3000, https: true, httpsop: {keyPath, certPath, pfxPath, caPath, h2, h2s, ...anyOtherHTTPSOptionsParameter}}  
 ```
 ##  
 ### *Static Methods*  

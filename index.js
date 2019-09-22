@@ -277,7 +277,7 @@ function getModuleInstance(xmodule) {
 		if (httpsop.certPath) httpsop.cert = fs.readFileSync(httpsop.certPath);
 		if (httpsop.pfxPath) httpsop.pfx = fs.readFileSync(httpsop.pfxPath);
 		if (httpsop.caPath) httpsop.ca = [fs.readFileSync(httpsop.caPath)];
-		serverche.htserv = (httpsop.h2 ? http2 : https).createServer(httpsop, function(req, res) {
+		serverche.htserv = (httpsop.h2 ? http2 : https)[httpsop.h2 ? "createSecureServer" : "createServer"](httpsop, function(req, res) {
 			try {
 				serverche.onRequest(req, res);
 			} catch (e) {}
