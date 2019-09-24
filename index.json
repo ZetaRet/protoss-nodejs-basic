@@ -3,7 +3,7 @@
 	"description": "Basic ProtoSS Node.js Server",
 	"text": "Simple printed server from ProtoSS Packages using XeltoSS synthesis",
 	"requires": "http, https, http2, fs",
-	"version": "1.3.5",
+	"version": "1.3.6",
 	"date": "2019 - Today",
 	"supername": "zetaret.node::ProtoSSChe",
 	"inherits": null,
@@ -65,7 +65,7 @@
 	"protected_methods": {},
 	"private_methods": {},
 	"static_descriptions": {
-		"stats": "JSON Object loaded and updated frequently",
+		"stats": "JSON Object loaded and updated frequently, use *global.ProtoSSCheStatsFile* to set different path in application before loading index module",
 		"getModuleInstance": {
 			"this": "create module server instance as it is by default",
 			"xmodule": "external path to server module",
