@@ -302,7 +302,7 @@ function getModuleInstance(xmodule) {
 	};
 }
 
-var instance = getModuleInstance(useXServer ? xserverModule : null);
+var instance = getModuleInstance(useXServer ? (global.ProtoSSCheXServerPath || "") + xserverModule : null);
 
 module.exports.loadedModule = instance.xpro;
 module.exports.loadedModuleClass = instance.xprocls;

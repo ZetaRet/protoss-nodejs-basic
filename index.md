@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, https, http2, fs*  
-> *Version: 1.3.6*  
+> *Version: 1.3.7*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -190,7 +190,7 @@ __stopFSInterval() : *void*__
 
 ##  
 __getModuleInstance(*String* xmodule) : *Object*__  
-create module server instance as it is by default  
+create module server instance as it is by default, initiated once by loading the module using stats configuration and prepends *global.ProtoSSCheXServerPath* to *xserverModule*  
 - xmodule - __*String*__, external path to server module  
 > *return __Object__, {serverche: ProtoSSChe, xpro: Module, xprocls: ProtoSSChe, xmodule: String}*  
 
