@@ -3,7 +3,7 @@
 	"description": "Basic extender and nullifier",
 	"text": "Extended ProtoSSChe Server loaded as module",
 	"requires": null,
-	"version": "1.3.5",
+	"version": "1.3.6",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.modules::XProtoSSChe",
 	"inherits": ["[zetaret.node::index](../index.md)"],
@@ -20,7 +20,8 @@
 		"routeCallback": "Function: null",
 		"routeScope": "Object: null",
 		"routeData": "Object: null",
-		"autoCookie": "Boolean: false"
+		"autoCookie": "Boolean: false",
+		"layerServer": "Boolean: false"
 	},
 	"protected_properties": {},
 	"private_properties": {},
@@ -30,6 +31,7 @@
 		"onReadRequestBody": "request*: http.ClientRequest, body*: String, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe",
 		"pushProtoSSResponse": "request*: http.ClientRequest, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe",
 		"addHeaders": "request*: http.ClientRequest, response*: http.ServerResponse; return Object",
+		"layerEndResponse": "request*: http.ClientRequest, response*: http.ServerResponse, input*: String, headers*: Object; return String",
 		"endResponse": "request*: http.ClientRequest, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe"
 	},
 	"protected_methods": {},
@@ -37,9 +39,18 @@
 	"static_descriptions": {},
 	"descriptions": {
 		"autoCookie": "used in endResponse to call updateCookies",
+		"layerServer": "use for proxy, cache, compress, encode, encrypt, content type based responses",
 		"onReadRequestBody": {
 			"this": "augments response based on request and executes routeCallback",
 			"response": "*.__splitUrl* is decoded route object, *.__body* is body, mark *.__async* to self execute *endResponse* later or .emit('pushProtoSSAsyncResponse')"
+		},
+		"layerEndResponse": {
+			"this": "override this method to contribute the server layer logic",
+			"request": "use input request data",
+			"response": "use route computed data",
+			"input": "current body to end response",
+			"headers": "edit headers object in place",
+			"return": "final version of response.end"
 		},
 		"endResponse": {
 			"this": "*response.__rcode* property will be checked before setting 200"

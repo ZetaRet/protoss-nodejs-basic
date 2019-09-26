@@ -13,6 +13,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (routeScope) o.routeScope = routeScope;
 			if (routeData) o.routeData = routeData;
 			o.autoCookie = false;
+			o.layerServer = false;
 			o.initRoute();
 		}
 
@@ -45,11 +46,16 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			return headers;
 		}
 
+		layerEndResponse(request, response, input, headers) {
+			return input;
+		}
+
 		endResponse(request, response) {
 			var o = this;
 			var input = response.__data.join(""),
 				headers = o.addHeaders(request, response);
 			if (o.autoCookie) o.updateCookies(request, response, headers);
+			if (o.layerServer) input = o.layerEndResponse(request, response, input, headers);
 			response.writeHead(response.__rcode || 200, headers);
 			response.end(input);
 			return o;

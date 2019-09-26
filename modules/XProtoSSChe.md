@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.3.5*  
+> *Version: 1.3.6*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -26,6 +26,10 @@ default null,
 #  
 __autoCookie__ Boolean  
 default false, used in endResponse to call updateCookies  
+
+#  
+__layerServer__ Boolean  
+default false, use for proxy, cache, compress, encode, encrypt, content type based responses  
 
 
 ##  
@@ -65,6 +69,15 @@ __addHeaders(*http.ClientRequest* request, *http.ServerResponse* response) : *Ob
 - __request*__ - __*http.ClientRequest*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __Object__*  
+
+##  
+__layerEndResponse(*http.ClientRequest* request, *http.ServerResponse* response, *String* input, *Object* headers) : *String*__  
+override this method to contribute the server layer logic  
+- __request*__ - __*http.ClientRequest*__, use input request data  
+- __response*__ - __*http.ServerResponse*__, use route computed data  
+- __input*__ - __*String*__, current body to end response  
+- __headers*__ - __*Object*__, edit headers object in place  
+> *return __String__, final version of response.end*  
 
 ##  
 __endResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *zetaret.node.modules::XProtoSSChe*__  
