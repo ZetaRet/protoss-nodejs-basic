@@ -4,7 +4,7 @@
  * Voyage model of Subserver.
  **/
 
-var Subserver, xpros = require('./Subserver.js');
+var Subserver, xpros = require(global.VoyageRequireModule || './Subserver.js');
 
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!Subserver) Subserver = xpros.getExtendedServerProtoSS(ProtoSSChe);

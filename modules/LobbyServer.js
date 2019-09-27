@@ -4,7 +4,7 @@
  * Lobby auth and rooms of Subserver.
  **/
 
-var Subserver, xpros = require('./Subserver.js'),
+var Subserver, xpros = require(global.LobbyServerRequireModule || './Subserver.js'),
 	http = require('http'),
 	https = require('https'),
 	events = require('events');

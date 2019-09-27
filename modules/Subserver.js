@@ -4,7 +4,7 @@
  * Subserver of extended Server loaded as module.
  **/
 
-var XProtoSSChe, xpros = require('./XProtoSSChe.js'),
+var XProtoSSChe, xpros = require(global.SubserverRequireModule || './XProtoSSChe.js'),
 	events = require('events');
 
 function getExtendedServerProtoSS(ProtoSSChe) {

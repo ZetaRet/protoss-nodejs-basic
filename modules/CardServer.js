@@ -4,7 +4,7 @@
  * Card server based on lobby connectivity with micro apps
  **/
 
-var LobbyServer, xpros = require('./LobbyServer.js'),
+var LobbyServer, xpros = require(global.CardServerRequireModule || './LobbyServer.js'),
 	events = require('events');
 
 class Card extends Array {
