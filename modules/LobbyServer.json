@@ -3,7 +3,7 @@
 	"description": "Lobby auth and rooms of Subserver",
 	"text": "Distribute users after authentication into rooms or applications based on requirements",
 	"requires": "http, https, events",
-	"version": "1.2.3",
+	"version": "1.2.4",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.modules::LobbyServer",
 	"inherits": ["[zetaret.node.modules::Subserver](Subserver.md)"],
@@ -42,9 +42,9 @@
 		"updateRemoveUser": "u*: LobbyUser, update: Boolean, remove: Boolean; return zetaret.node.modules::LobbyServer",
 		"updateRemoveRoom": "r*: LobbyRoom, update: Boolean, remove: Boolean; return zetaret.node.modules::LobbyServer",
 		"updateRemoveApp": "a*: LobbyApp, update: Boolean, remove: Boolean; return zetaret.node.modules::LobbyServer",
-		"user": "userId*: String, usercls: Function; return LobbyUser",
-		"room": "roomId*: String, roomcls: Function; return LobbyRoom",
-		"app": "appId*: String, appcls: Function; return LobbyApp"
+		"user": "userId*: String, usercls: Function; return zetaret.node.modules::LobbyUser",
+		"room": "roomId*: String, roomcls: Function; return zetaret.node.modules::LobbyRoom",
+		"app": "appId*: String, appcls: Function; return zetaret.node.modules::LobbyApp"
 	},
 	"protected_methods": {},
 	"private_methods": {},
@@ -74,5 +74,6 @@
 		}
 	},
 	"static_examples": {},
-	"examples": {}
+	"examples": {},
+	"imports": ["zetaret.node.modules::LobbyUser", "zetaret.node.modules::LobbyRoom", "zetaret.node.modules::LobbyApp"]
 }
