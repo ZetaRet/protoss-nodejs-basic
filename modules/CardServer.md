@@ -2,7 +2,7 @@
 > __Card server based on lobby connectivity with micro apps__  
 # Implement card games and different side applications  
 > *Requires: events*  
-> *Version: 1.3.0*  
+> *Version: 1.3.1*  
 > *Date: 2019 - Today*  
 
 __required*__

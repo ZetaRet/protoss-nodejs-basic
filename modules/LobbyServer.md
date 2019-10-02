@@ -2,7 +2,7 @@
 > __Lobby auth and rooms of Subserver__  
 # Distribute users after authentication into rooms or applications based on requirements  
 > *Requires: http, https, events*  
-> *Version: 1.2.3*  
+> *Version: 1.2.4*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -111,25 +111,25 @@ __updateRemoveApp(*LobbyApp* a, *Boolean* update, *Boolean* remove) : *zetaret.n
 > *return __zetaret.node.modules::LobbyServer__*  
 
 ##  
-__user(*String* userId, *Function* usercls) : *LobbyUser*__  
+__user(*String* userId, *Function* usercls) : *zetaret.node.modules::LobbyUser*__  
 add new user to lobby using default/custom Class  
 - __userId*__ - __*String*__,   
 - usercls - __*Function*__,   
-> *return __LobbyUser__*  
+> *return __zetaret.node.modules::LobbyUser__*  
 
 ##  
-__room(*String* roomId, *Function* roomcls) : *LobbyRoom*__  
+__room(*String* roomId, *Function* roomcls) : *zetaret.node.modules::LobbyRoom*__  
 add new room to lobby using default/custom Class  
 - __roomId*__ - __*String*__,   
 - roomcls - __*Function*__,   
-> *return __LobbyRoom__*  
+> *return __zetaret.node.modules::LobbyRoom__*  
 
 ##  
-__app(*String* appId, *Function* appcls) : *LobbyApp*__  
+__app(*String* appId, *Function* appcls) : *zetaret.node.modules::LobbyApp*__  
 add new app to lobby using default/custom Class  
 - __appId*__ - __*String*__,   
 - appcls - __*Function*__,   
-> *return __LobbyApp__*  
+> *return __zetaret.node.modules::LobbyApp__*  
 
 ##  
 ### *Static Properties*  
