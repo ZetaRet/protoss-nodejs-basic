@@ -1,0 +1,63 @@
+{
+	"author": "Zeta Ret",
+	"description": "Simple HTML parser",
+	"text": "RegExp XML processor to object and reversed conversion to HTML",
+	"requires": "fs, path",
+	"version": "1.1.3",
+	"date": "2019 - Today",
+	"supername": "zetaret.node.utils.html::HTMLParser",
+	"inherits": null,
+	"interfaces": null,
+	"static": {
+		"public_properties": {},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {
+		"dom": "Object: null",
+		"str": "String: null",
+		"prettyPrefix": "String: '\\t'",
+		"prettyNewLine": "String: '\\n'",
+		"attrAsObject": "Boolean: true"
+	},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {
+		"HTMLParser": "",
+		"getFilePath": "file*: String, dir: String|Boolean; return String",
+		"loadFromFile": "file*: String, dir: String|Boolean; return String",
+		"parseFromFile": "file*: String, dir: String|Boolean; return String",
+		"parseFromString": "str*: String; return zetaret.node.utils.html::HTMLParser",
+		"getDomJSON": "; return String",
+		"domToString": "dom*: Object, nowhite: Boolean, pretty: Boolean, prefix: Array; return String",
+		"search": "type*: String, attr*: String, value*: String, dom: Object; return Array",
+		"process": "s*: String, d*: Object; return Object",
+		"getTag": "s*: String; return Object",
+		"getElement": "type*: String, closed: Boolean, attr: Array|Object; return Object",
+		"attributes": "s*: String, el*: Object; return String"
+	},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {
+		"prettyPrefix": "tag offset per depth, change to more tabs, or spaces, deleted prefix will generate elements on each line, use in `domToString`",
+		"prettyNewLine": "new line string upon creating new tag, use in `domToString`",
+		"getFilePath": {
+			"this": "resolves using path and base directory",
+			"file": "relative or absolute path to file, will merge with dir",
+			"dir": "`true` uses `file` as it is, without `path.resolve` or local/remote directory"
+		},
+		"search": {
+			"this": "query the dom per type of element, and/or attribute key and value"
+		},
+		"getElement": {
+			"this": "generate new object element and append to any dom structure",
+			"return": "{type, closed, ending, attr, elements}"
+		}
+	},
+	"static_examples": {},
+	"examples": {}
+}
