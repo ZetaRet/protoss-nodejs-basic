@@ -1,0 +1,43 @@
+{
+	"author": "Zeta Ret",
+	"description": "HTML page cache utility",
+	"text": "Swap JS/CSS from filepath into tag as relative, cache as page content",
+	"requires": "fs, path",
+	"version": "1.1.4",
+	"date": "2019 - Today",
+	"supername": "zetaret.node.utils.html::HTMLCache",
+	"inherits": null,
+	"interfaces": null,
+	"static": {
+		"public_properties": {},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {
+		"pages": "Object: {}"
+	},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {
+		"HTMLCache": "",
+		"addPage": "page*: String, parser*: zetaret.node.utils.html::HTMLParser, hfile*: String, dir*: String; return Object",
+		"getPage": "page*: String; return String",
+		"exePage": "page*: String, cfg: Object; return Object",
+		"swapCSS": "page*: String, handler: Function",
+		"swapJS": "page*: String, handler: Function"
+	},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {
+		"HTMLCache": {
+			"this": "create pages by id and cache content from HTMLParser"
+		}
+	},
+	"static_examples": {},
+	"examples": {},
+	"imports": ["zetaret.node.utils.html::HTMLParser"]
+}
