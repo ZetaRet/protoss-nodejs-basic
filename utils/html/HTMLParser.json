@@ -46,7 +46,7 @@
 		"prettyPrefix": "tag offset per depth, change to more tabs, or spaces, deleted prefix will generate elements on each line, use in `domToString`",
 		"prettyNewLine": "new line string upon creating new tag, use in `domToString`",
 		"HTMLParser": {
-			"this": "Parse simple XML structures into templates, swap content, or use HTMLCache, no support of comments `<!--` or special tags `<!` `<?`. Must extend and override methods to suplement, or use multiple templates to create more complex HTML structure."
+			"this": "Parse simple XML structures into templates, swap content, or use HTMLCache, no support of comments `<!--` or special tags `<!` `<?`. Must extend and override methods to supplement, or use multiple templates to create more complex HTML structure."
 		},
 		"getFilePath": {
 			"this": "resolves using path and base directory",

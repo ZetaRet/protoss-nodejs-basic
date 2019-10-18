@@ -37,7 +37,7 @@ default true,
 
 ##  
 __HTMLParser() : *void*__  
-Parse simple XML structures into templates, swap content, or use HTMLCache, no support of comments `<!--` or special tags `<!` `<?`. Must extend and override methods to suplement, or use multiple templates to create more complex HTML structure.  
+Parse simple XML structures into templates, swap content, or use HTMLCache, no support of comments `<!--` or special tags `<!` `<?`. Must extend and override methods to supplement, or use multiple templates to create more complex HTML structure.  
 > *return __void__*  
 
 ##  
