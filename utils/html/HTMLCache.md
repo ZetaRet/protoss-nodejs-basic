@@ -2,7 +2,7 @@
 > __HTML page cache utility__  
 # Swap JS/CSS from filepath into tag as relative, cache as page content  
 > *Requires: fs, path*  
-> *Version: 1.1.5*  
+> *Version: 1.1.6*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -13,6 +13,10 @@ __required*__
 
 #  
 __pages__ Object  
+default {},   
+
+#  
+__despaceChars__ Object  
 default {},   
 
 
@@ -79,9 +83,10 @@ __swapJS(*String* page, *Function* handler) : *void*__
 > *return __void__*  
 
 ##  
-__despace(*String* v) : *String*__  
+__despace(*String* v, *String* type) : *String*__  
   
 - __v*__ - __*String*__,   
+- type - __*String*__,   
 > *return __String__*  
 
 ---  

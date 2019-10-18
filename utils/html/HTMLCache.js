@@ -11,6 +11,7 @@ class HTMLCache {
 	constructor() {
 		var o = this;
 		o.pages = {};
+		o.despaceChars = {};
 	}
 
 	addPage(page, parser, hfile, dir) {
@@ -55,7 +56,7 @@ class HTMLCache {
 			e.closed = false;
 			e.ending = '>';
 			e.elements = [fs.readFileSync(path.resolve(pdata.hfileloc, f)).toString()];
-			if (despace) e.elements[0] = o.despace(e.elements[0]);
+			if (despace) e.elements[0] = o.despace(e.elements[0], 'css');
 			if (handler) handler(page, pdata, e);
 		});
 	}
@@ -69,15 +70,16 @@ class HTMLCache {
 			if (f) {
 				delete e.attr.src;
 				e.elements = [fs.readFileSync(path.resolve(pdata.hfileloc, f)).toString()];
-				if (despace) e.elements[0] = o.despace(e.elements[0]);
+				if (despace) e.elements[0] = o.despace(e.elements[0], 'js');
 				if (handler) handler(page, pdata, e);
 			}
 		});
 	}
 
-	despace(v) {
+	despace(v, type) {
+		var o = this;
 		v = v.replace(new RegExp('[\\s]+', 'g'), ' ', v);
-		var i, chars = '[:(|{}=,\?\-\+\*/<>]';
+		var i, chars = (o.despaceChars[type] || ':(|{}=,\?\-\+\*/<>');
 		for (i = 0; i < chars.length; i++) v = v.replace(new RegExp('[\\s]*[' + chars.charAt(i) + '][\\s]*', 'g'), chars.charAt(i));
 		v = v.replace(new RegExp('[.][\\s]*', 'g'), '.');
 		v = v.replace(new RegExp('[\\[][\\s]*', 'g'), '[');
