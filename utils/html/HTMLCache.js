@@ -37,31 +37,30 @@ class HTMLCache {
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
 		if (!cfg) cfg = {};
-		if (cfg.swapjs) o.swapJS(page, cfg.jsh);
-		if (cfg.swapcss) o.swapCSS(page, cfg.cssh);
+		if (cfg.swapjs) o.swapJS(page, cfg.jsh, cfg.despacejs);
+		if (cfg.swapcss) o.swapCSS(page, cfg.cssh, cfg.despacecss);
 		pdata.content = hpinst.domToString(hpinst.dom, cfg.nowhite, cfg.pretty);
 		return pdata;
 	}
 
-	swapCSS(page, handler) {
+	swapCSS(page, handler, despace) {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
-		hpinst.search('link').forEach(e => {
-			if (e.attr.type === 'text/css') {
-				var f = e.attr.href;
-				delete e.attr.href;
-				delete e.attr.rel;
-				e.type = 'style';
-				e.closed = false;
-				e.ending = '>';
-				e.elements = [fs.readFileSync(path.resolve(pdata.hfileloc, f)).toString()];
-				if (handler) handler(page, pdata, e);
-			}
+		hpinst.search('link', 'type', 'text/css').forEach(e => {
+			var f = e.attr.href;
+			delete e.attr.href;
+			delete e.attr.rel;
+			e.type = 'style';
+			e.closed = false;
+			e.ending = '>';
+			e.elements = [fs.readFileSync(path.resolve(pdata.hfileloc, f)).toString()];
+			if (despace) e.elements[0] = o.despace(e.elements[0]);
+			if (handler) handler(page, pdata, e);
 		});
 	}
 
-	swapJS(page, handler) {
+	swapJS(page, handler, despace) {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
@@ -70,9 +69,21 @@ class HTMLCache {
 			if (f) {
 				delete e.attr.src;
 				e.elements = [fs.readFileSync(path.resolve(pdata.hfileloc, f)).toString()];
+				if (despace) e.elements[0] = o.despace(e.elements[0]);
 				if (handler) handler(page, pdata, e);
 			}
 		});
+	}
+
+	despace(v) {
+		v = v.replace(new RegExp('[\\s]+', 'g'), ' ', v);
+		var i, chars = '[:(|{}=,\?\-\+\*/<>]';
+		for (i = 0; i < chars.length; i++) v = v.replace(new RegExp('[\\s]*[' + chars.charAt(i) + '][\\s]*', 'g'), chars.charAt(i));
+		v = v.replace(new RegExp('[.][\\s]*', 'g'), '.');
+		v = v.replace(new RegExp('[\\[][\\s]*', 'g'), '[');
+		v = v.replace(new RegExp('[\\s]*[\\]]', 'g'), ']');
+		v = v.replace(new RegExp('[;][\\s]*', 'g'), ';');
+		return v;
 	}
 
 }
