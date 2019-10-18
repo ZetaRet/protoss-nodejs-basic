@@ -78,5 +78,11 @@ __swapJS(*String* page, *Function* handler) : *void*__
 - handler - __*Function*__,   
 > *return __void__*  
 
+##  
+__despace(*String* v) : *String*__  
+  
+- __v*__ - __*String*__,   
+> *return __String__*  
+
 ---  
 ### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

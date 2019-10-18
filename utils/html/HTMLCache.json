@@ -27,7 +27,8 @@
 		"getPage": "page*: String; return String",
 		"exePage": "page*: String, cfg: Object; return Object",
 		"swapCSS": "page*: String, handler: Function",
-		"swapJS": "page*: String, handler: Function"
+		"swapJS": "page*: String, handler: Function",
+		"despace": "v*: String; return String"
 	},
 	"protected_methods": {},
 	"private_methods": {},
