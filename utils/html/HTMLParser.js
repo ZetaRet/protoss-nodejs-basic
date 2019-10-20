@@ -17,7 +17,7 @@ class HTMLParser {
 		o.attrAsObject = true;
 		o.useAutomaton = false;
 		o.automata = {
-			prolog: ['<\\?[\\w]*', '\\?>', true],
+			prolog: ['<\\?[\\w]*', '[\\s]?\\?>', true],
 			comment: ['<\\!--', '-->', false],
 			doctype: ['<\\![\\w]*', '>', false]
 		};
@@ -157,7 +157,7 @@ class HTMLParser {
 
 	getTag(s) {
 		var o = this;
-		var t0, tag = s.match(new RegExp('<[/]*[\\w]*'));
+		var t0, tag = s.match(new RegExp('<[/]?[\\w]*'));
 		if (tag) {
 			t0 = tag[0];
 			tag.pre = tag.input.substr(0, tag.index);
@@ -196,15 +196,15 @@ class HTMLParser {
 
 	attributes(s, el) {
 		var o = this;
-		var a, attr, i, a0, lc, aa = [],
-			noattr = [];
+		var a, at, attr, i, a0, lc, aa = [],
+			noattr = (!el.auto || o.automata[el.auto][2] ? null : []);
 		while (true) {
 			a = s.match(new RegExp('[\\s|\\w]*[>|\'|\"]'));
 			if (a) {
 				a0 = a[0];
 				lc = a0.charAt(a0.length - 1);
 				if (lc === '\'' || lc === '"') {
-					if (!el.auto || o.automata[el.auto][2]) {
+					if (!noattr) {
 						i = a.input.indexOf(lc, a.index + a0.length);
 						aa.push(a.input.substr(0, i + 1));
 						s = a.input.substr(i + 1);
@@ -215,18 +215,23 @@ class HTMLParser {
 				} else {
 					attr = a.input.substr(0, a.index + a0.length);
 					if (el.auto) {
-						if (!attr.match(o.automata[el.auto][1])) {
-							noattr.push(attr);
+						at = attr.match(o.automata[el.auto][1]);
+						if (!at) {
+							if (noattr) noattr.push(attr);
 							s = a.input.substr(a.index + a0.length);
 							continue;
+						} else {
+							attr = at.input.substr(0, at.index);
+							(noattr ? noattr : aa).push(attr);
+							s = a.input.substr(at.index + at[0].length);
 						}
 						el.closed = true;
-						el.ending = noattr.join('') + attr;
+						el.ending = (noattr ? noattr.join('') : '') + at.input.substr(at.index);
 					} else {
 						el.closed = (attr[attr.length - 2] === '/');
 						el.ending = (el.closed ? '/' : '') + '>';
+						aa.push(attr.substr(0, attr.length - el.ending.length));
 					}
-					aa.push(attr.substr(0, attr.length - el.ending.length));
 					if (aa[aa.length - 1] === '') aa.pop();
 					if (aa.length > 0) {
 						if (o.attrAsObject) {
