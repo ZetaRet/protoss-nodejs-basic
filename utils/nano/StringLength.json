@@ -1,0 +1,32 @@
+{
+	"author": "Zeta Ret",
+	"description": "Computational String",
+	"text": "Length based value of String",
+	"requires": null,
+	"version": "1.0.0",
+	"date": "2019 - Today",
+	"supername": "zetaret.node.utils.nano::StringLength",
+	"inherits": ["String"],
+	"interfaces": null,
+	"static": {
+		"public_properties": {},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {
+		"StringLength": "s*: String",
+		"valueOf": "; return Number"
+	},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {},
+	"static_examples": {},
+	"examples": {}
+}
