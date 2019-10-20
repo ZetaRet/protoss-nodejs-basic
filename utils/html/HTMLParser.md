@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.2.0*  
+> *Version: 1.2.1*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -125,6 +125,13 @@ __attributes(*String* s, *Object* el) : *String*__
 - __s*__ - __*String*__,   
 - __el*__ - __*Object*__,   
 > *return __String__*  
+
+##  
+__attrToObject(*Array* aa, *Object* el) : *zetaret.node.utils.html::HTMLParser*__  
+  
+- __aa*__ - __*Array*__, non-parsed attributes from the tag  
+- __el*__ - __*Object*__, element object to create `attr` into  
+> *return __zetaret.node.utils.html::HTMLParser__*  
 
 ---  
 ### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

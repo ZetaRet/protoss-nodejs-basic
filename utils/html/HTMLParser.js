@@ -222,7 +222,7 @@ class HTMLParser {
 							continue;
 						} else {
 							attr = at.input.substr(0, at.index);
-							(noattr ? noattr : aa).push(attr);
+							(noattr || aa).push(attr);
 							s = a.input.substr(at.index + at[0].length);
 						}
 						el.closed = true;
@@ -233,26 +233,32 @@ class HTMLParser {
 						aa.push(attr.substr(0, attr.length - el.ending.length));
 					}
 					if (aa[aa.length - 1] === '') aa.pop();
-					if (aa.length > 0) {
-						if (o.attrAsObject) {
-							el.attr = {};
-							aa.forEach(e => {
-								var spl = e.split('='),
-									k = spl[0].trim(),
-									v = spl[1] ? spl[1].trim() : null,
-									kspl = k.replace(new RegExp('[\\s]+', 'g'), ' ').split(' ');
-								k = kspl.pop();
-								kspl.forEach(kk => el.attr[kk] = null);
-								el.attr[k] = (v === null ? null : v.substr(1, v.length - 2));
-							});
-						} else el.attr = aa;
-					}
+					o.attrToObject(aa, el);
 					s = a.input.substr(a.index + a0.length);
 					break;
 				}
 			} else break;
 		}
 		return s;
+	}
+
+	attrToObject(aa, el) {
+		var o = this;
+		if (aa.length > 0) {
+			if (o.attrAsObject) {
+				el.attr = {};
+				aa.forEach(e => {
+					var spl = e.split('='),
+						k = spl[0].trim(),
+						v = spl[1] ? spl[1].trim() : null,
+						kspl = k.replace(new RegExp('[\\s]+', 'g'), ' ').split(' ');
+					k = kspl.pop();
+					kspl.forEach(kk => el.attr[kk] = null);
+					el.attr[k] = (v === null ? null : v.substr(1, v.length - 2));
+				});
+			} else el.attr = aa;
+		}
+		return o;
 	}
 
 }

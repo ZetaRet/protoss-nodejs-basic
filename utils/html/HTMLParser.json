@@ -3,7 +3,7 @@
 	"description": "Simple HTML parser",
 	"text": "RegExp XML processor to object and reversed conversion to HTML",
 	"requires": "fs, path",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.utils.html::HTMLParser",
 	"inherits": null,
@@ -39,7 +39,8 @@
 		"process": "s*: String, d*: Object; return Object",
 		"getTag": "s*: String; return Object",
 		"getElement": "type*: String, closed: Boolean, attr: Array|Object; return Object",
-		"attributes": "s*: String, el*: Object; return String"
+		"attributes": "s*: String, el*: Object; return String",
+		"attrToObject": "aa*: Array, el*: Object; return zetaret.node.utils.html::HTMLParser"
 	},
 	"protected_methods": {},
 	"private_methods": {},
@@ -65,6 +66,10 @@
 		"getElement": {
 			"this": "generate new object element and append to any dom structure",
 			"return": "{type, closed, ending, attr, elements}"
+		},
+		"attrToObject": {
+			"aa": "non-parsed attributes from the tag",
+			"el": "element object to create `attr` into"
 		}
 	},
 	"static_examples": {},
