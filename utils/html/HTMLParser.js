@@ -15,6 +15,12 @@ class HTMLParser {
 		o.prettyPrefix = '\t';
 		o.prettyNewLine = '\n';
 		o.attrAsObject = true;
+		o.useAutomaton = false;
+		o.automata = {
+			prolog: ['<\\?[\\w]*', '\\?>', true],
+			comment: ['<\\!--', '-->', false],
+			doctype: ['<\\![\\w]*', '>', false]
+		};
 	}
 
 	getFilePath(file, dir) {
@@ -135,6 +141,7 @@ class HTMLParser {
 				el = {};
 				d.elements.push(el);
 				el.type = tag.type;
+				if (tag.auto) el.auto = tag.auto;
 				s = o.attributes(s, el);
 				if (!el.closed) {
 					el.elements = [];
@@ -149,13 +156,30 @@ class HTMLParser {
 	}
 
 	getTag(s) {
+		var o = this;
 		var t0, tag = s.match(new RegExp('<[/]*[\\w]*'));
 		if (tag) {
 			t0 = tag[0];
 			tag.pre = tag.input.substr(0, tag.index);
-			tag.closing = (t0.charAt(1) === '/');
-			tag.rest = tag.input.substr(tag.index + t0.length + (tag.closing ? 1 : 0));
-			tag.type = t0.substr(tag.closing ? 2 : 1);
+			if (t0 === '<' && o.useAutomaton) {
+				var ak, akt, atag;
+				for (ak in o.automata) {
+					akt = o.automata[ak];
+					atag = tag.input.match(new RegExp(akt[0]));
+					if (atag) {
+						tag.auto = ak;
+						tag.type = atag[0].substr(1);
+						tag.closing = false;
+						tag.rest = tag.input.substr(atag.index + atag[0].length);
+						break;
+					}
+				}
+			}
+			if (!tag.type) {
+				tag.closing = (t0.charAt(1) === '/');
+				tag.rest = tag.input.substr(tag.index + t0.length + (tag.closing ? 1 : 0));
+				tag.type = t0.substr(tag.closing ? 2 : 1);
+			}
 		}
 		return tag;
 	}
@@ -172,21 +196,37 @@ class HTMLParser {
 
 	attributes(s, el) {
 		var o = this;
-		var a, attr, i, a0, lc, aa = [];
+		var a, attr, i, a0, lc, aa = [],
+			noattr = [];
 		while (true) {
 			a = s.match(new RegExp('[\\s|\\w]*[>|\'|\"]'));
 			if (a) {
 				a0 = a[0];
 				lc = a0.charAt(a0.length - 1);
 				if (lc === '\'' || lc === '"') {
-					i = a.input.indexOf(lc, a.index + a0.length);
-					aa.push(a.input.substr(0, i + 1));
-					s = a.input.substr(i + 1);
+					if (!el.auto || o.automata[el.auto][2]) {
+						i = a.input.indexOf(lc, a.index + a0.length);
+						aa.push(a.input.substr(0, i + 1));
+						s = a.input.substr(i + 1);
+					} else {
+						noattr.push(a.input.substr(0, a.index + a0.length));
+						s = a.input.substr(a.index + a0.length);
+					}
 				} else {
 					attr = a.input.substr(0, a.index + a0.length);
-					el.closed = (attr[attr.length - 2] === '/');
-					el.ending = (el.closed ? '/' : '') + '>';
-					aa.push(attr.substr(0, attr.length - el.ending));
+					if (el.auto) {
+						if (!attr.match(o.automata[el.auto][1])) {
+							noattr.push(attr);
+							s = a.input.substr(a.index + a0.length);
+							continue;
+						}
+						el.closed = true;
+						el.ending = noattr.join('') + attr;
+					} else {
+						el.closed = (attr[attr.length - 2] === '/');
+						el.ending = (el.closed ? '/' : '') + '>';
+					}
+					aa.push(attr.substr(0, attr.length - el.ending.length));
 					if (aa[aa.length - 1] === '') aa.pop();
 					if (aa.length > 0) {
 						if (o.attrAsObject) {
@@ -194,7 +234,10 @@ class HTMLParser {
 							aa.forEach(e => {
 								var spl = e.split('='),
 									k = spl[0].trim(),
-									v = spl[1] ? spl[1].trim() : null;
+									v = spl[1] ? spl[1].trim() : null,
+									kspl = k.replace(new RegExp('[\\s]+', 'g'), ' ').split(' ');
+								k = kspl.pop();
+								kspl.forEach(kk => el.attr[kk] = null);
 								el.attr[k] = (v === null ? null : v.substr(1, v.length - 2));
 							});
 						} else el.attr = aa;

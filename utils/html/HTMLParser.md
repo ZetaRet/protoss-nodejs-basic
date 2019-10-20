@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.1.4*  
+> *Version: 1.2.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -30,6 +30,14 @@ default '\n', new line string upon creating new tag, use in `domToString`
 #  
 __attrAsObject__ Boolean  
 default true,   
+
+#  
+__useAutomaton__ Boolean  
+default false, parsing based on `automata` map, allows special tags, or define structure  
+
+#  
+__automata__ Object  
+default init,   
 
 
 ##  
