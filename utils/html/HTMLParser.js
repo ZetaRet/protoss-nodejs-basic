@@ -18,7 +18,11 @@ class HTMLParser {
 		o.useAutomaton = false;
 		o.automata = {
 			prolog: ['<\\?[\\w]*', '[\\s]?\\?>', true],
+			alias: ['<@[\\w]*', '[\\s]?@>', true],
+			template: ['<#[\\w]*', '[\\s]?#>', true],
+			block: ['<%[\\w]*', '[\\s]?%>', false],
 			comment: ['<\\!--', '-->', false],
+			cdata: ['<\\!\\[[\\w]*\\[', '\\]\\]>', false],
 			doctype: ['<\\![\\w]*', '>', false]
 		};
 	}
