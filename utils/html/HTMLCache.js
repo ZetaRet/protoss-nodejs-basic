@@ -12,6 +12,7 @@ class HTMLCache {
 		var o = this;
 		o.pages = {};
 		o.despaceChars = {};
+		o.despaceRules = {};
 	}
 
 	addPage(page, parser, hfile, dir) {
@@ -49,15 +50,21 @@ class HTMLCache {
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
 		hpinst.search('link', 'type', 'text/css').forEach(e => {
-			var f = e.attr.href;
-			delete e.attr.href;
-			delete e.attr.rel;
-			e.type = 'style';
-			e.closed = false;
-			e.ending = '>';
-			e.elements = [fs.readFileSync(path.resolve(pdata.hfileloc, f)).toString()];
-			if (despace) e.elements[0] = o.despace(e.elements[0], 'css');
-			if (handler) handler(page, pdata, e);
+			var swap, pr, f = e.attr.href;
+			if (f) {
+				pr = path.resolve(pdata.hfileloc, f);
+				if (fs.existsSync(pr)) {
+					delete e.attr.href;
+					delete e.attr.rel;
+					e.type = 'style';
+					e.closed = false;
+					e.ending = '>';
+					e.elements = [fs.readFileSync(pr).toString()];
+					if (despace) e.elements[0] = o.despace(e.elements[0], 'css');
+					swap = true;
+				}
+			}
+			if (handler) handler(page, pdata, e, swap);
 		});
 	}
 
@@ -65,26 +72,32 @@ class HTMLCache {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
-		hpinst.search('script').forEach(e => {
-			var f = e.attr.src;
+		hpinst.search('script', 'type', 'text/javascript').forEach(e => {
+			var swap, pr, f = e.attr.src;
 			if (f) {
-				delete e.attr.src;
-				e.elements = [fs.readFileSync(path.resolve(pdata.hfileloc, f)).toString()];
-				if (despace) e.elements[0] = o.despace(e.elements[0], 'js');
-				if (handler) handler(page, pdata, e);
+				pr = path.resolve(pdata.hfileloc, f);
+				if (fs.existsSync(pr)) {
+					delete e.attr.src;
+					e.elements = [fs.readFileSync(pr).toString()];
+					if (despace) e.elements[0] = o.despace(e.elements[0], 'js');
+					swap = true;
+				}
 			}
+			if (handler) handler(page, pdata, e, swap);
 		});
 	}
 
 	despace(v, type) {
 		var o = this;
-		v = v.replace(new RegExp('[\\s]+', 'g'), ' ', v);
-		var i, chars = (o.despaceChars[type] || ':(|{}=,\?\-\+\*/<>');
+		if (!o.despaceRules[' ']) v = v.replace(new RegExp('[\\s]+', 'g'), ' ', v);
+		var i, chars = (o.despaceChars[type] || ':(|{}=,\?\!\&\-\+\*/%<>');
 		for (i = 0; i < chars.length; i++) v = v.replace(new RegExp('[\\s]*[' + chars.charAt(i) + '][\\s]*', 'g'), chars.charAt(i));
-		v = v.replace(new RegExp('[.][\\s]*', 'g'), '.');
-		v = v.replace(new RegExp('[\\[][\\s]*', 'g'), '[');
-		v = v.replace(new RegExp('[\\s]*[\\]]', 'g'), ']');
-		v = v.replace(new RegExp('[;][\\s]*', 'g'), ';');
+		if (!o.despaceRules['^']) v = v.replace(new RegExp('[\\s]*[\\^][\\s]*', 'g'), '^');
+		if (!o.despaceRules['.']) v = v.replace(new RegExp('[.][\\s]*', 'g'), '.');
+		if (!o.despaceRules['[']) v = v.replace(new RegExp('[\\[][\\s]*', 'g'), '[');
+		if (!o.despaceRules[']']) v = v.replace(new RegExp('[\\s]*[\\]]', 'g'), ']');
+		if (!o.despaceRules[')']) v = v.replace(new RegExp('[\\s]*[\\)]', 'g'), ')');
+		if (!o.despaceRules[';']) v = v.replace(new RegExp('[;][\\s]*', 'g'), ';');
 		return v;
 	}
 

@@ -2,7 +2,7 @@
 > __HTML page cache utility__  
 # Swap JS/CSS from filepath into tag as relative, cache as page content  
 > *Requires: fs, path*  
-> *Version: 1.1.6*  
+> *Version: 1.1.7*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -17,6 +17,10 @@ default {},
 
 #  
 __despaceChars__ Object  
+default {},   
+
+#  
+__despaceRules__ Object  
 default {},   
 
 
