@@ -18,11 +18,11 @@ class HTMLParser {
 		o.useAutomaton = false;
 		o.autoOrder = false;
 		o.automata = {
-			prolog: ['<\\?[\\w]*', '[\\s]?\\?>', true],
-			alias: ['<@[\\w]*', '[\\s]?@>', true],
-			template: ['<#[\\w]*', '[\\s]?#>', true],
+			prolog: ['<\\?[\\w|-]*', '[\\s]?\\?>', true],
+			alias: ['<@[\\w|-]*', '[\\s]?@>', true],
+			template: ['<#[\\w|-]*', '[\\s]?#>', true],
 			var: ['<=[\\w]*', '>', true],
-			block: ['<%[\\w]*', '[\\s]?%>', false],
+			block: ['<%[\\w|-]*', '[\\s]?%>', false],
 			comment: ['<\\!--', '-->', false],
 			cdata: ['<\\!\\[[\\w]*\\[', '\\]\\]>', false],
 			doctype: ['<\\![\\w]*', '>', false]
@@ -163,28 +163,34 @@ class HTMLParser {
 
 	getTag(s) {
 		var o = this;
-		var t0, tag = s.match(new RegExp('<[/]?[\\w]*'));
+		var t0, tag = s.match(new RegExp('<[/]?[\\w|-]*'));
 		if (tag) {
 			t0 = tag[0];
 			tag.pre = tag.input.substr(0, tag.index);
 			if (t0 === '<' && o.useAutomaton) {
-				var ak, akt, atag, arest = tag.input.substr(tag.index);
-				for (ak in o.automata) {
-					akt = o.automata[ak];
-					atag = arest.match(new RegExp(akt[0]));
-					if (atag && (o.autoOrder || atag.index === 0)) {
-						tag.auto = ak;
-						tag.type = atag[0].substr(1);
-						tag.closing = false;
-						tag.rest = arest.substr(atag.index + atag[0].length);
-						break;
-					}
-				}
+				tag = o.getAutoTag(tag);
 			}
 			if (!tag.type) {
 				tag.closing = (t0.charAt(1) === '/');
 				tag.rest = tag.input.substr(tag.index + t0.length + (tag.closing ? 1 : 0));
 				tag.type = t0.substr(tag.closing ? 2 : 1);
+			}
+		}
+		return tag;
+	}
+
+	getAutoTag(tag) {
+		var o = this;
+		var ak, akt, atag, arest = tag.input.substr(tag.index);
+		for (ak in o.automata) {
+			akt = o.automata[ak];
+			atag = arest.match(new RegExp(akt[0]));
+			if (atag && (o.autoOrder || atag.index === 0)) {
+				tag.auto = ak;
+				tag.type = atag[0].substr(1);
+				tag.closing = false;
+				tag.rest = arest.substr(atag.index + atag[0].length);
+				break;
 			}
 		}
 		return tag;
@@ -205,7 +211,7 @@ class HTMLParser {
 		var a, at, attr, i, a0, lc, aa = [],
 			noattr = (!el.auto || o.automata[el.auto][2] ? null : []);
 		while (true) {
-			a = s.match(new RegExp('[\\s|\\w]*[>|\'|\"]'));
+			a = s.match(new RegExp('[\\s|\\w|-]*[>|\'|\"]'));
 			if (a) {
 				a0 = a[0];
 				lc = a0.charAt(a0.length - 1);

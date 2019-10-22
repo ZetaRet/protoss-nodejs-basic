@@ -39,6 +39,7 @@
 		"search": "type*: String, attr*: String, value*: String, dom: Object; return Array",
 		"process": "s*: String, d*: Object; return Object",
 		"getTag": "s*: String; return Object",
+		"getAutoTag": "tag*: Object; return Object",
 		"getElement": "type*: String, closed: Boolean, attr: Array|Object; return Object",
 		"attributes": "s*: String, el*: Object; return String",
 		"attrToObject": "aa*: Array, el*: Object; return zetaret.node.utils.html::HTMLParser"
@@ -66,6 +67,12 @@
 		"process": {
 			"this": "implemented for performance, use strict tagging and closures"
 		},
+		"getTag": {
+			"this": "detect any tag opener before processing attributes and closure"
+		},
+		"getAutoTag": {
+			"this": "check current detected tag opener for an `automaton` implementation"
+		},
 		"getElement": {
 			"this": "generate new object element and append to any dom structure",
 			"return": "{type, closed, ending, attr, elements}"
@@ -76,5 +83,16 @@
 		}
 	},
 	"static_examples": {},
-	"examples": {}
+	"examples": {
+		"getAutoTag": [
+			"<?xml prolog=\"attribute\" ?>",
+			"<@alias name=\"another\" @>",
+			"<#template file=\"path\" type=\"iterator\" #>",
+			"<=var method arguments=\"true, jsData.htmlParserInput\">",
+			"<%block wild text %>",
+			"<!-- comments in here-->",
+			"<![CDATA[my cdata content]]>",
+			"<!DOCTYPE HTML>"
+		]
+	}
 }

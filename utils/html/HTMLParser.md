@@ -111,10 +111,25 @@ implemented for performance, use strict tagging and closures
 
 ##  
 __getTag(*String* s) : *Object*__  
-  
+detect any tag opener before processing attributes and closure  
 - __s*__ - __*String*__,   
 > *return __Object__*  
 
+##  
+__getAutoTag(*Object* tag) : *Object*__  
+check current detected tag opener for an `automaton` implementation  
+- __tag*__ - __*Object*__,   
+> *return __Object__*  
+```
+<?xml prolog="attribute" ?>  
+<@alias name="another" @>  
+<#template file="path" type="iterator" #>  
+<=var method arguments="true, jsData.htmlParserInput">  
+<%block wild text %>  
+<!-- comments in here-->  
+<![CDATA[my cdata content]]>  
+<!DOCTYPE HTML>  
+```
 ##  
 __getElement(*String* type, *Boolean* closed, *Array|Object* attr) : *Object*__  
 generate new object element and append to any dom structure  
