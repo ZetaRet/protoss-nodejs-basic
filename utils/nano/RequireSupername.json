@@ -42,6 +42,10 @@
 		},
 		"verifySupername": {
 			"this": "execute RegExp supername match validation, check namespace folders and file existence per registered extension"
+		},
+		"setNamespaceMap": {
+			"this": "map many paths to a single namespace from an object",
+			"nsmap": "{'ns':['./../path/to/ns/','/absolute/path/to/folder2ofns/']}"
 		}
 	},
 	"static_examples": {},
@@ -54,6 +58,11 @@
 			"});",
 			"var htmlparser = require('zetaret.node.utils.html::HTMLParser'),",
 			"\thtmlcache = require('zetaret.node.utils.html::HTMLCache'),"
+		],
+		"setNamespaceMap": [
+			"var nsmap = JSON.parse(fs.readFileSync('namespacemap.json'));",
+			"for (var ns in nsmap) nsmap[ns].forEach((e, i, a) => a[i] = path.resolve(__dirname, e));",
+			"rsn.setNamespaceMap(nsmap);"
 		]
 	}
 }

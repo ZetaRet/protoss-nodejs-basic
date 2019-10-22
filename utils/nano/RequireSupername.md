@@ -77,9 +77,13 @@ __setNamespace(*String* ns, *Array* paths) : *void*__
 
 ##  
 __setNamespaceMap(*Object* nsmap) : *void*__  
-  
-- __nsmap*__ - __*Object*__,   
+map many paths to a single namespace from an object  
+- __nsmap*__ - __*Object*__, {'ns':['./../path/to/ns/','/absolute/path/to/folder2ofns/']}  
 > *return __void__*  
-
+```
+var nsmap = JSON.parse(fs.readFileSync('namespacemap.json'));  
+for (var ns in nsmap) nsmap[ns].forEach((e, i, a) => a[i] = path.resolve(__dirname, e));  
+rsn.setNamespaceMap(nsmap);  
+```
 ---  
 ### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator
