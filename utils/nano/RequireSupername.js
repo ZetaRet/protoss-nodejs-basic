@@ -10,6 +10,7 @@ var fs = require('fs'),
 var rf, maps = {},
 	supernames = {},
 	namespaces = {},
+	verified = {},
 	ext = ['js'];
 
 function setPathSupername(supername, paths) {
@@ -34,16 +35,20 @@ function resolveFilename() {
 }
 
 function verifySupername(id) {
-	var mid = id.match(new RegExp('[\\w|.]*[:]{2}?[\\w]*'));
+	var mid = id.match(new RegExp('[\\w|.]*[:]?[:]?[\\w]*'));
 	if (mid) {
-		var found, ns, nsa, fd, midr = id.replace('::', '.');
+		var found, ns, nsa, ex, fd, midr = id.replace(new RegExp('[:]+'), '.'),
+			midrspl = midr.split('.'),
+			cls = midrspl.pop(),
+			midrns = midrspl.join('.');
+		verified[id] = [midrns, cls];
 		for (ns in namespaces) {
 			nsa = namespaces[ns];
-			if ((midr + '.').startsWith(ns + '.')) {
+			if (('.' + midrns + '.').startsWith('.' + ns + '.')) {
 				found = nsa.find(p => {
-					fd = path.resolve(p, '.' + midr.substr(ns.length).split('.').join(path.sep));
-					if (ext.find(e => fs.existsSync(fd + '.' + e))) {
-						supernames[id] = fd;
+					fd = path.resolve(p, (midrspl.length > 1 ? '.' : '') + midr.substr(ns.length).split('.').join(path.sep));
+					if (ex = ext.find(e => fs.existsSync(fd + '.' + e))) {
+						supernames[id] = fd + '.' + ex;
 						return true;
 					}
 				});
@@ -55,7 +60,7 @@ function verifySupername(id) {
 
 function RequireSupername() {
 	var a = [].slice.call(arguments);
-	verifySupername(a[0]);
+	if (!verified[a[0]]) verifySupername(a[0]);
 	if (maps[a[0]]) a[0] = maps[a[0]];
 	if (supernames[a[0]]) a[0] = supernames[a[0]];
 	return a;
