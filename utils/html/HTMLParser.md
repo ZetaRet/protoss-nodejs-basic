@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.2.1*  
+> *Version: 1.2.2*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -36,8 +36,12 @@ __useAutomaton__ Boolean
 default false, parsing based on `automata` map, allows special tags, or define structure  
 
 #  
+__autoOrder__ Boolean  
+default false, honor `automaton` order or html of parsing `automata` tags  
+
+#  
 __automata__ Object  
-default init,   
+default init, [opener RegExp, closure RegExp, use attributes]  
 
 
 ##  

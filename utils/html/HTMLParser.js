@@ -16,10 +16,12 @@ class HTMLParser {
 		o.prettyNewLine = '\n';
 		o.attrAsObject = true;
 		o.useAutomaton = false;
+		o.autoOrder = false;
 		o.automata = {
 			prolog: ['<\\?[\\w]*', '[\\s]?\\?>', true],
 			alias: ['<@[\\w]*', '[\\s]?@>', true],
 			template: ['<#[\\w]*', '[\\s]?#>', true],
+			var: ['<=[\\w]*', '>', true],
 			block: ['<%[\\w]*', '[\\s]?%>', false],
 			comment: ['<\\!--', '-->', false],
 			cdata: ['<\\!\\[[\\w]*\\[', '\\]\\]>', false],
@@ -166,15 +168,15 @@ class HTMLParser {
 			t0 = tag[0];
 			tag.pre = tag.input.substr(0, tag.index);
 			if (t0 === '<' && o.useAutomaton) {
-				var ak, akt, atag;
+				var ak, akt, atag, arest = tag.input.substr(tag.index);
 				for (ak in o.automata) {
 					akt = o.automata[ak];
-					atag = tag.input.match(new RegExp(akt[0]));
-					if (atag) {
+					atag = arest.match(new RegExp(akt[0]));
+					if (atag && (o.autoOrder || atag.index === 0)) {
 						tag.auto = ak;
 						tag.type = atag[0].substr(1);
 						tag.closing = false;
-						tag.rest = tag.input.substr(atag.index + atag[0].length);
+						tag.rest = arest.substr(atag.index + atag[0].length);
 						break;
 					}
 				}
