@@ -119,7 +119,7 @@ class HTMLParser {
 		var i, s, a = [],
 			ch = dom.elements,
 			l = ch ? ch.length : 0;
-		if ((!type || dom.type === type) &&
+		if ((!type || (type.constructor === Array ? type.indexOf(dom.type) !== -1 : dom.type === type)) &&
 			(!attr || (dom.attr && dom.attr.constructor === Object && (dom.attr[attr].split(new RegExp('\\s')).indexOf(value) !== -1)))) {
 			a.push(dom);
 		}
@@ -172,7 +172,7 @@ class HTMLParser {
 			}
 			if (!tag.type) {
 				tag.closing = (t0.charAt(1) === '/');
-				tag.rest = tag.input.substr(tag.closing ? tag.input.indexOf('>') + 1 : tag.index + t0.length);
+				tag.rest = tag.input.substr(tag.closing ? tag.input.indexOf('>', tag.index) + 1 : tag.index + t0.length);
 				tag.type = t0.substr(tag.closing ? 2 : 1);
 			}
 		}
