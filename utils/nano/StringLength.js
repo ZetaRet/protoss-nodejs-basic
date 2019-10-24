@@ -9,6 +9,10 @@ class StringLength extends String {
 		super(s);
 	}
 
+	concat() {
+		return new StringLength(super.concat.apply(this, arguments));
+	}
+
 	valueOf() {
 		return this.length;
 	}
