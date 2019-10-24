@@ -172,7 +172,7 @@ class HTMLParser {
 			}
 			if (!tag.type) {
 				tag.closing = (t0.charAt(1) === '/');
-				tag.rest = tag.input.substr(tag.index + t0.length + (tag.closing ? 1 : 0));
+				tag.rest = tag.input.substr(tag.closing ? tag.input.indexOf('>') + 1 : tag.index + t0.length);
 				tag.type = t0.substr(tag.closing ? 2 : 1);
 			}
 		}
