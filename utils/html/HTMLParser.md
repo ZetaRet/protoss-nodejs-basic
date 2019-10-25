@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.2.3*  
+> *Version: 1.3.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -30,6 +30,18 @@ default '\n', new line string upon creating new tag, use in `domToString`
 #  
 __attrAsObject__ Boolean  
 default true,   
+
+#  
+__debug__ Boolean  
+default false,   
+
+#  
+__debugBuffer__ Array  
+default [],   
+
+#  
+__parseCursor__ Number  
+default 0,   
 
 #  
 __useAutomaton__ Boolean  
@@ -101,6 +113,20 @@ query the dom per type of element, and/or attribute key and value
 - __value*__ - __*String*__,   
 - dom - __*Object*__,   
 > *return __Array__*  
+
+##  
+__debugCase(*String* text, *Error|Function* error, *Object* data) : *void*__  
+  
+- __text*__ - __*String*__,   
+- error - __*Error|Function*__,   
+- data - __*Object*__,   
+> *return __void__*  
+
+##  
+__cursorToCR(*Number* cursor) : *String*__  
+  
+- __cursor*__ - __*Number*__,   
+> *return __String__*  
 
 ##  
 __process(*String* s, *Object* d) : *Object*__  

@@ -15,6 +15,9 @@ class HTMLParser {
 		o.prettyPrefix = '\t';
 		o.prettyNewLine = '\n';
 		o.attrAsObject = true;
+		o.debug = false;
+		o.debugBuffer = [];
+		o.parseCursor = 0;
 		o.useAutomaton = false;
 		o.autoOrder = false;
 		o.automata = {
@@ -46,6 +49,7 @@ class HTMLParser {
 
 	parseFromString(str) {
 		var o = this;
+		o.parseCursor = 0;
 		o.str = str;
 		o.dom = {
 			elements: []
@@ -134,6 +138,19 @@ class HTMLParser {
 		return a;
 	}
 
+	debugCase(text, error, data) {
+		console.log(text);
+		this.debugBuffer.push([text, error, data]);
+		if (error) throw new error(text + ' [Debug Buffer Index: ' + (this.debugBuffer.length - 1) + ']');
+	}
+
+	cursorToCR(cursor) {
+		var o = this;
+		var t = o.str.substr(0, cursor),
+			r = t.split(new RegExp('[\\n]'));
+		return r.length + ':' + (r[r.length - 1].length + 1) + ':' + cursor + ':' + o.str.length;
+	}
+
 	process(s, d) {
 		var o = this;
 		if (!s) s = o.str;
@@ -153,6 +170,9 @@ class HTMLParser {
 					el.elements = [];
 					ret = o.process(s, el);
 					if (ret.closing && ret.rest) {
+						if (o.debug && ret.type !== el.type) {
+							o.debugCase('{' + o.cursorToCR(o.parseCursor) + '}, Closing tag mismatch at ' + ret.inner, SyntaxError, [ret, el, d]);
+						}
 						ret = o.process(ret.rest, d);
 					}
 				} else ret = o.process(s, d);
@@ -163,7 +183,7 @@ class HTMLParser {
 
 	getTag(s) {
 		var o = this;
-		var t0, tag = s.match(new RegExp('<[/]?[\\w|-]*'));
+		var t0, ci, tag = s.match(new RegExp('<[/]?[\\w|-]*'));
 		if (tag) {
 			t0 = tag[0];
 			tag.pre = tag.input.substr(0, tag.index);
@@ -172,7 +192,14 @@ class HTMLParser {
 			}
 			if (!tag.type) {
 				tag.closing = (t0.charAt(1) === '/');
-				tag.rest = tag.input.substr(tag.closing ? tag.input.indexOf('>', tag.index) + 1 : tag.index + t0.length);
+				tag.endIndex = tag.input.indexOf('>', tag.index);
+				ci = tag.closing ? tag.endIndex + 1 : tag.index + t0.length;
+				tag.inner = tag.input.substring(tag.index, tag.endIndex + 1);
+				tag.rest = tag.input.substr(ci);
+				o.parseCursor += ci;
+				if (o.debug && tag.closing && (tag.endIndex !== tag.index + t0.length)) {
+					o.debugCase('{' + o.cursorToCR(o.parseCursor) + '}, Closing tag mistyped at ' + tag.inner, TypeError, [tag]);
+				}
 				tag.type = t0.substr(tag.closing ? 2 : 1);
 			}
 		}
@@ -220,9 +247,11 @@ class HTMLParser {
 						i = a.input.indexOf(lc, a.index + a0.length);
 						aa.push(a.input.substr(0, i + 1));
 						s = a.input.substr(i + 1);
+						o.parseCursor += i + 1;
 					} else {
 						noattr.push(a.input.substr(0, a.index + a0.length));
 						s = a.input.substr(a.index + a0.length);
+						o.parseCursor += a.index + a0.length;
 					}
 				} else {
 					attr = a.input.substr(0, a.index + a0.length);
@@ -231,11 +260,13 @@ class HTMLParser {
 						if (!at) {
 							if (noattr) noattr.push(attr);
 							s = a.input.substr(a.index + a0.length);
+							o.parseCursor += a.index + a0.length;
 							continue;
 						} else {
 							attr = at.input.substr(0, at.index);
 							(noattr || aa).push(attr);
 							s = a.input.substr(at.index + at[0].length);
+							o.parseCursor += at.index + at[0].length;
 						}
 						el.closed = true;
 						el.ending = (noattr ? noattr.join('') : '') + at.input.substr(at.index);
@@ -247,6 +278,7 @@ class HTMLParser {
 					if (aa[aa.length - 1] === '') aa.pop();
 					o.attrToObject(aa, el);
 					s = a.input.substr(a.index + a0.length);
+					o.parseCursor += a.index + a0.length;
 					break;
 				}
 			} else break;
