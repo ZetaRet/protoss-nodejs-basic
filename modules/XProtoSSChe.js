@@ -13,6 +13,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (routeScope) o.routeScope = routeScope;
 			if (routeData) o.routeData = routeData;
 			o.autoCookie = false;
+			o.postJSON = true;
 			o.layerServer = false;
 			o.initRoute();
 		}
@@ -26,6 +27,13 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			if (request.url) {
 				response.__splitUrl = o.splitUrl(request.url);
+				if (o.postJSON && request.headers['content-type'] === 'application/json') {
+					try {
+						response.__splitUrl.post = JSON.parse(body);
+					} catch (e) {
+						response.__splitUrl.post = {};
+					}
+				}
 			}
 			response.__body = body;
 			if (o.routeCallback) {

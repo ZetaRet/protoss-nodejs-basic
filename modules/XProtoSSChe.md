@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.3.6*  
+> *Version: 1.4.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -25,7 +25,11 @@ default null,
 
 #  
 __autoCookie__ Boolean  
-default false, used in endResponse to call updateCookies  
+default false, used in `endResponse` to call `updateCookies`  
+
+#  
+__postJSON__ Boolean  
+default true, check incoming `content-type` header and parse body as JSON, add as `post` to route object  
 
 #  
 __layerServer__ Boolean  
@@ -50,10 +54,10 @@ __initRoute() : *zetaret.node.modules::XProtoSSChe*__
 
 ##  
 __onReadRequestBody(*http.ClientRequest* request, *String* body, *http.ServerResponse* response) : *zetaret.node.modules::XProtoSSChe*__  
-augments response based on request and executes routeCallback  
+augments response based on `request` and executes `routeCallback`  
 - __request*__ - __*http.ClientRequest*__,   
 - __body*__ - __*String*__,   
-- __response*__ - __*http.ServerResponse*__, *.__splitUrl* is decoded route object, *.__body* is body, mark *.__async* to self execute *endResponse* later or .emit('pushProtoSSAsyncResponse')  
+- __response*__ - __*http.ServerResponse*__, `.__splitUrl` is decoded route object, `.__body` is body, mark `.__async` to self execute `endResponse` later or `.emit('pushProtoSSAsyncResponse')`  
 > *return __zetaret.node.modules::XProtoSSChe__*  
 
 ##  
@@ -81,7 +85,7 @@ override this method to contribute the server layer logic
 
 ##  
 __endResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *zetaret.node.modules::XProtoSSChe*__  
-*response.__rcode* property will be checked before setting 200  
+`response.__rcode` property will be checked before setting 200  
 - __request*__ - __*http.ClientRequest*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __zetaret.node.modules::XProtoSSChe__*  
