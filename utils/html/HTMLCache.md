@@ -2,7 +2,7 @@
 > __HTML page cache utility__  
 # Swap JS/CSS from filepath into tag as relative, cache as page content  
 > *Requires: fs, path*  
-> *Version: 1.1.7*  
+> *Version: 1.2.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -71,6 +71,12 @@ execute page script per configuration
 - __page*__ - __*String*__,   
 - cfg - __*Object*__, swap/handle/despace elements, execute `HTMLParser.domToString` {swapjs, jsh, despacejs, swapcss, cssh, despacecss, nowhite, pretty}  
 > *return __Object__*  
+
+##  
+__recache(*String* page) : *void*__  
+  
+- __page*__ - __*String*__,   
+> *return __void__*  
 
 ##  
 __swapCSS(*String* page, *Function* handler) : *void*__  

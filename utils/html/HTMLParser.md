@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.3.0*  
+> *Version: 1.3.1*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -17,6 +17,14 @@ default null,
 
 #  
 __str__ String  
+default null,   
+
+#  
+__file__ String  
+default null,   
+
+#  
+__dir__ String|Boolean  
 default null,   
 
 #  

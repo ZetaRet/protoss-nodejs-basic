@@ -41,8 +41,17 @@ class HTMLCache {
 		if (!cfg) cfg = {};
 		if (cfg.swapjs) o.swapJS(page, cfg.jsh, cfg.despacejs);
 		if (cfg.swapcss) o.swapCSS(page, cfg.cssh, cfg.despacecss);
+		pdata.execfg = cfg;
 		pdata.content = hpinst.domToString(hpinst.dom, cfg.nowhite, cfg.pretty);
 		return pdata;
+	}
+
+	recache(page) {
+		var o = this;
+		var pdata = o.pages[page],
+			hpinst = pdata.parser;
+		hpinst.parseFromFile(hpinst.file, hpinst.dir);
+		o.exePage(page, pdata.execfg);
 	}
 
 	swapCSS(page, handler, despace) {

@@ -12,6 +12,8 @@ class HTMLParser {
 		var o = this;
 		o.dom = null;
 		o.str = null;
+		o.file = null;
+		o.dir = null;
 		o.prettyPrefix = '\t';
 		o.prettyNewLine = '\n';
 		o.attrAsObject = true;
@@ -44,6 +46,8 @@ class HTMLParser {
 
 	parseFromFile(file, dir) {
 		var o = this;
+		o.file = file;
+		o.dir = dir;
 		return o.parseFromString(o.loadFromFile(file, dir));
 	}
 

@@ -3,7 +3,7 @@
 	"description": "HTML page cache utility",
 	"text": "Swap JS/CSS from filepath into tag as relative, cache as page content",
 	"requires": "fs, path",
-	"version": "1.1.7",
+	"version": "1.2.0",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.utils.html::HTMLCache",
 	"inherits": null,
@@ -28,6 +28,7 @@
 		"addPage": "page*: String, parser*: zetaret.node.utils.html.HTMLParser, hfile*: String, dir*: String; return Object",
 		"getPage": "page*: String; return String",
 		"exePage": "page*: String, cfg: Object; return Object",
+		"recache": "page*: String",
 		"swapCSS": "page*: String, handler: Function",
 		"swapJS": "page*: String, handler: Function",
 		"despace": "v*: String, type: String; return String"
