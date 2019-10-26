@@ -78,6 +78,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		initRouteListener() {
 			var o = this;
 			o.pathListenerX = o.pathListener.bind(o);
+			Object.defineProperty(o, 'pathListenerX', {
+				enumerable: false
+			});
 			o.addPathListener(o.noRouteEvent);
 			return o;
 		}

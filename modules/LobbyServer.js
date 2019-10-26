@@ -84,8 +84,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		initLobby() {
 			var o = this;
 			o.lobbyId = o.rndstr(10);
+			var bp = {};
+			bp.enumerable = false;
 			o.onConnectedX = o.onConnected.bind(o);
+			Object.defineProperty(o, 'onConnectedX', bp);
 			o.onConnectErrorX = o.onConnectError.bind(o);
+			Object.defineProperty(o, 'onConnectErrorX', bp);
 		}
 
 		initRooms() {}
