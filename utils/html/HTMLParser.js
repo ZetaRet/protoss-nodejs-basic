@@ -69,7 +69,7 @@ class HTMLParser {
 	domToString(dom, nowhite, pretty, prefix) {
 		var o = this;
 		if (!dom) dom = o.dom;
-		var i, tn, prfx, chi, a, k, ch = dom.elements,
+		var q, v, i, tn, prfx, chi, a, k, ch = dom.elements,
 			l = ch ? ch.length : 0,
 			start = '',
 			end = '',
@@ -90,7 +90,9 @@ class HTMLParser {
 				} else {
 					a = [];
 					for (k in dom.attr) {
-						a.push(k + (dom.attr[k] === null ? '' : '="' + dom.attr[k] + '"'));
+						v = dom.attr[k];
+						q = v.indexOf('"') !== -1 ? "'" : '"';
+						a.push(k + (v === null ? '' : '=' + q + v + q));
 					}
 					if (a.length > 0) start += ' ' + a.join(' ');
 				}
