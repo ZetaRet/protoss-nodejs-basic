@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.3.1*  
+> *Version: 1.3.2*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -180,10 +180,11 @@ __attributes(*String* s, *Object* el) : *String*__
 > *return __String__*  
 
 ##  
-__attrToObject(*Array* aa, *Object* el) : *zetaret.node.utils.html::HTMLParser*__  
+__attrToObject(*Array* aa, *Object* el, *Number* cursor) : *zetaret.node.utils.html::HTMLParser*__  
   
 - __aa*__ - __*Array*__, non-parsed attributes from the tag  
 - __el*__ - __*Object*__, element object to create `attr` into  
+- cursor - __*Number*__, used in `debugCase`  
 > *return __zetaret.node.utils.html::HTMLParser__*  
 
 ---  

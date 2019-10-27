@@ -91,7 +91,7 @@ class HTMLParser {
 					a = [];
 					for (k in dom.attr) {
 						v = dom.attr[k];
-						q = v.indexOf('"') !== -1 ? "'" : '"';
+						q = (v && v.indexOf('"') !== -1) ? "'" : '"';
 						a.push(k + (v === null ? '' : '=' + q + v + q));
 					}
 					if (a.length > 0) start += ' ' + a.join(' ');
@@ -242,9 +242,10 @@ class HTMLParser {
 	attributes(s, el) {
 		var o = this;
 		var a, at, attr, i, a0, lc, aa = [],
-			noattr = (!el.auto || o.automata[el.auto][2] ? null : []);
+			noattr = (!el.auto || o.automata[el.auto][2] ? null : []),
+			regxtag = new RegExp('[\\s|\\w|-]*[>|\'|\"]');
 		while (true) {
-			a = s.match(new RegExp('[\\s|\\w|-]*[>|\'|\"]'));
+			a = s.match(regxtag);
 			if (a) {
 				a0 = a[0];
 				lc = a0.charAt(a0.length - 1);
@@ -281,10 +282,10 @@ class HTMLParser {
 						el.ending = (el.closed ? '/' : '') + '>';
 						aa.push(attr.substr(0, attr.length - el.ending.length));
 					}
-					if (aa[aa.length - 1] === '') aa.pop();
-					o.attrToObject(aa, el);
+					if (aa[aa.length - 1].trim() === '') aa.pop();
 					s = a.input.substr(a.index + a0.length);
 					o.parseCursor += a.index + a0.length;
+					o.attrToObject(aa, el, o.parseCursor);
 					break;
 				}
 			} else break;
@@ -292,17 +293,36 @@ class HTMLParser {
 		return s;
 	}
 
-	attrToObject(aa, el) {
+	attrToObject(aa, el, cursor) {
 		var o = this;
 		if (aa.length > 0) {
 			if (o.attrAsObject) {
+				var ap, wreg = new RegExp('[\\s]+', 'g'),
+					regxattr = new RegExp('[\\w|\\s|-]*[\\w|-]+[\\s]*[=][\\s]*[\'|\"]'),
+					regxkey = new RegExp('[\\w|-]+');
 				el.attr = {};
 				aa.forEach(e => {
+					ap = e.match(regxattr);
 					var spl = e.split('='),
 						k = spl[0].trim(),
 						v = spl[1] ? spl[1].trim() : null,
-						kspl = k.replace(new RegExp('[\\s]+', 'g'), ' ').split(' ');
+						kspl = k.replace(wreg, ' ').split(' ');
+					if (o.debug && (!ap || ap.index !== 0) && spl.length > 1) {
+						o.debugCase((cursor !== undefined ? '{' + o.cursorToCR(cursor) + '}, ' : '') + 'Attribute pattern mismatch at ' + e, SyntaxError, [aa, el]);
+					}
 					k = kspl.pop();
+					if (o.debug) {
+						ap = k.match(regxkey);
+						if (!ap || ap[0] !== k) {
+							o.debugCase((cursor !== undefined ? '{' + o.cursorToCR(cursor) + '}, ' : '') + 'Invalid attribute key at ' + e, TypeError, [aa, el]);
+						}
+						kspl.forEach(kk => {
+							ap = kk.match(regxkey);
+							if (!ap || ap[0] !== kk) {
+								o.debugCase((cursor !== undefined ? '{' + o.cursorToCR(cursor) + '}, ' : '') + 'Invalid attribute key at ' + e, TypeError, [aa, el]);
+							}
+						});
+					}
 					kspl.forEach(kk => el.attr[kk] = null);
 					el.attr[k] = (v === null ? null : v.substr(1, v.length - 2));
 				});
