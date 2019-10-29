@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.3.2*  
+> *Version: 1.4.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -62,6 +62,10 @@ default false, honor `automaton` order or html of parsing `automata` tags
 #  
 __automata__ Object  
 default init, [opener RegExp, closure RegExp, use attributes]  
+
+#  
+__skipTags__ Array  
+default [],   
 
 
 ##  
@@ -141,6 +145,13 @@ __process(*String* s, *Object* d) : *Object*__
 implemented for performance, use strict tagging and closures  
 - __s*__ - __*String*__,   
 - __d*__ - __*Object*__,   
+> *return __Object__*  
+
+##  
+__getClosedTag(*String* s, *Object* el) : *Object*__  
+  
+- __s*__ - __*String*__,   
+- __el*__ - __*Object*__,   
 > *return __Object__*  
 
 ##  

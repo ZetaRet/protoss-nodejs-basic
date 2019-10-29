@@ -32,6 +32,7 @@ class HTMLParser {
 			cdata: ['<\\!\\[[\\w]*\\[', '\\]\\]>', false],
 			doctype: ['<\\![\\w]*', '>', false]
 		};
+		o.closeTags = [];
 	}
 
 	getFilePath(file, dir) {
@@ -174,7 +175,10 @@ class HTMLParser {
 				s = o.attributes(s, el);
 				if (!el.closed) {
 					el.elements = [];
-					ret = o.process(s, el);
+					if (o.closeTags.indexOf(el.type) !== -1) {
+						ret = o.getClosedTag(s, el);
+						el.elements.push(ret.pre);
+					} else ret = o.process(s, el);
 					if (ret.closing && ret.rest) {
 						if (o.debug && ret.type !== el.type) {
 							o.debugCase('{' + o.cursorToCR(o.parseCursor) + '}, Closing tag mismatch at ' + ret.inner, SyntaxError, [ret, el, d]);
@@ -185,6 +189,25 @@ class HTMLParser {
 			} else ret = tag;
 		}
 		return ret;
+	}
+
+	getClosedTag(s, el) {
+		var o = this;
+		var t0, ci, tag = s.match(new RegExp('</' + el.type + '[\\s]*>'));
+		if (tag) {
+			t0 = tag[0];
+			tag.pre = tag.input.substr(0, tag.index);
+			ci = tag.index + t0.length;
+			tag.inner = tag.input.substring(tag.index, ci);
+			tag.rest = tag.input.substr(ci);
+			tag.closing = true;
+			tag.type = el.type;
+			o.parseCursor += ci;
+			if (o.debug && t0.length !== ('</' + el.type + '>').length) {
+				o.debugCase('{' + o.cursorToCR(o.parseCursor) + '}, Closing tag mistyped at ' + tag.inner, TypeError, [tag]);
+			}
+		}
+		return tag;
 	}
 
 	getTag(s) {
@@ -202,11 +225,11 @@ class HTMLParser {
 				ci = tag.closing ? tag.endIndex + 1 : tag.index + t0.length;
 				tag.inner = tag.input.substring(tag.index, tag.endIndex + 1);
 				tag.rest = tag.input.substr(ci);
+				tag.type = t0.substr(tag.closing ? 2 : 1);
 				o.parseCursor += ci;
 				if (o.debug && tag.closing && (tag.endIndex !== tag.index + t0.length)) {
 					o.debugCase('{' + o.cursorToCR(o.parseCursor) + '}, Closing tag mistyped at ' + tag.inner, TypeError, [tag]);
 				}
-				tag.type = t0.substr(tag.closing ? 2 : 1);
 			}
 		}
 		return tag;
@@ -285,8 +308,10 @@ class HTMLParser {
 						s = a.input.substr(a.index + a0.length);
 						o.parseCursor += a.index + a0.length;
 					}
-					if (aa[aa.length - 1] !== undefined && aa[aa.length - 1].trim() === '') aa.pop();
-					o.attrToObject(aa, el, o.parseCursor);
+					if (!noattr && aa.length > 0) {
+						if (aa[aa.length - 1] !== undefined && aa[aa.length - 1].trim() === '') aa.pop();
+						o.attrToObject(aa, el, o.parseCursor);
+					}
 					break;
 				}
 			} else break;
