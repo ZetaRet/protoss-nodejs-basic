@@ -130,7 +130,7 @@ class HTMLParser {
 			ch = dom.elements,
 			l = ch ? ch.length : 0;
 		if ((!type || (type.constructor === Array ? type.indexOf(dom.type) !== -1 : dom.type === type)) &&
-			(!attr || (dom.attr && dom.attr.constructor === Object && (dom.attr[attr].split(new RegExp('\\s')).indexOf(value) !== -1)))) {
+			(!attr || (dom.attr && dom.attr.constructor === Object && dom.attr[attr] && dom.attr[attr].split(new RegExp('\\s')).indexOf(value) !== -1))) {
 			a.push(dom);
 		}
 		if (l > 0) {
@@ -223,6 +223,7 @@ class HTMLParser {
 				tag.type = atag[0].substr(1);
 				tag.closing = false;
 				tag.rest = arest.substr(atag.index + atag[0].length);
+				o.parseCursor += tag.index + atag.index + atag[0].length;
 				break;
 			}
 		}
@@ -281,10 +282,10 @@ class HTMLParser {
 						el.closed = (attr[attr.length - 2] === '/');
 						el.ending = (el.closed ? '/' : '') + '>';
 						aa.push(attr.substr(0, attr.length - el.ending.length));
+						s = a.input.substr(a.index + a0.length);
+						o.parseCursor += a.index + a0.length;
 					}
-					if (aa[aa.length - 1].trim() === '') aa.pop();
-					s = a.input.substr(a.index + a0.length);
-					o.parseCursor += a.index + a0.length;
+					if (aa[aa.length - 1] !== undefined && aa[aa.length - 1].trim() === '') aa.pop();
 					o.attrToObject(aa, el, o.parseCursor);
 					break;
 				}
