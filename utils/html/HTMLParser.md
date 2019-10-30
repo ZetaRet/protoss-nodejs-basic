@@ -64,8 +64,8 @@ __automata__ Object
 default init, [opener RegExp, closure RegExp, use attributes]  
 
 #  
-__skipTags__ Array  
-default [],   
+__closeTags__ Array  
+default [], skip parsing elements and lookup to close the tag directly, i.e. `script` or `style`  
 
 
 ##  

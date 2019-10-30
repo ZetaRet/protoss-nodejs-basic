@@ -30,7 +30,7 @@
 		"useAutomaton": "Boolean: false",
 		"autoOrder": "Boolean: false",
 		"automata": "Object: init",
-		"skipTags": "Array: []"
+		"closeTags": "Array: []"
 	},
 	"protected_properties": {},
 	"private_properties": {},
