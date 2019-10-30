@@ -23,11 +23,11 @@ class HTMLParser {
 		o.useAutomaton = false;
 		o.autoOrder = false;
 		o.automata = {
-			prolog: ['<\\?[\\w|-]*', '[\\s]?\\?>', true],
-			alias: ['<@[\\w|-]*', '[\\s]?@>', true],
-			template: ['<#[\\w|-]*', '[\\s]?#>', true],
-			var: ['<=[\\w]*', '>', true],
-			block: ['<%[\\w|-]*', '[\\s]?%>', false],
+			prolog: ['<\\?[\\w|-|.|:]*', '[\\s]?\\?>', true],
+			alias: ['<@[\\w|-|.|:]*', '[\\s]?@>', true],
+			template: ['<#[\\w|-|.|:]*', '[\\s]?#>', true],
+			var: ['<=[\\w|.|:]*', '>', true],
+			block: ['<%[\\w|-|.|:]*', '[\\s]?%>', false],
 			comment: ['<\\!--', '-->', false],
 			cdata: ['<\\!\\[[\\w]*\\[', '\\]\\]>', false],
 			doctype: ['<\\![\\w]*', '>', false]
@@ -212,7 +212,7 @@ class HTMLParser {
 
 	getTag(s) {
 		var o = this;
-		var t0, ci, tag = s.match(new RegExp('<[/]?[\\w|-]*'));
+		var t0, ci, tag = s.match(new RegExp('<[/]?[\\w|-|.|:]*'));
 		if (tag) {
 			t0 = tag[0];
 			tag.pre = tag.input.substr(0, tag.index);
@@ -267,7 +267,7 @@ class HTMLParser {
 		var o = this;
 		var a, at, attr, i, a0, lc, aa = [],
 			noattr = (!el.auto || o.automata[el.auto][2] ? null : []),
-			regxtag = new RegExp('[\\s|\\w|-]*[>|\'|\"]');
+			regxtag = new RegExp('[\\s|\\w|-|.|:]*[>|\'|\"]');
 		while (true) {
 			a = s.match(regxtag);
 			if (a) {
@@ -324,8 +324,8 @@ class HTMLParser {
 		if (aa.length > 0) {
 			if (o.attrAsObject) {
 				var ap, wreg = new RegExp('[\\s]+', 'g'),
-					regxattr = new RegExp('[\\w|\\s|-]*[\\w|-]+[\\s]*[=][\\s]*[\'|\"]'),
-					regxkey = new RegExp('[\\w|-]+');
+					regxattr = new RegExp('[\\w|\\s|-|.|:]*[\\w|-|.|:]+[\\s]*[=][\\s]*[\'|\"]'),
+					regxkey = new RegExp('[\\w|-|.|:]+');
 				el.attr = {};
 				aa.forEach(e => {
 					ap = e.match(regxattr);

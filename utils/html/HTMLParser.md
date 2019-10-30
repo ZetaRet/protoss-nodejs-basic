@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.4.0*  
+> *Version: 1.4.1*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -73,7 +73,7 @@ default [],
 
 ##  
 __HTMLParser() : *void*__  
-Parse simple XML structures into templates, swap content, or use HTMLCache, no support of comments `<!--` or special tags `<!` `<?`. Must extend and override methods to supplement, or use multiple templates to create more complex HTML structure.  
+Parse simple XML structures with namespace into templates, swap content, or use HTMLCache, `useAutomaton` to support comments `<!--` or special tags `<!` `<?`. Must extend and override methods to supplement, or use multiple templates to create more complex HTML structure.  
 > *return __void__*  
 
 ##  
