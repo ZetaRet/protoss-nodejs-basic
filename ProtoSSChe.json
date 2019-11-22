@@ -1,0 +1,30 @@
+{
+	"author": "Zeta Ret",
+	"description": "Alias of ProtoSS Server index",
+	"text": "Module importer of ProtoSSChe",
+	"requires": null,
+	"version": "1.0.0",
+	"date": "2019 - Today",
+	"supername": "zetaret.node::ProtoSSChe",
+	"inherits": null,
+	"interfaces": null,
+	"static": {
+		"public_properties": {},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {},
+	"static_examples": {},
+	"examples": {},
+	"imports": ["zetaret.node::index"]
+}

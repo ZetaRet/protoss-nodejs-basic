@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, https, http2, fs*  
-> *Version: 1.3.7*  
+> *Version: 1.3.8*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -97,15 +97,15 @@ __loadedModule__ Module
 default external,   
 
 #  
-__loadedModuleClass__ ProtoSSChe  
+__loadedModuleClass__ zetaret.node.ProtoSSChe  
 default extended,   
 
 #  
-__serverclass__ ProtoSSChe  
+__serverclass__ zetaret.node.ProtoSSChe  
 default index,   
 
 #  
-__serverche__ ProtoSSChe  
+__serverche__ zetaret.node.ProtoSSChe  
 default new,   
 
 ##  
