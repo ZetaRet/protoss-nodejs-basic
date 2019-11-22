@@ -5,7 +5,7 @@
 	"requires": "http, https, http2, fs",
 	"version": "1.3.8",
 	"date": "2019 - Today",
-	"supername": "zetaret.node::ProtoSSChe",
+	"supername": "zetaret.node::index",
 	"inherits": null,
 	"interfaces": null,
 	"static": {
