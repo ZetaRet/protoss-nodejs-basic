@@ -71,6 +71,12 @@ function initRequireSupername() {
 	module.constructor._resolveFilename = resolveFilename;
 }
 
+function loadFromJSON(json, dir) {
+	var nsmap = JSON.parse(fs.readFileSync(path.resolve(dir, json)));
+	for (var ns in nsmap) nsmap[ns].forEach((e, i, a) => a[i] = path.resolve(dir, e));
+	setNamespaceMap(nsmap);
+}
+
 module.exports.RequireSupername = RequireSupername;
 module.exports.initRequireSupername = initRequireSupername;
 module.exports.verifySupername = verifySupername;
@@ -78,6 +84,7 @@ module.exports.setPathSupername = setPathSupername;
 module.exports.setSupername = setSupername;
 module.exports.setNamespace = setNamespace;
 module.exports.setNamespaceMap = setNamespaceMap;
+module.exports.loadFromJSON = loadFromJSON;
 module.exports.maps = maps;
 module.exports.supernames = supernames;
 module.exports.namespaces = namespaces;

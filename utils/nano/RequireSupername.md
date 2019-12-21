@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __use ProtoSS super qualified names in `require` and `import`__  
 # swap `Module._resolveFilename` with supername validator, add alias path maps, supernames and namespace folders  
-> *Version: 1.0.1*  
+> *Version: 1.0.2*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -85,5 +85,12 @@ var nsmap = JSON.parse(fs.readFileSync('namespacemap.json'));
 for (var ns in nsmap) nsmap[ns].forEach((e, i, a) => a[i] = path.resolve(__dirname, e));  
 rsn.setNamespaceMap(nsmap);  
 ```
+##  
+__loadFromJSON(*String* json, *String* dir) : *void*__  
+  
+- __json*__ - __*String*__,   
+- __dir*__ - __*String*__,   
+> *return __void__*  
+
 ---  
 ### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

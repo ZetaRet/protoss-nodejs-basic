@@ -3,7 +3,7 @@
 	"description": "use ProtoSS super qualified names in `require` and `import`",
 	"text": "swap `Module._resolveFilename` with supername validator, add alias path maps, supernames and namespace folders",
 	"requires": null,
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.utils.nano::RequireSupername",
 	"inherits": null,
@@ -31,7 +31,8 @@
 		"setPathSupername": "supername*: String, paths*: Array",
 		"setSupername": "supername*: String, path*: String",
 		"setNamespace": "ns*: String, paths*: Array",
-		"setNamespaceMap": "nsmap*: Object"
+		"setNamespaceMap": "nsmap*: Object",
+		"loadFromJSON": "json*: String, dir*: String"
 	},
 	"protected_methods": {},
 	"private_methods": {},
