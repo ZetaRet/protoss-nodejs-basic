@@ -1,6 +1,6 @@
 ## ProtoSS Node.js Server  
 
-Simple printed server from [ProtoSS Packages](https://github.com/ZetaRet/protoss) using [XeltoSS](https://github.com/ZetaRet/protoss/wiki/XeltoSS-Documentation) synthesis.  
+Simple printed server from [ProtoSS Packages](https://github.com/ZetaRet/protoss) using [XeltoSS](https://github.com/ZetaRet/protoss/blob/master/xeltoss/XeltoSS.md) synthesis.  
 
 `GZIP` is applied automatically using `content-type header` and `Apache/NGINX` configuration based on root folder.  
 
@@ -12,7 +12,7 @@ Folder `modules` contains examples and base extends of the server, including sam
 
 `FileSystem` module is used to maintain `stats.json` and current number of requests per `5s interval`. Each reload of server `reads the file`.  
 
-Server executes requests non-stop and labels them by unique id **__reqid**, subclass server must extend functionality and create workers using [SkytoSS](https://github.com/ZetaRet/protoss/wiki/SkytoSS-Documentation).  
+Server executes requests non-stop and labels them by unique id **__reqid**, subclass server must extend functionality and create workers using [SkytoSS](https://github.com/ZetaRet/protoss/blob/master/skytoss/SkytoSS.md).  
 
 [Preview server](https://protoss.zetaret.com/node/) in the browser using PING-shPONGle request returning omitted client data.  
 
