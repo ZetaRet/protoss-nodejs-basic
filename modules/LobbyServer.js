@@ -19,6 +19,7 @@ class LobbyUser extends Array {
 	}
 
 	getUserPrerequisites() {
+		var o = this;
 		return o.userData.prerequisites;
 	}
 }
