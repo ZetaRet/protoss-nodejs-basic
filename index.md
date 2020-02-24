@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, https, http2, fs*  
-> *Version: 1.3.8*  
+> *Version: 1.4.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -29,16 +29,16 @@ HTTP Server Constructor
 > *return __void__*  
 
 ##  
-__onRequest(*http.ClientRequest* request, *http.ServerResponse* response) : *void*__  
+__onRequest(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *void*__  
   
-- __request*__ - __*http.ClientRequest*__,   
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __void__*  
 
 ##  
-__onReadRequestBody(*http.ClientRequest* request, *String* body, *http.ServerResponse* response) : *ProtoSSChe*__  
+__onReadRequestBody(*http.ClientRequest|http.IncomingMessage* request, *String* body, *http.ServerResponse* response) : *ProtoSSChe*__  
   
-- __request*__ - __*http.ClientRequest*__,   
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __body*__ - __*String*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __ProtoSSChe__*  
@@ -61,31 +61,31 @@ __getReqId() : *String*__
 > *return __String__*  
 
 ##  
-__pushProtoSSResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *ProtoSSChe*__  
+__pushProtoSSResponse(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *ProtoSSChe*__  
   
-- __request*__ - __*http.ClientRequest*__,   
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __ProtoSSChe__*  
 
 ##  
-__readRequestBody(*http.ClientRequest* request, *http.ServerResponse* response) : *ProtoSSChe*__  
+__readRequestBody(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *ProtoSSChe*__  
   
-- __request*__ - __*http.ClientRequest*__,   
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __ProtoSSChe__*  
 
 ##  
-__updateCookies(*http.ClientRequest* request, *http.ServerResponse* response, *Object* headers) : *ProtoSSChe*__  
+__updateCookies(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response, *Object* headers) : *ProtoSSChe*__  
   
-- __request*__ - __*http.ClientRequest*__,   
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 - __headers*__ - __*Object*__,   
 > *return __ProtoSSChe__*  
 
 ##  
-__endResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *ProtoSSChe*__  
+__endResponse(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *ProtoSSChe*__  
   
-- __request*__ - __*http.ClientRequest*__,   
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __ProtoSSChe__*  
 
