@@ -110,6 +110,19 @@ function initFS() {
 initFS();
 
 class ProtoSSChe {
+	constructor() {
+		this.env = null;
+		this.htserv = null;
+		this.acceptAppRequests = false;
+		this.apps = {};
+	}
+
+	getAppRequest(request) {
+		var o = this;
+		var app = o.apps[request.headers.protossappid];
+		return app ? app(o, request) : request;
+	}
+
 	onRequest(request, response) {
 		var o = this;
 		request.__reqid = o.getReqId();
@@ -258,7 +271,7 @@ class ProtoSSChe {
 }
 
 function getModuleInstance(xmodule) {
-	var serverche, sk, xpro, xprocls;
+	var serverche, sk, xpro, xprocls, httpsop;
 	if (xmodule) {
 		xpro = require(xmodule);
 		xprocls = xpro.getExtendedServerProtoSS(ProtoSSChe);
@@ -269,13 +282,13 @@ function getModuleInstance(xmodule) {
 	serverche.env = env;
 	if (env.statsout && env.statsout.https === true) {
 		env.statsin.https = true;
-		let httpsop = {};
+		httpsop = {};
 		if (!env.statsout.httpsop) {
 			httpsop.keyPath = 'key.pem';
 			httpsop.certPath = 'cert.pem';
 		} else {
 			env.statsin.httpsop = env.statsout.httpsop;
-			for (sk in env.statsout.httpsop) httsop[sk] = env.statsout.httpsop[sk];
+			for (sk in env.statsout.httpsop) httpsop[sk] = env.statsout.httpsop[sk];
 		}
 		if (httpsop.keyPath) httpsop.key = fs.readFileSync(httpsop.keyPath);
 		if (httpsop.certPath) httpsop.cert = fs.readFileSync(httpsop.certPath);
@@ -289,6 +302,7 @@ function getModuleInstance(xmodule) {
 	} else {
 		serverche.htserv = http.createServer(function(req, res) {
 			try {
+				if (serverche.acceptAppRequests) req = serverche.getAppRequest(req);
 				serverche.onRequest(req, res);
 			} catch (e) {}
 		});

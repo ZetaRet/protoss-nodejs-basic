@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, https, http2, fs*  
-> *Version: 1.4.0*  
+> *Version: 1.5.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -19,6 +19,14 @@ default {},
 __htserv__ http.Server  
 default created,   
 
+#  
+__acceptAppRequests__ Boolean  
+default false,   
+
+#  
+__apps__ Object  
+default {}, map of id to application method  
+
 
 ##  
 ### *Methods*  
@@ -27,6 +35,12 @@ default created,
 __ProtoSSChe() : *void*__  
 HTTP Server Constructor  
 > *return __void__*  
+
+##  
+__getAppRequest(*http.IncomingMessage* request) : *http.ClientRequest|http.IncomingMessage*__  
+Read request.headers.protossappid  
+- __request*__ - __*http.IncomingMessage*__,   
+> *return __http.ClientRequest|http.IncomingMessage__, new or modified request object*  
 
 ##  
 __onRequest(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *void*__  
