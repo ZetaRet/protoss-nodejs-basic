@@ -75,9 +75,9 @@ __onConnectError(*Error* e) : *void*__
 > *return __void__*  
 
 ##  
-__onConnected(*http.IncomingMessage* res) : *void*__  
+__onConnected(*http.IncomingMessage|http.ServerResponse* res) : *void*__  
   
-- __res*__ - __*http.IncomingMessage*__,   
+- __res*__ - __*http.IncomingMessage|http.ServerResponse*__,   
 > *return __void__*  
 
 ##  

@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.1.3*  
+> *Version: 1.2.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -60,21 +60,21 @@ __removePathListener(*String* path, *Function* callback) : *zetaret.node.modules
 > *return __zetaret.node.modules::Subserver__*  
 
 ##  
-__pathListener(*zetaret.node.modules.Subserver* server, *Object* robj, *Object* routeData, *http.ClientReques* request, *http.ServerResponse* response) : *void*__  
+__pathListener(*zetaret.node.modules.Subserver* server, *Object* robj, *Object* routeData, *http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *void*__  
   
 - __server*__ - __*zetaret.node.modules.Subserver*__,   
 - __robj*__ - __*Object*__,   
 - __routeData*__ - __*Object*__,   
-- __request*__ - __*http.ClientReques*__,   
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __void__*  
 
 ##  
-__routeCallback(*Object* routeData, *String* body, *http.ClientRequest* request, *http.ServerResponse* response) : *void*__  
+__routeCallback(*Object* routeData, *String* body, *http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *void*__  
 reads response.__breakRoute to stop routing, augments route object  
 - __routeData*__ - __*Object*__,   
 - __body*__ - __*String*__,   
-- __request*__ - __*http.ClientRequest*__,   
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __void__*  
 
@@ -89,16 +89,16 @@ __initRouteListener() : *zetaret.node.modules::Subserver*__
 > *return __zetaret.node.modules::Subserver__*  
 
 ##  
-__pushProtoSSResponse(*http.ClientRequest* request, *http.ServerResponse* response) : *zetaret.node.modules::Subserver*__  
+__pushProtoSSResponse(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *zetaret.node.modules::Subserver*__  
   
-- __request*__ - __*http.ClientRequest*__,   
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __zetaret.node.modules::Subserver__*  
 
 ##  
-__addHeaders(*http.ClientRequest* request, *http.ServerResponse* response) : *Object*__  
+__addHeaders(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *Object*__  
   
-- __request*__ - __*http.ClientRequest*__,   
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __Object__*  
 

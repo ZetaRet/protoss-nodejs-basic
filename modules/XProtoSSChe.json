@@ -3,7 +3,7 @@
 	"description": "Basic extender and nullifier",
 	"text": "Extended ProtoSSChe Server loaded as module",
 	"requires": null,
-	"version": "1.4.0",
+	"version": "1.5.0",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.modules::XProtoSSChe",
 	"inherits": ["[zetaret.node::index](../index.md)"],
@@ -29,11 +29,11 @@
 	"public_methods": {
 		"XProtoSSChe": "routeCallback: Function, routeScope: Object, routeData: Object",
 		"initRoute": "; return zetaret.node.modules::XProtoSSChe",
-		"onReadRequestBody": "request*: http.ClientRequest, body*: String, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe",
-		"pushProtoSSResponse": "request*: http.ClientRequest, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe",
-		"addHeaders": "request*: http.ClientRequest, response*: http.ServerResponse; return Object",
-		"layerEndResponse": "request*: http.ClientRequest, response*: http.ServerResponse, input*: String, headers*: Object; return String",
-		"endResponse": "request*: http.ClientRequest, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe"
+		"onReadRequestBody": "request*: http.ClientRequest|http.IncomingMessage, body*: String, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe",
+		"pushProtoSSResponse": "request*: http.ClientRequest|http.IncomingMessage, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe",
+		"addHeaders": "request*: http.ClientRequest|http.IncomingMessage, response*: http.ServerResponse; return Object",
+		"layerEndResponse": "request*: http.ClientRequest|http.IncomingMessage, response*: http.ServerResponse, input*: String, headers*: Object; return String",
+		"endResponse": "request*: http.ClientRequest|http.IncomingMessage, response*: http.ServerResponse; return zetaret.node.modules::XProtoSSChe"
 	},
 	"protected_methods": {},
 	"private_methods": {},

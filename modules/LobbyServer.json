@@ -37,7 +37,7 @@
 		"initApps": "",
 		"connectTo": "options*: Object, data: String, secure: Boolean; return http.ClientRequest",
 		"onConnectError": "e*: Error",
-		"onConnected": "res*: http.IncomingMessage",
+		"onConnected": "res*: http.IncomingMessage|http.ServerResponse",
 		"lobby": "data*: Object; return zetaret.node.modules::LobbyServer",
 		"updateRemoveUser": "u*: LobbyUser, update: Boolean, remove: Boolean; return zetaret.node.modules::LobbyServer",
 		"updateRemoveRoom": "r*: LobbyRoom, update: Boolean, remove: Boolean; return zetaret.node.modules::LobbyServer",
