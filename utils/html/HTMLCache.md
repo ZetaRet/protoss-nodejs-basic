@@ -2,7 +2,7 @@
 > __HTML page cache utility__  
 # Swap JS/CSS from filepath into tag as relative, cache as page content  
 > *Requires: fs, path*  
-> *Version: 1.2.0*  
+> *Version: 1.3.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -21,6 +21,22 @@ default {},
 
 #  
 __despaceRules__ Object  
+default {},   
+
+#  
+__watchFiles__ Boolean  
+default false,   
+
+#  
+__watchOptions__ Object  
+default null,   
+
+#  
+__watchListener__ Function  
+default null,   
+
+#  
+__watchMap__ Object  
 default {},   
 
 
@@ -90,6 +106,17 @@ __swapJS(*String* page, *Function* handler) : *void*__
   
 - __page*__ - __*String*__,   
 - handler - __*Function*__,   
+> *return __void__*  
+
+##  
+__watchFile(*String* pr) : *void*__  
+  
+- __pr*__ - __*String*__,   
+> *return __void__*  
+
+##  
+__resetWatchers() : *void*__  
+  
 > *return __void__*  
 
 ##  

@@ -13,6 +13,10 @@ class HTMLCache {
 		o.pages = {};
 		o.despaceChars = {};
 		o.despaceRules = {};
+		o.watchFiles = false;
+		o.watchOptions = null;
+		o.watchListener = null;
+		o.watchMap = {};
 	}
 
 	addPage(page, parser, hfile, dir) {
@@ -71,6 +75,7 @@ class HTMLCache {
 					e.elements = [fs.readFileSync(pr).toString()];
 					if (despace) e.elements[0] = o.despace(e.elements[0], 'css');
 					swap = true;
+					if (o.watchFiles) o.watchFile(pr);
 				}
 			}
 			if (handler) handler(page, pdata, e, swap);
@@ -90,10 +95,24 @@ class HTMLCache {
 					e.elements = [fs.readFileSync(pr).toString()];
 					if (despace) e.elements[0] = o.despace(e.elements[0], 'js');
 					swap = true;
+					if (o.watchFiles) o.watchFile(pr);
 				}
 			}
 			if (handler) handler(page, pdata, e, swap);
 		});
+	}
+
+	watchFile(pr) {
+		var o = this;
+		if (o.watchMap[pr]) o.watchMap[pr].close();
+		o.watchMap[pr] = fs.watchFile(pr, o.watchOptions, o.watchListener);
+	}
+
+	resetWatchers() {
+		var o = this;
+		var k;
+		for (k in o.watchMap) o.watchMap[k].close();
+		o.watchMap = {};
 	}
 
 	despace(v, type) {
