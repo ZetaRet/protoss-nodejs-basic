@@ -68,7 +68,7 @@ class HTMLCache {
 			hpinst = new HTMLParser();
 			hpinst.useAutomaton = op.useAutomaton || false;
 			hpinst.debug = op.debug || false;
-			hpinst.closeTags.splice(0, 0, ...op.closeTags);
+			if (op.closeTags) hpinst.closeTags.splice(0, 0, ...op.closeTags);
 			hpinst.parseFromFile(op.hfile, op.dir);
 			o.addPage(op.id, hpinst, op.hfile, op.dir);
 			if (log) {
