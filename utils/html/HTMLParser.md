@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.5.0*  
+> *Version: 1.6.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -10,6 +10,10 @@ __required*__
 ## zetaret.node.utils.html::HTMLParser  
 
 ### *Properties*  
+
+#  
+__id__ String  
+default null,   
 
 #  
 __dom__ Object  
@@ -118,6 +122,14 @@ __parseFromString(*String* str) : *zetaret.node.utils.html::HTMLParser*__
   
 - __str*__ - __*String*__,   
 > *return __zetaret.node.utils.html::HTMLParser__*  
+
+##  
+__watchFile(*String* fp, *Function* listener, *Object* options) : *void*__  
+  
+- fp - __*String*__,   
+- listener - __*Function*__,   
+- options - __*Object*__,   
+> *return __void__*  
 
 ##  
 __getDomJSON() : *String*__  

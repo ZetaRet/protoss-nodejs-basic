@@ -27,6 +27,7 @@ class HTMLCache {
 			dir: dir,
 			content: ''
 		};
+		parser.id = page;
 		var hfileloc = path.resolve(path.resolve(dir, hfile)).split(path.sep);
 		hfileloc.pop();
 		pdata.hfileloc = hfileloc.join(path.sep);
@@ -75,7 +76,7 @@ class HTMLCache {
 					e.elements = [fs.readFileSync(pr).toString()];
 					if (despace) e.elements[0] = o.despace(e.elements[0], 'css');
 					swap = true;
-					if (o.watchFiles) o.watchFile(pr);
+					if (o.watchFiles) o.watchFile(pr, page, 'css');
 				}
 			}
 			if (handler) handler(page, pdata, e, swap);
@@ -95,17 +96,52 @@ class HTMLCache {
 					e.elements = [fs.readFileSync(pr).toString()];
 					if (despace) e.elements[0] = o.despace(e.elements[0], 'js');
 					swap = true;
-					if (o.watchFiles) o.watchFile(pr);
+					if (o.watchFiles) o.watchFile(pr, page, 'js');
 				}
 			}
 			if (handler) handler(page, pdata, e, swap);
 		});
 	}
 
-	watchFile(pr) {
+	watch(listener, options) {
+		var o = this;
+		var k, pdata, hpinst;
+		o.watchFiles = true;
+		o.watchOptions = options;
+		o.watchListener = listener;
+		for (k in o.pages) {
+			pdata = o.pages[k];
+			hpinst = pdata.parser;
+			hpinst.watchFiles = true;
+			hpinst.watchOptions = options;
+			hpinst.watchListener = listener;
+			hpinst.watchFile();
+		}
+	}
+
+	getWatchers(listener, interval, debug, recacheOnChange) {
+		var o = this;
+		var watchers = {},
+			watchinterval = interval || 0;
+
+		function watchmethod(e, f, longfile, page, type, stats) {
+			clearTimeout(watchers[longfile]);
+			watchers[longfile] = setTimeout(() => {
+				if (debug) console.log(e, f, longfile, page, type, stats);
+				if (recacheOnChange && e === 'change') o.recache(page);
+				if (listener) listener(e, f, longfile, page, type, stats);
+			}, watchinterval);
+		}
+
+		return {
+			watchers, watchinterval, watchmethod
+		};
+	}
+
+	watchFile(pr, page, type) {
 		var o = this;
 		if (o.watchMap[pr]) o.watchMap[pr].close();
-		o.watchMap[pr] = fs.watch(pr, o.watchOptions, o.watchListener);
+		o.watchMap[pr] = fs.watch(pr, o.watchOptions, (e, f) => o.watchListener(e, f, pr, page, type, fs.statSync(pr)));
 	}
 
 	resetWatchers() {

@@ -10,6 +10,7 @@ var fs = require('fs'),
 class HTMLParser {
 	constructor() {
 		var o = this;
+		o.id = null;
 		o.dom = null;
 		o.str = null;
 		o.file = null;
@@ -47,10 +48,7 @@ class HTMLParser {
 		var o = this;
 		var fp = o.getFilePath(file, dir),
 			filec = fs.readFileSync(fp).toString();
-		if (o.watchFiles) {
-			if (o.watcher) o.watcher.close();
-			o.watcher = fs.watch(fp, o.watchOptions, o.watchListener);
-		}
+		if (o.watchFiles) o.watchFile(fp);
 		return filec;
 	}
 
@@ -70,6 +68,15 @@ class HTMLParser {
 		};
 		o.process();
 		return o;
+	}
+
+	watchFile(fp, listener, options) {
+		var o = this;
+		if (!fp) fp = o.getFilePath(o.file, o.dir);
+		if (listener) o.watchListener = listener;
+		if (options) o.watchOptions = options;
+		if (o.watcher) o.watcher.close();
+		o.watcher = fs.watch(fp, o.watchOptions, (e, f) => o.watchListener(e, f, fp, o.id, 'html', fs.statSync(fp)));
 	}
 
 	getDomJSON() {

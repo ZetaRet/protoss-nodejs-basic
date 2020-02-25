@@ -3,7 +3,7 @@
 	"description": "Simple HTML parser",
 	"text": "RegExp XML processor to object and reversed conversion to HTML",
 	"requires": "fs, path",
-	"version": "1.5.0",
+	"version": "1.6.0",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.utils.html::HTMLParser",
 	"inherits": null,
@@ -17,6 +17,7 @@
 		"private_methods": {}
 	},
 	"public_properties": {
+		"id": "String: null",
 		"dom": "Object: null",
 		"str": "String: null",
 		"file": "String: null",
@@ -44,6 +45,7 @@
 		"loadFromFile": "file*: String, dir: String|Boolean; return String",
 		"parseFromFile": "file*: String, dir: String|Boolean; return String",
 		"parseFromString": "str*: String; return zetaret.node.utils.html::HTMLParser",
+		"watchFile": "fp: String, listener: Function, options: Object",
 		"getDomJSON": "; return String",
 		"domToString": "dom*: Object, nowhite: Boolean, pretty: Boolean, prefix: Array; return String",
 		"search": "type*: String|Array, attr*: String, value*: String, dom: Object; return Array",
