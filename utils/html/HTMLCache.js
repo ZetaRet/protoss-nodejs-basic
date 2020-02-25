@@ -59,6 +59,32 @@ class HTMLCache {
 		o.exePage(page, pdata.execfg);
 	}
 
+	setPages(pages, HTMLParser, watchers, log) {
+		var o = this;
+		var hpinst, p, op;
+
+		for (p in pages) {
+			op = pages[p];
+			hpinst = new HTMLParser();
+			hpinst.useAutomaton = op.useAutomaton || false;
+			hpinst.debug = op.debug || false;
+			hpinst.closeTags.splice(0, 0, ...op.closeTags);
+			hpinst.parseFromFile(op.hfile, op.dir);
+			o.addPage(op.id, hpinst, op.hfile, op.dir);
+			if (log) {
+				console.log(hpinst.getDomJSON());
+				console.log(hpinst.domToString());
+			}
+		}
+
+		if (watchers) o.watch(watchers.watchmethod);
+
+		for (p in pages) {
+			op = pages[p];
+			o.exePage(op.id, op.exe);
+		}
+	}
+
 	swapCSS(page, handler, despace) {
 		var o = this;
 		var pdata = o.pages[page],
