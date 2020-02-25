@@ -105,7 +105,7 @@ class HTMLCache {
 	watchFile(pr) {
 		var o = this;
 		if (o.watchMap[pr]) o.watchMap[pr].close();
-		o.watchMap[pr] = fs.watchFile(pr, o.watchOptions, o.watchListener);
+		o.watchMap[pr] = fs.watch(pr, o.watchOptions, o.watchListener);
 	}
 
 	resetWatchers() {

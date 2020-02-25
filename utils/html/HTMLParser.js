@@ -49,7 +49,7 @@ class HTMLParser {
 			filec = fs.readFileSync(fp).toString();
 		if (o.watchFiles) {
 			if (o.watcher) o.watcher.close();
-			o.watcher = fs.watchFile(fp, o.watchOptions, o.watchListener);
+			o.watcher = fs.watch(fp, o.watchOptions, o.watchListener);
 		}
 		return filec;
 	}
