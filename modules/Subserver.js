@@ -7,6 +7,10 @@
 var XProtoSSChe, xpros = require(global.SubserverRequireModule || './XProtoSSChe.js'),
 	events = require('events');
 
+const EVENTS = {
+	VOID: ''
+};
+
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!XProtoSSChe) XProtoSSChe = xpros.getExtendedServerProtoSS(ProtoSSChe);
 	return class Subserver extends XProtoSSChe {
@@ -64,7 +68,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				}
 			} else {
 				robj.exact = true;
-				o.listener.emit("", o, robj, routeData, request, response);
+				o.listener.emit(EVENTS.VOID, o, robj, routeData, request, response);
 			}
 			if (o.codeMap[rawpath]) response.__rcode = o.codeMap[rawpath];
 		}
@@ -98,4 +102,5 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 	}
 }
 
+module.exports.EVENTS = EVENTS;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

@@ -9,6 +9,21 @@ var Subserver, xpros = require(global.LobbyServerRequireModule || './Subserver.j
 	https = require('https'),
 	events = require('events');
 
+const EVENTS = {
+	CONNECT_ERROR: 'connectError',
+	LOBBY_UPDATE: 'lobbyUpdate',
+	ON_CONNECTED: 'onConnected',
+	NEW_USER: 'newUser',
+	UPDATE_USER: 'updateUser',
+	REMOVE_USER: 'removeUser',
+	NEW_ROOM: 'newRoom',
+	UPDATE_ROOM: 'updateRoom',
+	REMOVE_ROOM: 'removeRoom',
+	NEW_APP: 'newApp',
+	UPDATE_APP: 'updateApp',
+	REMOVE_APP: 'removeApp'
+};
+
 class LobbyUser extends Array {
 	constructor() {
 		super();
@@ -110,7 +125,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		onConnectError(e) {
 			var o = this;
-			o.lobbyEvents.emit('connectError', e, o);
+			o.lobbyEvents.emit(EVENTS.CONNECT_ERROR, e, o);
 			if (o.debugRoute) {
 				console.log('Lobby connect error: ' + o.lobbyId);
 				console.log(e);
@@ -129,7 +144,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 					console.log('Lobby connect data: ');
 					console.log(d);
 				}
-				o.lobbyEvents.emit('onConnected', res, d, o);
+				o.lobbyEvents.emit(EVENTS.ON_CONNECTED, res, d, o);
 			});
 		}
 
@@ -137,28 +152,28 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			var k;
 			for (k in data) o.lobbyData[k] = data[k];
-			o.lobbyEvents.emit("lobbyUpdate", o);
+			o.lobbyEvents.emit(EVENTS.LOBBY_UPDATE, o);
 			return o;
 		}
 
 		updateRemoveUser(u, update, remove) {
 			var o = this;
-			if (update) o.lobbyEvents.emit("updateUser", u, o);
-			if (remove) o.lobbyEvents.emit("removeUser", u, o);
+			if (update) o.lobbyEvents.emit(EVENTS.UPDATE_USER, u, o);
+			if (remove) o.lobbyEvents.emit(EVENTS.REMOVE_USER, u, o);
 			return o;
 		}
 
 		updateRemoveRoom(r, update, remove) {
 			var o = this;
-			if (update) o.lobbyEvents.emit("updateRoom", r, o);
-			if (remove) o.lobbyEvents.emit("removeRoom", r, o);
+			if (update) o.lobbyEvents.emit(EVENTS.UPDATE_ROOM, r, o);
+			if (remove) o.lobbyEvents.emit(EVENTS.REMOVE_ROOM, r, o);
 			return o;
 		}
 
 		updateRemoveApp(a, update, remove) {
 			var o = this;
-			if (update) o.lobbyEvents.emit("updateApp", a, o);
-			if (remove) o.lobbyEvents.emit("removeApp", a, o);
+			if (update) o.lobbyEvents.emit(EVENTS.UPDATE_APP, a, o);
+			if (remove) o.lobbyEvents.emit(EVENTS.REMOVE_APP, a, o);
 			return o;
 		}
 
@@ -169,7 +184,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			u.lobby = o.lobbyId;
 			u.userId = userId;
 			o.users[userId] = u;
-			o.lobbyEvents.emit("newUser", u, o);
+			o.lobbyEvents.emit(EVENTS.NEW_USER, u, o);
 			return u;
 		}
 
@@ -180,7 +195,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			r.lobby = o.lobbyId;
 			r.roomId = roomId;
 			o.rooms[roomId] = r;
-			o.lobbyEvents.emit("newRoom", r, o);
+			o.lobbyEvents.emit(EVENTS.NEW_ROOM, r, o);
 			return r;
 		}
 
@@ -191,13 +206,14 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			a.lobby = o.lobbyId;
 			a.appId = appId;
 			o.apps[appId] = a;
-			o.lobbyEvents.emit("newApp", a, o);
+			o.lobbyEvents.emit(EVENTS.NEW_APP, a, o);
 			return a;
 		}
 
 	}
 }
 
+module.exports.EVENTS = EVENTS;
 module.exports.lobbyUserClass = LobbyUser;
 module.exports.lobbyRoomClass = LobbyRoom;
 module.exports.lobbyAppClass = LobbyApp;

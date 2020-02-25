@@ -2,7 +2,7 @@
 > __Card server based on lobby connectivity with micro apps__  
 # Implement card games and different side applications  
 > *Requires: events*  
-> *Version: 1.3.1*  
+> *Version: 1.4.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -37,6 +37,10 @@ __initCardAppServer() : *void*__
 
 ##  
 ### *Static Properties*  
+
+#  
+__EVENTS__ Object  
+default const,   
 
 #  
 __lobbyModule__ Module  

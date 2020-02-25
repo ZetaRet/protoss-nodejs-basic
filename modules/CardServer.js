@@ -7,6 +7,10 @@
 var LobbyServer, xpros = require(global.CardServerRequireModule || './LobbyServer.js'),
 	events = require('events');
 
+const EVENTS = {
+	DRAW_CARD: 'drawCard'
+};
+
 class Card extends Array {
 	constructor() {
 		super();
@@ -63,7 +67,7 @@ class CardApp extends xpros.lobbyAppClass {
 
 	drawCard(card, user) {
 		var o = this;
-		o.cardEvents.emit('drawCard', card, user, o);
+		o.cardEvents.emit(EVENTS.DRAW_CARD, card, user, o);
 	}
 
 }
@@ -95,6 +99,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 	}
 }
 
+module.exports.EVENTS = EVENTS;
 module.exports.lobbyModule = xpros;
 module.exports.cardClass = Card;
 module.exports.cardAppClass = CardApp;
