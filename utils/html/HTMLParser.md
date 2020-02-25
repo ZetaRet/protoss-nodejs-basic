@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.4.1*  
+> *Version: 1.5.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -66,6 +66,22 @@ default init, [opener RegExp, closure RegExp, use attributes]
 #  
 __closeTags__ Array  
 default [], skip parsing elements and lookup to close the tag directly, i.e. `script` or `style`  
+
+#  
+__watchFiles__ Boolean  
+default false,   
+
+#  
+__watchOptions__ Object  
+default null,   
+
+#  
+__watchListener__ Function  
+default null,   
+
+#  
+__watcher__ fs.FSWatcher  
+default null,   
 
 
 ##  

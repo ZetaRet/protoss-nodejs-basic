@@ -33,6 +33,10 @@ class HTMLParser {
 			doctype: ['<\\![\\w]*', '>', false]
 		};
 		o.closeTags = [];
+		o.watchFiles = false;
+		o.watchOptions = null;
+		o.watchListener = null;
+		o.watcher = null;
 	}
 
 	getFilePath(file, dir) {
@@ -41,7 +45,12 @@ class HTMLParser {
 
 	loadFromFile(file, dir) {
 		var o = this;
-		var filec = fs.readFileSync(o.getFilePath(file, dir)).toString();
+		var fp = o.getFilePath(file, dir),
+			filec = fs.readFileSync(fp).toString();
+		if (o.watchFiles) {
+			if (o.watcher) o.watcher.close();
+			o.watcher = fs.watchFile(fp, o.watchOptions, o.watchListener);
+		}
 		return filec;
 	}
 
