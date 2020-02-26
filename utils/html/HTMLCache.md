@@ -2,7 +2,7 @@
 > __HTML page cache utility__  
 # Swap JS/CSS from filepath into tag as relative, cache as page content  
 > *Requires: fs, path*  
-> *Version: 1.6.1*  
+> *Version: 1.6.2*  
 > *Date: 2019 - Today*  
 
 __required*__

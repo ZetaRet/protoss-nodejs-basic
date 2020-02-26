@@ -151,8 +151,9 @@ class HTMLCache {
 			watchinterval = interval || 0;
 
 		function watchmethod(e, f, longfile, page, type, stats) {
-			clearTimeout(watchers[longfile]);
+			if (watchers[longfile] !== undefined) return;
 			watchers[longfile] = setTimeout(() => {
+				delete watchers[longfile];
 				if (debug) console.log(e, f, longfile, page, type, stats);
 				if (recacheOnChange && e === 'change') o.recache(page);
 				if (listener) listener(e, f, longfile, page, type, stats);
