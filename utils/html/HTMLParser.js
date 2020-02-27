@@ -93,7 +93,7 @@ class HTMLParser {
 			content = [],
 			pn = (pretty && dom.type ? o.prettyNewLine : '');
 		if (pretty && dom.type) prefix = (prefix || []).concat(o.prettyPrefix);
-		if (dom.type) {
+		if (dom.type && !dom.norender) {
 			start = '<' + dom.type;
 			if (dom.attr) {
 				if (dom.attr.constructor === Array) {
@@ -129,7 +129,7 @@ class HTMLParser {
 				}
 			}
 		}
-		if (dom.type && !dom.closed) {
+		if (dom.type && !dom.closed && !dom.norender) {
 			if (l === tn) {
 				end = '</' + dom.type + '>';
 			} else {
@@ -146,10 +146,13 @@ class HTMLParser {
 		var i, s, a = [],
 			ch = dom.elements,
 			l = ch ? ch.length : 0;
-		if ((!type || (type.constructor === Array ? type.indexOf(dom.type) !== -1 : dom.type === type)) &&
-			(!attr || (dom.attr && dom.attr.constructor === Object && dom.attr[attr] && dom.attr[attr].split(new RegExp('\\s')).indexOf(value) !== -1))) {
-			a.push(dom);
+		var attrcond, typecond = !type || (type.constructor === Array ? type.indexOf(dom.type) !== -1 : dom.type === type);
+		if (!attr) attrcond = true;
+		else if (dom.attr && dom.attr.constructor === Object) {
+			if (attr.constructor === Function) attrcond = attr(o, dom, dom.attr, value);
+			else attrcond = (dom.attr[attr] && dom.attr[attr].split(new RegExp('\\s')).indexOf(value) !== -1);
 		}
+		if (typecond && attrcond) a.push(dom);
 		if (l > 0) {
 			for (i = 0; i < l; i++) {
 				if (ch[i].constructor === Object) {

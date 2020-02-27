@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.6.0*  
+> *Version: 1.7.1*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -146,11 +146,11 @@ __domToString(*Object* dom, *Boolean* nowhite, *Boolean* pretty, *Array* prefix)
 > *return __String__*  
 
 ##  
-__search(*String|Array* type, *String* attr, *String* value, *Object* dom) : *Array*__  
+__search(*String|Array* type, *String|Function* attr, *String|Object* value, *Object* dom) : *Array*__  
 query the dom per type of element, and/or attribute key and value  
 - __type*__ - __*String|Array*__,   
-- __attr*__ - __*String*__,   
-- __value*__ - __*String*__,   
+- __attr*__ - __*String|Function*__,   
+- __value*__ - __*String|Object*__,   
 - dom - __*Object*__,   
 > *return __Array__*  
 
