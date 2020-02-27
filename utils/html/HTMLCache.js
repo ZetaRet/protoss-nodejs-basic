@@ -10,6 +10,8 @@ var fs = require('fs'),
 class HTMLCache {
 	constructor() {
 		var o = this;
+		o.structs = {};
+		o.autoStructPage = true;
 		o.pages = {};
 		o.despaceChars = {};
 		o.despaceRules = {};
@@ -19,12 +21,29 @@ class HTMLCache {
 		o.watchMap = {};
 	}
 
+	setStruct(id, pagesOrStructIds) {
+		var o = this;
+		o.structs[id] = pagesOrStructIds;
+		return o;
+	}
+
+	getStruct(id) {
+		var o = this;
+		var c, s = o.structs[id];
+		if (s.constructor === Array) c = s.map(e => o.getStruct(e)).join('');
+		else c = o.getPage(s);
+		return c;
+	}
+
 	addPage(page, parser, hfile, dir) {
 		var o = this;
 		var pdata = {
 			parser: parser,
 			hfile: hfile,
 			dir: dir,
+			hfileloc: '',
+			binders: null,
+			execfg: null,
 			content: ''
 		};
 		parser.id = page;
@@ -32,11 +51,12 @@ class HTMLCache {
 		hfileloc.pop();
 		pdata.hfileloc = hfileloc.join(path.sep);
 		o.pages[page] = pdata;
+		if (o.autoStructPage) o.structs[page] = page;
 		return pdata;
 	}
 
 	getPage(page) {
-		return this.pages[page].content;
+		return this.pages[page].content || this.renderContent(page);
 	}
 
 	exePage(page, cfg) {
@@ -44,11 +64,36 @@ class HTMLCache {
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
 		if (!cfg) cfg = {};
+		pdata.execfg = cfg;
+		pdata.binders = {};
+		pdata.content = '';
+		o.resetBinders(page);
 		if (cfg.swapjs) o.swapJS(page, cfg.jsh, cfg.despacejs);
 		if (cfg.swapcss) o.swapCSS(page, cfg.cssh, cfg.despacecss);
-		pdata.execfg = cfg;
-		pdata.content = hpinst.domToString(hpinst.dom, cfg.nowhite, cfg.pretty);
 		return pdata;
+	}
+
+	renderContent(page) {
+		var o = this;
+		var c, pdata = o.pages[page],
+			hpinst = pdata.parser,
+			cfg = pdata.execfg;
+		if (cfg.render) cfg.render(o, page, pdata, hpinst, cfg);
+		c = hpinst.domToString(hpinst.dom, cfg.nowhite, cfg.pretty);
+		if (!cfg.nocontent) pdata.content = c;
+		return c;
+	}
+
+	resetBinders(page) {
+		var o = this;
+		var p, pdata;
+		for (p in o.pages) {
+			pdata = o.pages[p];
+			if (pdata.binders && pdata.binders[page]) {
+				pdata.content = '';
+				o.resetBinders(p);
+			}
+		}
 	}
 
 	recache(page) {
@@ -126,6 +171,15 @@ class HTMLCache {
 				}
 			}
 			if (handler) handler(page, pdata, e, swap);
+		});
+	}
+
+	defaultRenderTemplate(hcache, page, pdata, hpinst, cfg) {
+		hpinst.search('#template').forEach(t => {
+			var sp = t.attr.section;
+			t.norender = true;
+			if (pdata.binders) pdata.binders[sp] = true;
+			t.elements = !cfg.domtemplate ? [hcache.getPage(sp)] : hcache.pages[sp].parser.dom.elements;
 		});
 	}
 

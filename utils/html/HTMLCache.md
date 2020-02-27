@@ -2,7 +2,7 @@
 > __HTML page cache utility__  
 # Swap JS/CSS from filepath into tag as relative, cache as page content  
 > *Requires: fs, path*  
-> *Version: 1.6.2*  
+> *Version: 1.7.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -10,6 +10,14 @@ __required*__
 ## zetaret.node.utils.html::HTMLCache  
 
 ### *Properties*  
+
+#  
+__structs__ Object  
+default {},   
+
+#  
+__autoStructPage__ Boolean  
+default true,   
 
 #  
 __pages__ Object  
@@ -67,6 +75,19 @@ app.instance.server.addPathListener('', function(server, robj, routeData, reques
 });  
 ```
 ##  
+__setStruct(*String* id, *Array* pagesOrStructIds) : *zetaret.node.utils.html::HTMLCache*__  
+  
+- __id*__ - __*String*__,   
+- __pagesOrStructIds*__ - __*Array*__,   
+> *return __zetaret.node.utils.html::HTMLCache__*  
+
+##  
+__getStruct(*String* id) : *String*__  
+  
+- __id*__ - __*String*__,   
+> *return __String__*  
+
+##  
 __addPage(*String* page, *zetaret.node.utils.html.HTMLParser* parser, *String* hfile, *String* dir) : *Object*__  
 create new page by id in cache  
 - __page*__ - __*String*__,   
@@ -87,6 +108,18 @@ execute page script per configuration
 - __page*__ - __*String*__,   
 - cfg - __*Object*__, swap/handle/despace elements, execute `HTMLParser.domToString` {swapjs, jsh, despacejs, swapcss, cssh, despacecss, nowhite, pretty}  
 > *return __Object__*  
+
+##  
+__renderContent(*String* page) : *String*__  
+  
+- __page*__ - __*String*__,   
+> *return __String__*  
+
+##  
+__resetBinders(*String* page) : *void*__  
+  
+- __page*__ - __*String*__,   
+> *return __void__*  
 
 ##  
 __recache(*String* page) : *void*__  
@@ -115,6 +148,16 @@ __swapJS(*String* page, *Function* handler) : *void*__
   
 - __page*__ - __*String*__,   
 - handler - __*Function*__,   
+> *return __void__*  
+
+##  
+__defaultRenderTemplate(*zetaret.node.utils.html.HTMLCache* hcache, *String* page, *Object* pdata, *zetaret.node.utils.html.HTMLParser* hpinst, *Object* cfg) : *void*__  
+  
+- __hcache*__ - __*zetaret.node.utils.html.HTMLCache*__,   
+- __page*__ - __*String*__,   
+- __pdata*__ - __*Object*__,   
+- __hpinst*__ - __*zetaret.node.utils.html.HTMLParser*__,   
+- __cfg*__ - __*Object*__,   
 > *return __void__*  
 
 ##  
