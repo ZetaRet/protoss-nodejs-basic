@@ -271,7 +271,7 @@ class ProtoSSChe {
 }
 
 function getModuleInstance(xmodule) {
-	var serverche, sk, xpro, xprocls, httpsop;
+	var serverche, sk, xpro, xprocls, httpsop, htserv;
 	if (xmodule) {
 		xpro = require(xmodule);
 		xprocls = xpro.getExtendedServerProtoSS(ProtoSSChe);
@@ -280,6 +280,14 @@ function getModuleInstance(xmodule) {
 		serverche = new ProtoSSChe();
 	}
 	serverche.env = env;
+
+	function requestListener(req, res) {
+		try {
+			if (serverche.acceptAppRequests) req = serverche.getAppRequest(req);
+			serverche.onRequest(req, res);
+		} catch (e) {}
+	}
+
 	if (env.statsout && env.statsout.https === true) {
 		env.statsin.https = true;
 		httpsop = {};
@@ -294,22 +302,15 @@ function getModuleInstance(xmodule) {
 		if (httpsop.certPath) httpsop.cert = fs.readFileSync(httpsop.certPath);
 		if (httpsop.pfxPath) httpsop.pfx = fs.readFileSync(httpsop.pfxPath);
 		if (httpsop.caPath) httpsop.ca = [fs.readFileSync(httpsop.caPath)];
-		serverche.htserv = (httpsop.h2 ? http2 : https)[httpsop.h2 ? "createSecureServer" : "createServer"](httpsop, function(req, res) {
-			try {
-				serverche.onRequest(req, res);
-			} catch (e) {}
-		});
+		if (httpsop.h2) htserv = http2.createSecureServer(httpsop, requestListener);
+		else htserv = https.createServer(httpsop, requestListener);
 	} else {
-		serverche.htserv = http.createServer(function(req, res) {
-			try {
-				if (serverche.acceptAppRequests) req = serverche.getAppRequest(req);
-				serverche.onRequest(req, res);
-			} catch (e) {}
-		});
+		htserv = http.createServer(requestListener);
 	}
-	if (!serverche.htserv.request) serverche.htserv.request = http.request;
-	if (!serverche.htserv.srequest) serverche.htserv.srequest = https.request;
-	if (htport >= 0) serverche.htserv.listen(htport);
+	if (!htserv.request) htserv.request = http.request;
+	if (!htserv.srequest) htserv.srequest = https.request;
+	if (htport >= 0) htserv.listen(htport);
+	serverche.htserv = htserv;
 
 	return {
 		serverche, xpro, xprocls, xmodule
