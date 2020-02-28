@@ -2,14 +2,16 @@
 	"author": "Zeta Ret",
 	"description": "HTML page cache utility",
 	"text": "Swap JS/CSS from filepath into tag as relative, cache as page content",
-	"requires": "fs, path",
-	"version": "1.7.0",
+	"requires": "fs, path, events",
+	"version": "1.7.1",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.utils.html::HTMLCache",
 	"inherits": null,
 	"interfaces": null,
 	"static": {
-		"public_properties": {},
+		"public_properties": {
+			"EVENTS": "Object: const"
+		},
 		"protected_properties": {},
 		"private_properties": {},
 		"public_methods": {},
@@ -25,7 +27,8 @@
 		"watchFiles": "Boolean: false",
 		"watchOptions": "Object: null",
 		"watchListener": "Function: null",
-		"watchMap": "Object: {}"
+		"watchMap": "Object: {}",
+		"events": "events.EventEmitter: new"
 	},
 	"protected_properties": {},
 	"private_properties": {},

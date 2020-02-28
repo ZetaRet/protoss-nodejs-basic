@@ -1,8 +1,8 @@
 > __Author: Zeta Ret__  
 > __HTML page cache utility__  
 # Swap JS/CSS from filepath into tag as relative, cache as page content  
-> *Requires: fs, path*  
-> *Version: 1.7.0*  
+> *Requires: fs, path, events*  
+> *Version: 1.7.1*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -46,6 +46,10 @@ default null,
 #  
 __watchMap__ Object  
 default {},   
+
+#  
+__events__ events.EventEmitter  
+default new,   
 
 
 ##  
@@ -195,6 +199,13 @@ __despace(*String* v, *String* type) : *String*__
 - __v*__ - __*String*__,   
 - type - __*String*__,   
 > *return __String__*  
+
+##  
+### *Static Properties*  
+
+#  
+__EVENTS__ Object  
+default const,   
 
 ---  
 ### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

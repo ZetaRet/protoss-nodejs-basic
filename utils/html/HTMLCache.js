@@ -5,7 +5,14 @@
  **/
 
 var fs = require('fs'),
-	path = require('path');
+	path = require('path'),
+	events = require('events');
+
+const EVENTS = {
+	ADD_PAGE: 'addPage',
+	EXE_PAGE: 'exePage',
+	RENDER_CONTENT: 'renderContent'
+};
 
 class HTMLCache {
 	constructor() {
@@ -19,6 +26,7 @@ class HTMLCache {
 		o.watchOptions = null;
 		o.watchListener = null;
 		o.watchMap = {};
+		o.events = new events.EventEmitter();
 	}
 
 	setStruct(id, pagesOrStructIds) {
@@ -52,6 +60,7 @@ class HTMLCache {
 		pdata.hfileloc = hfileloc.join(path.sep);
 		o.pages[page] = pdata;
 		if (o.autoStructPage) o.structs[page] = page;
+		o.events.emit(EVENTS.ADD_PAGE, page, pdata, o);
 		return pdata;
 	}
 
@@ -70,6 +79,7 @@ class HTMLCache {
 		o.resetBinders(page);
 		if (cfg.swapjs) o.swapJS(page, cfg.jsh, cfg.despacejs);
 		if (cfg.swapcss) o.swapCSS(page, cfg.cssh, cfg.despacecss);
+		o.events.emit(EVENTS.EXE_PAGE, page, pdata, o);
 		return pdata;
 	}
 
@@ -78,6 +88,7 @@ class HTMLCache {
 		var c, pdata = o.pages[page],
 			hpinst = pdata.parser,
 			cfg = pdata.execfg;
+		o.events.emit(EVENTS.RENDER_CONTENT, page, pdata, o);
 		if (cfg.render) cfg.render(o, page, pdata, hpinst, cfg);
 		c = hpinst.domToString(hpinst.dom, cfg.nowhite, cfg.pretty);
 		if (!cfg.nocontent) pdata.content = c;
@@ -248,4 +259,5 @@ class HTMLCache {
 
 }
 
+module.exports.EVENTS = EVENTS;
 module.exports.HTMLCache = HTMLCache;
