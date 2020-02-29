@@ -3,7 +3,7 @@
 	"description": "HTML page cache utility",
 	"text": "Swap JS/CSS from filepath into tag as relative, cache as page content",
 	"requires": "fs, path, events",
-	"version": "1.7.1",
+	"version": "1.7.2",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.utils.html::HTMLCache",
 	"inherits": null,

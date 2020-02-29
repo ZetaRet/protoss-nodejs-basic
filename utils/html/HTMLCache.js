@@ -9,9 +9,17 @@ var fs = require('fs'),
 	events = require('events');
 
 const EVENTS = {
+	SET_STRUCT: 'setStruct',
 	ADD_PAGE: 'addPage',
 	EXE_PAGE: 'exePage',
-	RENDER_CONTENT: 'renderContent'
+	RENDER_CONTENT: 'renderContent',
+	RECACHE: 'recache',
+	SWAP_JS: 'swapJs',
+	SWAP_CSS: 'swapCss',
+	WATCH: 'watch',
+	ON_WATCH: 'onWatch',
+	WATCH_FILE: 'watchFile',
+	RESET_WATCHERS: 'resetWatchers'
 };
 
 class HTMLCache {
@@ -32,6 +40,7 @@ class HTMLCache {
 	setStruct(id, pagesOrStructIds) {
 		var o = this;
 		o.structs[id] = pagesOrStructIds;
+		o.events.emit(EVENTS.SET_STRUCT, id, o);
 		return o;
 	}
 
@@ -111,6 +120,7 @@ class HTMLCache {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
+		o.events.emit(EVENTS.RECACHE, page, pdata, o);
 		hpinst.parseFromFile(hpinst.file, hpinst.dir);
 		o.exePage(page, pdata.execfg);
 	}
@@ -145,6 +155,7 @@ class HTMLCache {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
+		o.events.emit(EVENTS.SWAP_CSS, page, pdata, o);
 		hpinst.search('link', 'type', 'text/css').forEach(e => {
 			var swap, pr, f = e.attr.href;
 			if (f) {
@@ -169,6 +180,7 @@ class HTMLCache {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
+		o.events.emit(EVENTS.SWAP_JS, page, pdata, o);
 		hpinst.search('script', 'type', 'text/javascript').forEach(e => {
 			var swap, pr, f = e.attr.src;
 			if (f) {
@@ -190,7 +202,8 @@ class HTMLCache {
 			var sp = t.attr.section;
 			t.norender = true;
 			if (pdata.binders) pdata.binders[sp] = true;
-			t.elements = !cfg.domtemplate ? [hcache.getPage(sp)] : hcache.pages[sp].parser.dom.elements;
+			if (cfg.exetemplate) cfg.exetemplate(t, sp, hcache, page, pdata, hpinst, cfg);
+			if (!t.attr.nodom) t.elements = !cfg.domtemplate ? [hcache.getPage(sp)] : hcache.pages[sp].parser.dom.elements;
 		});
 	}
 
@@ -208,6 +221,7 @@ class HTMLCache {
 			hpinst.watchListener = listener;
 			hpinst.watchFile();
 		}
+		o.events.emit(EVENTS.WATCH, o);
 	}
 
 	getWatchers(listener, interval, debug, recacheOnChange) {
@@ -222,6 +236,7 @@ class HTMLCache {
 				if (debug) console.log(e, f, longfile, page, type, stats);
 				if (recacheOnChange && e === 'change') o.recache(page);
 				if (listener) listener(e, f, longfile, page, type, stats);
+				o.events.emit(EVENTS.ON_WATCH, e, f, longfile, page, type, stats, o);
 			}, watchinterval);
 		}
 
@@ -234,11 +249,13 @@ class HTMLCache {
 		var o = this;
 		if (o.watchMap[pr]) o.watchMap[pr].close();
 		o.watchMap[pr] = fs.watch(pr, o.watchOptions, (e, f) => o.watchListener(e, f, pr, page, type, fs.statSync(pr)));
+		o.events.emit(EVENTS.WATCH_FILE, pr, page, type, o);
 	}
 
 	resetWatchers() {
 		var o = this;
 		var k;
+		o.events.emit(EVENTS.RESET_WATCHERS, o);
 		for (k in o.watchMap) o.watchMap[k].close();
 		o.watchMap = {};
 	}
