@@ -2,7 +2,7 @@
 > __Card server based on lobby connectivity with micro apps__  
 # Implement card games and different side applications  
 > *Requires: events*  
-> *Version: 1.4.0*  
+> *Version: 1.5.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -39,12 +39,16 @@ __initCardAppServer() : *void*__
 ### *Static Properties*  
 
 #  
+__xpros__ Module  
+default load,   
+
+#  
 __EVENTS__ Object  
 default const,   
 
 #  
-__lobbyModule__ Module  
-default zetaret.node.modules.LobbyServer,   
+__SERVERID__ String  
+default supername,   
 
 #  
 __cardClass__ Card  

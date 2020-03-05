@@ -23,6 +23,7 @@ const EVENTS = {
 	UPDATE_APP: 'updateApp',
 	REMOVE_APP: 'removeApp'
 };
+const SERVERID = 'zetaret.node.modules::LobbyServer';
 
 class LobbyUser extends Array {
 	constructor() {
@@ -213,8 +214,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 	}
 }
 
+module.exports.xpros = xpros;
 module.exports.EVENTS = EVENTS;
+module.exports.SERVERID = SERVERID;
 module.exports.lobbyUserClass = LobbyUser;
 module.exports.lobbyRoomClass = LobbyRoom;
 module.exports.lobbyAppClass = LobbyApp;
+module.exports.resetExtends = () => Subserver = null;
+module.exports.getExtends = () => Subserver;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

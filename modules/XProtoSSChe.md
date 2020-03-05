@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.6.0*  
+> *Version: 1.7.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -101,6 +101,17 @@ __endResponse(*http.ClientRequest|http.IncomingMessage* request, *http.ServerRes
 - __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __zetaret.node.modules::XProtoSSChe__*  
+
+##  
+### *Static Properties*  
+
+#  
+__EVENTS__ Object  
+default const,   
+
+#  
+__SERVERID__ String  
+default supername,   
 
 ---  
 ### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

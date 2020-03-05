@@ -5,6 +5,7 @@
  **/
 
 var Subserver, xpros = require(global.VoyageRequireModule || './Subserver.js');
+const SERVERID = 'zetaret.node.modules::Voyage';
 
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!Subserver) Subserver = xpros.getExtendedServerProtoSS(ProtoSSChe);
@@ -28,4 +29,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 	}
 }
 
+module.exports.xpros = xpros;
+module.exports.SERVERID = SERVERID;
+module.exports.resetExtends = () => Subserver = null;
+module.exports.getExtends = () => Subserver;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

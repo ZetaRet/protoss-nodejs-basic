@@ -10,6 +10,7 @@ var LobbyServer, xpros = require(global.CardServerRequireModule || './LobbyServe
 const EVENTS = {
 	DRAW_CARD: 'drawCard'
 };
+const SERVERID = 'zetaret.node.modules::CardServer';
 
 class Card extends Array {
 	constructor() {
@@ -99,9 +100,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 	}
 }
 
+module.exports.xpros = xpros;
 module.exports.EVENTS = EVENTS;
-module.exports.lobbyModule = xpros;
+module.exports.SERVERID = SERVERID;
 module.exports.cardClass = Card;
 module.exports.cardAppClass = CardApp;
 module.exports.sideCardAppClass = SideCardApp;
+module.exports.resetExtends = () => LobbyServer = null;
+module.exports.getExtends = () => LobbyServer;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

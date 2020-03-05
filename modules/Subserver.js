@@ -10,6 +10,7 @@ var XProtoSSChe, xpros = require(global.SubserverRequireModule || './XProtoSSChe
 const EVENTS = {
 	VOID: ''
 };
+const SERVERID = 'zetaret.node.modules::Subserver';
 
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!XProtoSSChe) XProtoSSChe = xpros.getExtendedServerProtoSS(ProtoSSChe);
@@ -102,5 +103,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 	}
 }
 
+module.exports.xpros = xpros;
 module.exports.EVENTS = EVENTS;
+module.exports.SERVERID = SERVERID;
+module.exports.resetExtends = () => XProtoSSChe = null;
+module.exports.getExtends = () => XProtoSSChe;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

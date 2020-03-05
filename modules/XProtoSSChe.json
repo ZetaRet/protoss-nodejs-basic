@@ -3,13 +3,16 @@
 	"description": "Basic extender and nullifier",
 	"text": "Extended ProtoSSChe Server loaded as module",
 	"requires": null,
-	"version": "1.6.0",
+	"version": "1.7.0",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.modules::XProtoSSChe",
 	"inherits": ["[zetaret.node::index](../index.md)"],
 	"interfaces": null,
 	"static": {
-		"public_properties": {},
+		"public_properties": {
+			"EVENTS": "Object: const",
+			"SERVERID": "String: supername"
+		},
 		"protected_properties": {},
 		"private_properties": {},
 		"public_methods": {},

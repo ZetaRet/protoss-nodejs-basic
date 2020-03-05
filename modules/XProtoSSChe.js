@@ -4,15 +4,19 @@
  * Extended ProtoSSChe Server loaded as module.
  **/
 
+var ExtendProtoSSChe;
+
 const EVENTS = {
 	INIT_REQUEST: 'initRequest',
 	ROUTE: 'route',
 	ASYNC_RESPONSE: 'pushProtoSSAsyncResponse',
 	END_RESPONSE: 'endResponse'
 };
+const SERVERID = 'zetaret.node.modules::XProtoSSChe';
 
 function getExtendedServerProtoSS(ProtoSSChe) {
-	return class XProtoSSChe extends ProtoSSChe {
+	if (!ExtendProtoSSChe) ExtendProtoSSChe = ProtoSSChe;
+	return class XProtoSSChe extends ExtendProtoSSChe {
 		constructor(routeCallback, routeScope, routeData) {
 			super();
 			var o = this;
@@ -88,4 +92,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 }
 
 module.exports.EVENTS = EVENTS;
+module.exports.SERVERID = SERVERID;
+module.exports.resetExtends = () => ExtendProtoSSChe = null;
+module.exports.getExtends = () => ExtendProtoSSChe;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

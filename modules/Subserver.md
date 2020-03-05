@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.3.0*  
+> *Version: 1.4.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -106,8 +106,16 @@ __addHeaders(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResp
 ### *Static Properties*  
 
 #  
+__xpros__ Module  
+default load,   
+
+#  
 __EVENTS__ Object  
 default const,   
+
+#  
+__SERVERID__ String  
+default supername,   
 
 ---  
 ### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

@@ -2,7 +2,7 @@
 > __Lobby auth and rooms of Subserver__  
 # Distribute users after authentication into rooms or applications based on requirements  
 > *Requires: http, https, events*  
-> *Version: 1.3.0*  
+> *Version: 1.4.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -135,8 +135,16 @@ add new app to lobby using default/custom Class
 ### *Static Properties*  
 
 #  
+__xpros__ Module  
+default load,   
+
+#  
 __EVENTS__ Object  
 default const,   
+
+#  
+__SERVERID__ String  
+default supername,   
 
 #  
 __lobbyUserClass__ LobbyUser  
