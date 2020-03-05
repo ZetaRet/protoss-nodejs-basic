@@ -4,6 +4,13 @@
  * Extended ProtoSSChe Server loaded as module.
  **/
 
+const EVENTS = {
+	INIT_REQUEST: 'initRequest',
+	ROUTE: 'route',
+	ASYNC_RESPONSE: 'pushProtoSSAsyncResponse',
+	END_RESPONSE: 'endResponse'
+};
+
 function getExtendedServerProtoSS(ProtoSSChe) {
 	return class XProtoSSChe extends ProtoSSChe {
 		constructor(routeCallback, routeScope, routeData) {
@@ -15,6 +22,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.autoCookie = false;
 			o.postJSON = true;
 			o.layerServer = false;
+			o.emitRR = false;
 			o.initRoute();
 		}
 
@@ -25,6 +33,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		onReadRequestBody(request, body, response) {
 			var o = this;
+			if (o.emitRR) request.emit(EVENTS.INIT_REQUEST, o, request, response);
+			if (o.layerServer) body = o.layerInitRequest(request, response, body);
 			if (request.url) {
 				response.__splitUrl = o.splitUrl(request.url);
 				if (o.postJSON && request.headers['content-type'] === 'application/json') {
@@ -36,11 +46,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				}
 			}
 			response.__body = body;
+			if (o.emitRR) response.emit(EVENTS.ROUTE, o, request, response);
 			if (o.routeCallback) {
-				o.routeCallback.call(o.routeScope, o.routeData, body, request, response);
+				o.routeCallback.call(o.routeScope, o.routeData, response.__body, request, response);
 			}
 			if (!response.__async) o.endResponse(request, response);
-			else response.on('pushProtoSSAsyncResponse', () => o.endResponse(request, response));
+			else response.on(EVENTS.ASYNC_RESPONSE, () => o.endResponse(request, response));
 			return o;
 		}
 
@@ -54,12 +65,17 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			return headers;
 		}
 
+		layerInitRequest(request, response, body) {
+			return body;
+		}
+
 		layerEndResponse(request, response, input, headers) {
 			return input;
 		}
 
 		endResponse(request, response) {
 			var o = this;
+			if (o.emitRR) response.emit(EVENTS.END_RESPONSE, o, request, response);
 			var input = response.__data.join(""),
 				headers = o.addHeaders(request, response);
 			if (o.autoCookie) o.updateCookies(request, response, headers);
@@ -71,4 +87,5 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 	}
 }
 
+module.exports.EVENTS = EVENTS;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

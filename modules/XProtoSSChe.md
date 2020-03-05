@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.5.0*  
+> *Version: 1.6.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -34,6 +34,10 @@ default true, check incoming `content-type` header and parse body as JSON, add a
 #  
 __layerServer__ Boolean  
 default false, use for proxy, cache, compress, encode, encrypt, content type based responses  
+
+#  
+__emitRR__ Boolean  
+default false,   
 
 
 ##  
@@ -73,6 +77,14 @@ __addHeaders(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResp
 - __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __Object__*  
+
+##  
+__layerInitRequest(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response, *String* body) : *String*__  
+  
+- __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
+- __response*__ - __*http.ServerResponse*__,   
+- __body*__ - __*String*__,   
+> *return __String__*  
 
 ##  
 __layerEndResponse(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response, *String* input, *Object* headers) : *String*__  
