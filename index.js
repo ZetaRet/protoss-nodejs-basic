@@ -115,6 +115,10 @@ class ProtoSSChe {
 		this.htserv = null;
 		this.acceptAppRequests = false;
 		this.apps = {};
+		this.cookieMethod = null;
+		this.requestMethod = null;
+		this.onErrorBody = null;
+		this.onEndBody = null;
 	}
 
 	getAppRequest(request) {
@@ -127,6 +131,7 @@ class ProtoSSChe {
 		var o = this;
 		request.__reqid = o.getReqId();
 		response.__data = [];
+		if (o.requestMethod) o.requestMethod(o, request, response);
 		o.pushProtoSSResponse(request, response).readRequestBody(request, response);
 	}
 
@@ -236,16 +241,19 @@ class ProtoSSChe {
 				if (body.length > maxBodyLength) {
 					ended = true;
 					request.abort();
+					if (o.onErrorBody) o.onErrorBody(o, request, response, body);
 					o.onReadRequestBody(request, body, response);
 				}
 			});
 			request.on('end', function() {
 				if (!ended) {
 					ended = true;
+					if (o.onEndBody) o.onEndBody(o, request, response, body);
 					o.onReadRequestBody(request, body, response);
 				}
 			});
 		} else {
+			if (o.onErrorBody) o.onErrorBody(o, request, response, body);
 			o.onReadRequestBody(request, body, response);
 		}
 		return o;
@@ -253,7 +261,8 @@ class ProtoSSChe {
 
 	updateCookies(request, response, headers) {
 		var o = this;
-		if (!request.headers.cookie) headers['set-cookie'] = cookieid + "=" + o.rndstr(32);
+		if (o.cookieMethod) o.cookieMethod(o, request, response, headers);
+		else if (!request.headers.cookie) headers['set-cookie'] = cookieid + "=" + o.rndstr(32);
 		return o;
 	}
 

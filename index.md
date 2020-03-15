@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, https, http2, fs*  
-> *Version: 1.6.0*  
+> *Version: 1.7.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -26,6 +26,22 @@ default false,
 #  
 __apps__ Object  
 default {}, map of id to application method  
+
+#  
+__cookieMethod__ Function  
+default null,   
+
+#  
+__requestMethod__ Function  
+default null,   
+
+#  
+__onErrorBody__ Function  
+default null,   
+
+#  
+__onEndBody__ Function  
+default null,   
 
 
 ##  
