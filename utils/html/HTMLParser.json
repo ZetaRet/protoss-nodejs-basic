@@ -3,7 +3,7 @@
 	"description": "Simple HTML parser",
 	"text": "RegExp XML processor to object and reversed conversion to HTML",
 	"requires": "fs, path",
-	"version": "1.7.1",
+	"version": "1.8.0",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.utils.html::HTMLParser",
 	"inherits": null,
@@ -35,7 +35,9 @@
 		"watchFiles": "Boolean: false",
 		"watchOptions": "Object: null",
 		"watchListener": "Function: null",
-		"watcher": "fs.FSWatcher: null"
+		"watcher": "fs.FSWatcher: null",
+		"whiteList": "Object: null",
+		"blackList": "Object: null"
 	},
 	"protected_properties": {},
 	"private_properties": {},
@@ -69,6 +71,8 @@
 		"autoOrder": "honor `automaton` order or html of parsing `automata` tags",
 		"automata": "[opener RegExp, closure RegExp, use attributes]",
 		"closeTags": "skip parsing elements and lookup to close the tag directly, i.e. `script` or `style`",
+		"whiteList": "map of keys to be allowed in `domToString` attributes",
+		"blackList": "map of keys to be disallowed in `domToString` attributes",
 		"HTMLParser": {
 			"this": "Parse simple XML structures with namespace into templates, swap content, or use HTMLCache, `useAutomaton` to support comments `<!--` or special tags `<!` `<?`. Must extend and override methods to supplement, or use multiple templates to create more complex HTML structure."
 		},

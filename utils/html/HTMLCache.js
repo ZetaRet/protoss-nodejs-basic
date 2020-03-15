@@ -134,7 +134,8 @@ class HTMLCache {
 			hpinst = new HTMLParser();
 			hpinst.useAutomaton = op.useAutomaton || false;
 			hpinst.debug = op.debug || false;
-			if (op.closeTags) hpinst.closeTags.splice(0, 0, ...op.closeTags);
+			if (op.closeTags) hpinst.closeTags = op.closeTags;
+			if (op.cfgParser) op.cfgParser(hpinst, p, op);
 			hpinst.parseFromFile(op.hfile, op.dir);
 			o.addPage(op.id, hpinst, op.hfile, op.dir);
 			if (log) {
@@ -142,9 +143,7 @@ class HTMLCache {
 				console.log(hpinst.domToString());
 			}
 		}
-
 		if (watchers) o.watch(watchers.watchmethod);
-
 		for (p in pages) {
 			op = pages[p];
 			o.exePage(op.id, op.exe);

@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path*  
-> *Version: 1.7.1*  
+> *Version: 1.8.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -86,6 +86,14 @@ default null,
 #  
 __watcher__ fs.FSWatcher  
 default null,   
+
+#  
+__whiteList__ Object  
+default null, map of keys to be allowed in `domToString` attributes  
+
+#  
+__blackList__ Object  
+default null, map of keys to be disallowed in `domToString` attributes  
 
 
 ##  
