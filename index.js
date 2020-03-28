@@ -119,6 +119,8 @@ class ProtoSSChe {
 		this.requestMethod = null;
 		this.onErrorBody = null;
 		this.onEndBody = null;
+		this.dataJoin = null;
+		this.reqIdLength = 31;
 	}
 
 	getAppRequest(request) {
@@ -206,17 +208,17 @@ class ProtoSSChe {
 	}
 
 	rndstr(l) {
-		var ch = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		var str = '',
-			i = l;
-		while (i--) str += ch.charAt(Math.round(Math.random() * (ch.length - 1)));
+		var ch = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+			str = '',
+			chl = ch.length - 1;
+		while (l--) str += ch.charAt(Math.round(Math.random() * chl));
 		return str;
 	}
 
 	getReqId() {
 		var o = this;
 		reqnum = (reqnum + 1) % Number.MAX_SAFE_INTEGER;
-		return o.rndstr(31) + '-' + reqnum.toString(36);
+		return o.rndstr(o.reqIdLength) + '-' + reqnum.toString(36);
 	}
 
 	pushProtoSSResponse(request, response) {
@@ -268,10 +270,10 @@ class ProtoSSChe {
 
 	endResponse(request, response) {
 		var o = this;
-		var input = response.__data.join("");
-		var headers = {
-			'content-type': contenttype
-		};
+		var input = response.__data.join(o.dataJoin || ""),
+			headers = {
+				'content-type': contenttype
+			};
 		o.updateCookies(request, response, headers);
 		response.writeHead(200, headers);
 		response.end(input);

@@ -3,7 +3,7 @@
 	"description": "Basic ProtoSS Node.js Server",
 	"text": "Simple printed server from ProtoSS Packages using XeltoSS synthesis",
 	"requires": "http, https, http2, fs",
-	"version": "1.7.0",
+	"version": "1.7.1",
 	"date": "2019 - Today",
 	"supername": "zetaret.node::index",
 	"inherits": null,
@@ -52,7 +52,9 @@
 		"cookieMethod": "Function: null",
 		"requestMethod": "Function: null",
 		"onErrorBody": "Function: null",
-		"onEndBody": "Function: null"
+		"onEndBody": "Function: null",
+		"dataJoin": "String: null",
+		"reqIdLength": "Number: 31"
 	},
 	"protected_properties": {},
 	"private_properties": {},
