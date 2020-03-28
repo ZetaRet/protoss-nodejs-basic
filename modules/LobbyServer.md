@@ -2,7 +2,7 @@
 > __Lobby auth and rooms of Subserver__  
 # Distribute users after authentication into rooms or applications based on requirements  
 > *Requires: http, https, events*  
-> *Version: 1.4.0*  
+> *Version: 1.5.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -67,6 +67,14 @@ connect to another server or lobby, auto-configure options{port, method}
 - data - __*String*__, data to send with request  
 - secure - __*Boolean*__, connect to SSL server port using https  
 > *return __http.ClientRequest__, ends automatically*  
+
+##  
+__promiseConnectTo(*Object* options, *String* data, *Boolean* secure) : *Promise*__  
+  
+- __options*__ - __*Object*__,   
+- data - __*String*__,   
+- secure - __*Boolean*__,   
+> *return __Promise__*  
 
 ##  
 __onConnectError(*Error* e) : *void*__  

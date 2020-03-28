@@ -124,6 +124,15 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			return req;
 		}
 
+		promiseConnectTo(options, data, secure) {
+			var o = this;
+			return new Promise((resolve, reject) => {
+				const req = o.connectTo(options, data, secure);
+				req.addEventListener(EVENTS.ON_CONNECTED, d => resolve(d));
+				req.addEventListener('error', e => reject(req));
+			});
+		}
+
 		onConnectError(e) {
 			var o = this;
 			o.lobbyEvents.emit(EVENTS.CONNECT_ERROR, e, o);
@@ -137,14 +146,13 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			var d = '';
 			res.setEncoding(res.req.__encoding || 'utf8');
-			res.on('data', (chunk) => {
-				d += chunk;
-			});
+			res.on('data', chunk => d += chunk);
 			res.on('end', () => {
 				if (o.debugRoute) {
 					console.log('Lobby connect data: ');
 					console.log(d);
 				}
+				res.emit(EVENTS.ON_CONNECTED, d, o);
 				o.lobbyEvents.emit(EVENTS.ON_CONNECTED, res, d, o);
 			});
 		}

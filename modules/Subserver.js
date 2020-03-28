@@ -23,6 +23,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.noRouteCode = 404;
 			o.noRouteEvent = 'error404';
 			o.debugRoute = true;
+			o.proxyPaths = '__proxypaths';
 			o.listener = new events.EventEmitter();
 			o.initRouteListener();
 		}
@@ -45,9 +46,31 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (o.debugRoute) console.log(robj);
 		}
 
+		addRegPathListener(path, callback) {
+			var o = this;
+			var regexp = o.setRouteRegExp(path);
+			return o.addPathListener(path, (server, robj, routeData, request, response) => {
+				if (robj.pageCurrent.match(regexp)) callback(server, robj, routeData, request, response);
+			});
+		}
+
+		setRouteRegExp(path) {
+			var o = this;
+			var r = o.routeMap;
+			path.split('/').forEach(e => {
+				if (!r[e]) {
+					r[e] = r['*'] = {};
+					r = r['*'];
+				} else r = r[e];
+			});
+			if (!r[o.proxyPaths]) r[o.proxyPaths] = {};
+			r[o.proxyPaths][path] = {};
+			return new RegExp(path);
+		}
+
 		routeCallback(routeData, body, request, response) {
 			var o = this;
-			var cp, p, i, r = o.routeMap,
+			var cp, pp, p, i, r = o.routeMap,
 				robj = response.__splitUrl,
 				l = robj.pages.length,
 				rawpath = robj.pages.join("/");
@@ -56,6 +79,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				for (i = 0; i < l; i++) {
 					p = robj.pages[i];
 					cp = cp ? cp + '/' + p : p;
+					robj.pageIndex = i;
+					robj.pageCurrent = cp;
+					robj.pageProxy = null;
 					r = r[p] || r["*"];
 					if (!r) {
 						response.__rcode = o.noRouteCode;
@@ -64,6 +90,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 					} else {
 						robj.exact = (cp === robj.rawpath);
 						o.listener.emit(cp, o, robj, routeData, request, response);
+						if (r[o.proxyPaths]) {
+							for (pp in r[o.proxyPaths]) {
+								robj.pageProxy = pp;
+								o.listener.emit(pp, o, robj, routeData, request, response);
+							}
+						}
 						if (response.__breakRoute) break;
 					}
 				}

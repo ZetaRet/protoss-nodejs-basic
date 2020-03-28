@@ -80,7 +80,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		endResponse(request, response) {
 			var o = this;
 			if (o.emitRR) response.emit(EVENTS.END_RESPONSE, o, request, response);
-			var input = response.__data.join(""),
+			var input = response.__data.join(o.dataJoin || ""),
 				headers = o.addHeaders(request, response);
 			if (o.autoCookie) o.updateCookies(request, response, headers);
 			if (o.layerServer) input = o.layerEndResponse(request, response, input, headers);

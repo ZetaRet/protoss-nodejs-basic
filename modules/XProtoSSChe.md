@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.7.0*  
+> *Version: 1.7.1*  
 > *Date: 2019 - Today*  
 
 __required*__

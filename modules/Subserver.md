@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.4.0*  
+> *Version: 1.7.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -31,6 +31,10 @@ default 'error404',
 #  
 __debugRoute__ Boolean  
 default true,   
+
+#  
+__proxyPaths__ String  
+default '\_\_proxypaths',   
 
 #  
 __listener__ events.EventEmitter  
@@ -68,6 +72,19 @@ __pathListener(*zetaret.node.modules.Subserver* server, *Object* robj, *Object* 
 - __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __void__*  
+
+##  
+__addRegPathListener(*String* path, *Function* callback) : *Function*__  
+  
+- __path*__ - __*String*__,   
+- __callback*__ - __*Function*__,   
+> *return __Function__*  
+
+##  
+__setRouteRegExp(*String* path) : *RegExp*__  
+  
+- __path*__ - __*String*__,   
+> *return __RegExp__*  
 
 ##  
 __routeCallback(*Object* routeData, *String* body, *http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *void*__  
