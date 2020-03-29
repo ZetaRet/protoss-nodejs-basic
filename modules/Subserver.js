@@ -23,8 +23,14 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.noRouteCode = 404;
 			o.noRouteEvent = 'error404';
 			o.debugRoute = true;
-			o.proxyPaths = '__proxypaths';
 			o.listener = new events.EventEmitter();
+			o.routeRegMap = {};
+			o.routeRegExp = new RegExp('^[\\w|\\-]+$');
+			o.routeRegGet = null;
+			o.proxyPaths = '__proxypaths';
+			o.proxyMask = {};
+			o.noProxyCode = 400;
+			o.noProxyEvent = 'proxyNoRoute';
 			o.initRouteListener();
 		}
 
@@ -51,17 +57,27 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var regexp = o.setRouteRegExp(path);
 			return o.addPathListener(path, (server, robj, routeData, request, response) => {
 				if (robj.pageCurrent.match(regexp)) callback(server, robj, routeData, request, response);
+				else {
+					response.__rcode = server.noProxyCode;
+					if (server.noProxyEvent) server.listener.emit(server.noProxyEvent, server, robj, routeData, request, response);
+				}
 			});
 		}
 
 		setRouteRegExp(path) {
 			var o = this;
-			var r = o.routeMap;
-			path.split('/').forEach(e => {
-				if (!r[e]) {
-					r[e] = r['*'] = {};
-					r = r['*'];
-				} else r = r[e];
+			var r = o.routeMap,
+				regmap = o.routeRegMap[path];
+			path.split('/').forEach((e, i, a) => {
+				if (regmap) {
+					if (!regmap[i]) e = '*';
+				} else if (o.routeRegExp) {
+					if (!e.match(o.routeRegExp)) e = '*';
+				} else if (o.routeRegGet) {
+					if (!o.routeRegGet(e, i, a)) e = '*';
+				}
+				if (!r[e]) r[e] = {};
+				r = r[e];
 			});
 			if (!r[o.proxyPaths]) r[o.proxyPaths] = {};
 			r[o.proxyPaths][path] = {};
@@ -82,7 +98,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 					robj.pageIndex = i;
 					robj.pageCurrent = cp;
 					robj.pageProxy = null;
-					r = r[p] || r["*"];
+					if (p === o.proxyPaths || o.proxyMask[cp] || o.proxyMask[p]) r = null;
+					else r = r[p] || r["*"];
 					if (!r) {
 						response.__rcode = o.noRouteCode;
 						if (o.noRouteEvent) o.listener.emit(o.noRouteEvent, o, robj, routeData, request, response);

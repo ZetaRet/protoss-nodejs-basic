@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.7.0*  
+> *Version: 1.8.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -33,12 +33,28 @@ __debugRoute__ Boolean
 default true,   
 
 #  
+__listener__ events.EventEmitter  
+default new,   
+
+#  
 __proxyPaths__ String  
 default '\_\_proxypaths',   
 
 #  
-__listener__ events.EventEmitter  
-default new,   
+__proxyMask__ Object  
+default {},   
+
+#  
+__routeRegMap__ Object  
+default {}, map of RegExp string routes  
+
+#  
+__routeRegExp__ RegExp  
+default [\w|\-]+,   
+
+#  
+__routeRegGet__ Function  
+default null,   
 
 
 ##  
@@ -79,7 +95,9 @@ __addRegPathListener(*String* path, *Function* callback) : *Function*__
 - __path*__ - __*String*__,   
 - __callback*__ - __*Function*__,   
 > *return __Function__*  
-
+```
+server.addRegPathListener('profiles/[\w]+/photo-id/[\w]+$', (server, robj, routeData, request, response) => {});  
+```
 ##  
 __setRouteRegExp(*String* path) : *RegExp*__  
   
