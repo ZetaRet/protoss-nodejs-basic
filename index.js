@@ -121,6 +121,7 @@ class ProtoSSChe {
 		this.onEndBody = null;
 		this.dataJoin = null;
 		this.reqIdLength = 31;
+		this.requestBodyMethods = null;
 	}
 
 	getAppRequest(request) {
@@ -236,16 +237,23 @@ class ProtoSSChe {
 		var o = this;
 		var ended = false,
 			body = '';
+
 		if (!request.aborted) {
-			request.on('data', function(data) {
-				if (ended) return;
-				body += data;
-				if (body.length > maxBodyLength) {
-					ended = true;
-					request.abort();
-					if (o.onErrorBody) o.onErrorBody(o, request, response, body);
-					o.onReadRequestBody(request, body, response);
-				}
+			if (!o.requestBodyMethods || o.requestBodyMethods.indexOf(request.method) !== -1) {
+				request.on('data', function(data) {
+					if (ended) return;
+					body += data;
+					if (body.length > maxBodyLength) {
+						ended = true;
+						request.abort();
+						if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error('size'));
+						o.onReadRequestBody(request, body, response);
+					}
+				});
+			}
+			request.on('error', function(error) {
+				if (o.onErrorBody) o.onErrorBody(o, request, response, body, error);
+				o.onReadRequestBody(request, body, response);
 			});
 			request.on('end', function() {
 				if (!ended) {
@@ -255,7 +263,7 @@ class ProtoSSChe {
 				}
 			});
 		} else {
-			if (o.onErrorBody) o.onErrorBody(o, request, response, body);
+			if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error('abort'));
 			o.onReadRequestBody(request, body, response);
 		}
 		return o;
