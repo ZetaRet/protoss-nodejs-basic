@@ -4,11 +4,11 @@ Simple printed server from [ProtoSS Packages](https://github.com/ZetaRet/protoss
 
 `GZIP` is applied automatically using `content-type header` and `Apache/NGINX` configuration based on root folder.  
 
-`Cookies` are set based on `PHP` __setcookie__ function.  
+`Cookies` are set based on `PHP` __setcookie__ function or internal JS mechanism.  
 
 Create a `server subclass` of __ProtoSSChe__ and `override methods`.  
 
-Folder `modules` contains examples and base extends of the server, including sample `stats.json` per server.  
+Folder `modules` contains base extends of the `index` server, including sample `stats.json` per server.  
 
 `FileSystem` module is used to maintain `stats.json` and current number of requests per `5s interval`. Each reload of server `reads the file`.  
 
