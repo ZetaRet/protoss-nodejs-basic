@@ -27,10 +27,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.routeRegMap = {};
 			o.routeRegExp = new RegExp('^[\\w|\\-]+$');
 			o.routeRegGet = null;
+			o.useProxy = true;
 			o.proxyPaths = '__proxypaths';
 			o.proxyMask = {};
 			o.noProxyCode = 400;
 			o.noProxyEvent = 'proxyNoRoute';
+			o.emitExacts = false;
 			o.initRouteListener();
 		}
 
@@ -98,7 +100,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 					robj.pageIndex = i;
 					robj.pageCurrent = cp;
 					robj.pageProxy = null;
-					if (p === o.proxyPaths || o.proxyMask[cp] || o.proxyMask[p]) r = null;
+					if (o.useProxy && (p === o.proxyPaths || o.proxyMask[cp] || o.proxyMask[p])) r = null;
 					else r = r[p] || r["*"];
 					if (!r) {
 						response.__rcode = o.noRouteCode;
@@ -106,8 +108,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 						break;
 					} else {
 						robj.exact = (cp === robj.rawpath);
-						o.listener.emit(cp, o, robj, routeData, request, response);
-						if (r[o.proxyPaths]) {
+						if (!o.emitExacts || robj.exact) o.listener.emit(cp, o, robj, routeData, request, response);
+						if (o.useProxy && r[o.proxyPaths]) {
 							for (pp in r[o.proxyPaths]) {
 								robj.pageProxy = pp;
 								o.listener.emit(pp, o, robj, routeData, request, response);

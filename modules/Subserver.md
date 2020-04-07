@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.8.0*  
+> *Version: 1.9.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -37,14 +37,6 @@ __listener__ events.EventEmitter
 default new,   
 
 #  
-__proxyPaths__ String  
-default '\_\_proxypaths',   
-
-#  
-__proxyMask__ Object  
-default {},   
-
-#  
 __routeRegMap__ Object  
 default {}, map of RegExp string routes  
 
@@ -55,6 +47,30 @@ default [\w|\-]+,
 #  
 __routeRegGet__ Function  
 default null,   
+
+#  
+__useProxy__ Boolean  
+default true,   
+
+#  
+__proxyPaths__ String  
+default '\_\_proxypaths',   
+
+#  
+__proxyMask__ Object  
+default {},   
+
+#  
+__noProxyCode__ Number  
+default 400,   
+
+#  
+__noProxyEvent__ String  
+default 'proxyNoRoute',   
+
+#  
+__emitExacts__ Boolean  
+default false,   
 
 
 ##  
