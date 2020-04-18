@@ -1,8 +1,8 @@
 > __Author: Zeta Ret__  
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
-> *Requires: fs, path*  
-> *Version: 1.8.0*  
+> *Requires: fs, path, events*  
+> *Version: 1.9.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -95,6 +95,10 @@ default null, map of keys to be allowed in `domToString` attributes
 __blackList__ Object  
 default null, map of keys to be disallowed in `domToString` attributes  
 
+#  
+__queryPrefix__ Object  
+default init,   
+
 
 ##  
 ### *Methods*  
@@ -155,13 +159,23 @@ __domToString(*Object* dom, *Boolean* nowhite, *Boolean* pretty, *Array* prefix)
 
 ##  
 __search(*String|Array* type, *String|Function* attr, *String|Object* value, *Object* dom) : *Array*__  
-query the dom per type of element, and/or attribute key and value  
+search the dom per type of element, and/or attribute key and value  
 - __type*__ - __*String|Array*__,   
 - __attr*__ - __*String|Function*__,   
 - __value*__ - __*String|Object*__,   
 - dom - __*Object*__,   
 > *return __Array__*  
 
+##  
+__query(*String* selector, *Object* methods, *Boolean|Object* classes) : *Array*__  
+execute sequential search on the dom, and convert dom objects to classes  
+- __selector*__ - __*String*__, space separated sequence, use `queryPrefix` to identify attributes  
+- methods - __*Object*__, object map per converted attribute, swap `attr` arguments to function handler in search  
+- classes - __*Boolean|Object*__, convert dom objects to classes in final return  
+> *return __Array__*  
+```
+htparser.query('#my-component .buttons', null, true)  
+```
 ##  
 __debugCase(*String* text, *Error|Function* error, *Object* data) : *void*__  
   

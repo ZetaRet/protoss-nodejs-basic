@@ -5,7 +5,8 @@
  **/
 
 var fs = require('fs'),
-	path = require('path');
+	path = require('path'),
+	events = require('events');
 
 class HTMLParser {
 	constructor() {
@@ -40,6 +41,22 @@ class HTMLParser {
 		o.watcher = null;
 		o.whiteList = null;
 		o.blackList = null;
+		o.queryPrefix = {
+			'#': 'id',
+			'.': 'class',
+			'/': 'data',
+			'*': 'src',
+			'@': 'style',
+			'!': 'href',
+			'$': 'rel',
+			'%': 'alt',
+			'^': 'title',
+			'&': 'name',
+			'=': 'content',
+			'-': 'target',
+			'+': 'type',
+			'?': '_'
+		};
 	}
 
 	getFilePath(file, dir) {
@@ -166,6 +183,27 @@ class HTMLParser {
 			}
 		}
 		return a;
+	}
+
+	query(selector, methods, classes) {
+		var o = this;
+		var dom, s = selector.split(' ');
+		s.forEach(e => {
+			var r, value, type, attr, prefix = e.charAt(0);
+			attr = o.queryPrefix[prefix];
+			if (attr) {
+				value = e.substring(1);
+				if (methods && methods[attr]) attr = methods[attr];
+			} else type = e;
+			if (dom) {
+				r = [];
+				dom.forEach(d => r = r.concat(o.search(type, attr, value, d)));
+			} else r = o.search(type, attr, value, dom);
+			dom = r;
+		});
+		if (classes === true) dom.forEach((e, i, a) => a[i] = new HTMLDomElement(e));
+		else if (classes) dom.forEach((e, i, a) => a[i] = classes[e.type] ? new classes[e.type](e) : e);
+		return dom;
 	}
 
 	debugCase(text, error, data) {
@@ -382,4 +420,38 @@ class HTMLParser {
 
 }
 
+class HTMLDomElement extends Array {
+	constructor(dom) {
+		super();
+		this.dom = dom;
+		this.type = dom.type;
+		this.data = {};
+		this.events = new events.EventEmitter();
+		var i, l = dom.elements ? dom.elements.length : 0;
+		for (i = 0; i < l; i++) this[i] = dom.elements[i];
+	}
+
+	get id() {
+		return this.dom.attr['id'];
+	}
+
+	get classList() {
+		return (this.dom.attr['class'] || '').split(' ');
+	}
+
+	convert(classes, sub) {
+		var o = this;
+		var i, e, cls, l = o.length;
+		if (!classes) classes = {};
+		for (i = 0; i < l; i++) {
+			e = o[i];
+			cls = classes[e.type] || HTMLDomElement;
+			o[i] = new cls(e);
+			if (sub) o[i].convert();
+		}
+		return o;
+	}
+}
+
 module.exports.HTMLParser = HTMLParser;
+module.exports.HTMLDomElement = HTMLDomElement;
