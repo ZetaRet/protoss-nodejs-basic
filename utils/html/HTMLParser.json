@@ -3,7 +3,7 @@
 	"description": "Simple HTML parser",
 	"text": "RegExp XML processor to object and reversed conversion to HTML",
 	"requires": "fs, path, events",
-	"version": "1.9.0",
+	"version": "1.9.1",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.utils.html::HTMLParser",
 	"inherits": null,
@@ -53,6 +53,7 @@
 		"domToString": "dom*: Object, nowhite: Boolean, pretty: Boolean, prefix: Array; return String",
 		"search": "type*: String|Array, attr*: String|Function, value*: String|Object, dom: Object; return Array",
 		"query": "selector*: String, methods: Object, classes: Boolean|Object; return Array",
+		"querySafe": "selector*: String, methods: Object, classes: Boolean|Object, debug: Function; return Array",
 		"debugCase": "text*: String, error: Error|Function, data: Object",
 		"cursorToCR": "cursor*: Number; return String",
 		"process": "s*: String, d*: Object; return Object",
@@ -126,5 +127,6 @@
 			"<![CDATA[my cdata content]]>",
 			"<!DOCTYPE HTML>"
 		]
-	}
+	},
+	"imports": ["zetaret.node.utils.html::HTMLDomElement"]
 }

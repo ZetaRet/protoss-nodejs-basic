@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path, events*  
-> *Version: 1.9.0*  
+> *Version: 1.9.1*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -176,6 +176,15 @@ execute sequential search on the dom, and convert dom objects to classes
 ```
 htparser.query('#my-component .buttons', null, true)  
 ```
+##  
+__querySafe(*String* selector, *Object* methods, *Boolean|Object* classes, *Function* debug) : *Array*__  
+  
+- __selector*__ - __*String*__,   
+- methods - __*Object*__,   
+- classes - __*Boolean|Object*__,   
+- debug - __*Function*__,   
+> *return __Array__*  
+
 ##  
 __debugCase(*String* text, *Error|Function* error, *Object* data) : *void*__  
   

@@ -206,6 +206,21 @@ class HTMLParser {
 		return dom;
 	}
 
+	querySafe(selector, methods, classes, debug) {
+		var o = this;
+		var r, semap = {};
+		try {
+			selector.split(' ').forEach(e => {
+				if (!e || semap[e] || o.queryPrefix[e]) throw new SyntaxError('Unexpected query sequence or malformed string');
+				semap[e] = true;
+			});
+			r = o.query(selector, methods, classes);
+		} catch (err) {
+			if (debug) debug(err, selector, methods, classes, o);
+		}
+		return r;
+	}
+
 	debugCase(text, error, data) {
 		console.log(text);
 		this.debugBuffer.push([text, error, data]);
@@ -439,7 +454,7 @@ class HTMLDomElement extends Array {
 		return (this.dom.attr['class'] || '').split(' ');
 	}
 
-	convert(classes, sub) {
+	convert(classes, sub, subc) {
 		var o = this;
 		var i, e, cls, l = o.length;
 		if (!classes) classes = {};
@@ -447,7 +462,7 @@ class HTMLDomElement extends Array {
 			e = o[i];
 			cls = classes[e.type] || HTMLDomElement;
 			o[i] = new cls(e);
-			if (sub) o[i].convert();
+			if (sub) o[i].convert(classes, subc, subc);
 		}
 		return o;
 	}
