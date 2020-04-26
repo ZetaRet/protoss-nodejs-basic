@@ -3,7 +3,7 @@
 	"description": "Simple XML DOM Element",
 	"text": "Wrapper class used as facade of the element and extends logic",
 	"requires": "events",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"date": "2020 - Today",
 	"supername": "zetaret.node.utils.html::HTMLDomElement",
 	"inherits": ["Array"],
