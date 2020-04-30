@@ -155,15 +155,15 @@ __SERVERID__ String
 default supername,   
 
 #  
-__lobbyUserClass__ LobbyUser  
+__lobbyUserClass__ [LobbyUser](LobbyUser.md)  
 default module,   
 
 #  
-__lobbyRoomClass__ LobbyRoom  
+__lobbyRoomClass__ [LobbyRoom](LobbyRoom.md)  
 default module,   
 
 #  
-__lobbyAppClass__ LobbyApp  
+__lobbyAppClass__ [LobbyApp](LobbyApp.md)  
 default module,   
 
 ---  

@@ -13,9 +13,9 @@
 			"xpros": "Module: load",
 			"EVENTS": "Object: const",
 			"SERVERID": "String: supername",
-			"cardClass": "Card: module",
-			"cardAppClass": "CardApp: module",
-			"sideCardAppClass": "SideCardApp: module"
+			"cardClass": "[Card](Card.md): module",
+			"cardAppClass": "[CardApp](CardApp.md): module",
+			"sideCardAppClass": "[SideCardApp](SideCardApp.md): module"
 		},
 		"protected_properties": {},
 		"private_properties": {},

@@ -1,13 +1,14 @@
 > __Author: Zeta Ret__  
 > __Card container of the Server__  
 # Application wrapper of card emitter, use to control external content through the medium  
+> *Requires: events*  
 > *Version: 1.3.1*  
 > *Date: 2019 - Today*  
 
 __required*__
 
 ## zetaret.node.modules::CardApp  
-> Inherits: zetaret.node.modules::LobbyApp  
+> Inherits: [zetaret.node.modules::LobbyApp](LobbyApp.md)  
 
 ### *Properties*  
 

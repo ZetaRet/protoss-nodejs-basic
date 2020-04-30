@@ -13,9 +13,9 @@
 			"xpros": "Module: load",
 			"EVENTS": "Object: const",
 			"SERVERID": "String: supername",
-			"lobbyUserClass": "LobbyUser: module",
-			"lobbyRoomClass": "LobbyRoom: module",
-			"lobbyAppClass": "LobbyApp: module"
+			"lobbyUserClass": "[LobbyUser](LobbyUser.md): module",
+			"lobbyRoomClass": "[LobbyRoom](LobbyRoom.md): module",
+			"lobbyAppClass": "[LobbyApp](LobbyApp.md): module"
 		},
 		"protected_properties": {},
 		"private_properties": {},

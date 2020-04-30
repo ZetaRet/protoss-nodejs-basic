@@ -51,15 +51,15 @@ __SERVERID__ String
 default supername,   
 
 #  
-__cardClass__ Card  
+__cardClass__ [Card](Card.md)  
 default module,   
 
 #  
-__cardAppClass__ CardApp  
+__cardAppClass__ [CardApp](CardApp.md)  
 default module,   
 
 #  
-__sideCardAppClass__ SideCardApp  
+__sideCardAppClass__ [SideCardApp](SideCardApp.md)  
 default module,   
 
 ---  

@@ -7,7 +7,7 @@
 __required*__
 
 ## zetaret.node.modules::SideCardApp  
-> Inherits: zetaret.node.modules::CardApp  
+> Inherits: [zetaret.node.modules::CardApp](CardApp.md)  
 
 ### *Properties*  
 
