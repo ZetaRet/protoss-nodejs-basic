@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, https, http2, fs*  
-> *Version: 1.8.0*  
+> *Version: 1.9.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -209,7 +209,11 @@ default './modules/XProtoSSChe.js',
 __stats__ Object  
 default init, JSON Object loaded and updated frequently, use *global.ProtoSSCheStatsFile* to set different path in application before loading index module  
 ```
-{reqnum:3, xserver:true, xserverModule: "./modules/MyServer.js", cookieid: "mycookie", htport: 3000, https: true, httpsop: {keyPath, certPath, pfxPath, caPath, h2, ...anyOtherHTTPSOptionsParameter}}  
+{  
+	reqnum:3, xserver:true, xserverModule: "./modules/MyServer.js", cookieid: "mycookie", htport: 3000, https: true,  
+	httpsop: {keyPath, certPath, pfxPath, caPath, h2, ...anyOtherHTTPSOptionsParameter},  
+	h2: false, h2op: null  
+}  
 ```
 ##  
 ### *Static Methods*  

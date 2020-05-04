@@ -324,7 +324,8 @@ function getModuleInstance(xmodule) {
 		if (httpsop.h2) htserv = http2.createSecureServer(httpsop, requestListener);
 		else htserv = https.createServer(httpsop, requestListener);
 	} else {
-		htserv = http.createServer(requestListener);
+		if (env.statsout && env.statsout.h2) htserv = http2.createServer(env.statsout.h2op, requestListener);
+		else htserv = http.createServer(requestListener);
 	}
 	if (!htserv.request) htserv.request = http.request;
 	if (!htserv.srequest) htserv.srequest = https.request;

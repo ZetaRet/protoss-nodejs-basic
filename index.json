@@ -3,7 +3,7 @@
 	"description": "Basic ProtoSS Node.js Server",
 	"text": "Simple printed server from ProtoSS Packages using XeltoSS synthesis",
 	"requires": "http, https, http2, fs",
-	"version": "1.8.0",
+	"version": "1.9.0",
 	"date": "2019 - Today",
 	"supername": "zetaret.node::index",
 	"inherits": null,
@@ -94,7 +94,11 @@
 	},
 	"static_examples": {
 		"stats": [
-			"{reqnum:3, xserver:true, xserverModule: \"./modules/MyServer.js\", cookieid: \"mycookie\", htport: 3000, https: true, httpsop: {keyPath, certPath, pfxPath, caPath, h2, ...anyOtherHTTPSOptionsParameter}}"
+			"{",
+			"\treqnum:3, xserver:true, xserverModule: \"./modules/MyServer.js\", cookieid: \"mycookie\", htport: 3000, https: true,",
+			"\thttpsop: {keyPath, certPath, pfxPath, caPath, h2, ...anyOtherHTTPSOptionsParameter},",
+			"\th2: false, h2op: null",
+			"}"
 		]
 	},
 	"examples": {}
