@@ -128,7 +128,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		initRoute() {
 			var o = this;
 			o.routeScope = o;
-			return o;
 		}
 
 		initRouteListener() {

@@ -3,7 +3,7 @@
 	"description": "Route map listener server",
 	"text": "Subserver of extended Server loaded as module",
 	"requires": "events",
-	"version": "1.9.0",
+	"version": "1.9.1",
 	"date": "2019 - Today",
 	"supername": "zetaret.node.modules::Subserver",
 	"inherits": ["[zetaret.node.modules::XProtoSSChe](XProtoSSChe.md)"],
@@ -47,7 +47,7 @@
 		"addRegPathListener": "path*: String, callback*: Function; return Function",
 		"setRouteRegExp": "path*: String; return RegExp",
 		"routeCallback": "routeData*: Object, body*: String, request*: http.ClientRequest|http.IncomingMessage, response*: http.ServerResponse",
-		"initRoute": "; return zetaret.node.modules::Subserver",
+		"initRoute": "",
 		"initRouteListener": "; return zetaret.node.modules::Subserver",
 		"pushProtoSSResponse": "request*: http.ClientRequest|http.IncomingMessage, response*: http.ServerResponse; return zetaret.node.modules::Subserver",
 		"addHeaders": "request*: http.ClientRequest|http.IncomingMessage, response*: http.ServerResponse; return Object"

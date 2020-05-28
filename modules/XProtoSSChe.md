@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.7.1*  
+> *Version: 1.9.1*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -39,6 +39,22 @@ default false, use for proxy, cache, compress, encode, encrypt, content type bas
 __emitRR__ Boolean  
 default false,   
 
+#  
+__asyncGrid__ Function  
+default null,   
+
+#  
+__asyncBuffer__ Array  
+default [],   
+
+#  
+__asyncInterval__ Number  
+default 1000,   
+
+#  
+__asyncId__ Number|Object  
+default null,   
+
 
 ##  
 ### *Methods*  
@@ -52,9 +68,24 @@ __XProtoSSChe(*Function* routeCallback, *Object* routeScope, *Object* routeData)
 > *return __void__*  
 
 ##  
-__initRoute() : *zetaret.node.modules::XProtoSSChe*__  
+__initRoute() : *void*__  
   
-> *return __zetaret.node.modules::XProtoSSChe__*  
+> *return __void__*  
+
+##  
+__initAsyncGrid() : *void*__  
+  
+> *return __void__*  
+
+##  
+__stopAsyncGrid() : *void*__  
+  
+> *return __void__*  
+
+##  
+__flushAsyncBuffer() : *void*__  
+  
+> *return __void__*  
 
 ##  
 __onReadRequestBody(*http.ClientRequest|http.IncomingMessage* request, *String* body, *http.ServerResponse* response) : *zetaret.node.modules::XProtoSSChe*__  

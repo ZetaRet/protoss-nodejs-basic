@@ -27,12 +27,34 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.postJSON = true;
 			o.layerServer = false;
 			o.emitRR = false;
+			o.asyncGrid = null;
+			o.asyncBuffer = [];
+			o.asyncInterval = 1000;
+			o.asyncId = null;
 			o.initRoute();
+			o.initAsyncGrid();
 		}
 
-		initRoute() {
+		initRoute() {}
+
+		initAsyncGrid() {
 			var o = this;
-			return o;
+			o.asyncId = setInterval(() => o.flushAsyncBuffer(), o.asyncInterval);
+		}
+
+		stopAsyncGrid() {
+			var o = this;
+			clearInterval(o.asyncId);
+			o.asyncId = null;
+		}
+
+		flushAsyncBuffer() {
+			var o = this;
+			if (o.asyncBuffer.length > 0) {
+				o.asyncBuffer.forEach(e => o.routeCallback.call(o.routeScope, o.routeData, e[1].__body, e[0], e[1]));
+				o.asyncBuffer.forEach(e => o.endResponse(e[0], e[1]));
+				o.asyncBuffer = [];
+			}
 		}
 
 		onReadRequestBody(request, body, response) {
@@ -52,7 +74,10 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			response.__body = body;
 			if (o.emitRR) response.emit(EVENTS.ROUTE, o, request, response);
 			if (o.routeCallback) {
-				o.routeCallback.call(o.routeScope, o.routeData, response.__body, request, response);
+				if (o.asyncGrid && o.asyncGrid(o, request, response)) {
+					response.__async = true;
+					o.asyncBuffer.push([request, response]);
+				} else o.routeCallback.call(o.routeScope, o.routeData, response.__body, request, response);
 			}
 			if (!response.__async) o.endResponse(request, response);
 			else response.on(EVENTS.ASYNC_RESPONSE, () => o.endResponse(request, response));

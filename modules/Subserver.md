@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.9.0*  
+> *Version: 1.9.1*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -130,9 +130,9 @@ reads response.__breakRoute to stop routing, augments route object
 > *return __void__*  
 
 ##  
-__initRoute() : *zetaret.node.modules::Subserver*__  
+__initRoute() : *void*__  
 set routeScope to self  
-> *return __zetaret.node.modules::Subserver__*  
+> *return __void__*  
 
 ##  
 __initRouteListener() : *zetaret.node.modules::Subserver*__  
