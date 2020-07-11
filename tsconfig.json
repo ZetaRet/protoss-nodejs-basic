@@ -1,0 +1,24 @@
+{
+	"compilerOptions": {
+		"target": "ES2020",
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"noImplicitAny": true,
+		"removeComments": true,
+		"preserveConstEnums": true,
+		"sourceMap": false,
+		"allowJs": true,
+		"outDir": "ts/"
+	},
+	"files": [
+		"indexTS.ts"
+	],
+	"include": [
+		"index.js",
+		"ProtoSSChe.js",
+		"modules/**/*"
+	],
+	"exclude": [
+		"node_modules"
+	]
+}
