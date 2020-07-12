@@ -16,7 +16,8 @@
 	"include": [
 		"index.js",
 		"ProtoSSChe.js",
-		"modules/**/*"
+		"modules/**/*",
+		"utils/**/*"
 	],
 	"exclude": [
 		"node_modules"
