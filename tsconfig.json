@@ -11,7 +11,8 @@
 		"outDir": "ts/"
 	},
 	"files": [
-		"indexTS.ts"
+		"indexTS.ts",
+		"indexUtilsTS.ts"
 	],
 	"include": [
 		"index.js",
