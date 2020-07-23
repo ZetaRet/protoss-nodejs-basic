@@ -6,7 +6,7 @@
 	"namespace": "zetaret.node",
 	"relative": true,
 	"markdown": true,
-	"ext": ["js"],
-	"version": "1.13.2",
+	"ext": ["js", "ts"],
+	"version": "1.13.3",
 	"license": "MIT"
 }
