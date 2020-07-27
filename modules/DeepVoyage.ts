@@ -8,9 +8,9 @@ var Voyage: zetaret.node.modules.VoyageCTOR,
 	xpros: zetaret.node.modules.VoyageModule = require((global as any).DeepVoyageRequireModule || './Voyage.js');
 const SERVERID = 'zetaret.node.modules::DeepVoyage';
 
-function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zetaret.node.modules.VoyageCTOR {
+function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zetaret.node.modules.DeepVoyageCTOR {
 	if (!Voyage) Voyage = xpros.getExtendedServerProtoSS(ProtoSSChe);
-	return class DeepVoyage extends Voyage implements zetaret.node.modules.Voyage {
+	return class DeepVoyage extends Voyage implements zetaret.node.modules.DeepVoyage {
 		constructor() {
 			super();
 			this.configTypeServer();
