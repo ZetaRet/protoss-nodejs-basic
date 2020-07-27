@@ -5,7 +5,7 @@
  **/
 
 var Voyage: zetaret.node.modules.VoyageCTOR,
-	xpros: zetaret.node.modules.VoyageModule = require((global as any).DeepVoyageRequireModule || './Voyage.js');
+	xpros: zetaret.node.modules.VoyageModule = require((global as zetaret.node.BasicServerGlobal).DeepVoyageRequireModule || './Voyage.js');
 const SERVERID = 'zetaret.node.modules::DeepVoyage';
 
 function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zetaret.node.modules.DeepVoyageCTOR {
@@ -23,7 +23,6 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 		voya(route: object, port?: number): DeepVoyage {
 			return this;
 		}
-
 	}
 }
 
