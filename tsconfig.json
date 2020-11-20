@@ -17,6 +17,7 @@
 	"include": [
 		"index.js",
 		"ProtoSSChe.js",
+		"api/**/*",
 		"modules/**/*",
 		"utils/**/*"
 	],
