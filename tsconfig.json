@@ -12,7 +12,8 @@
 	},
 	"files": [
 		"indexTS.ts",
-		"indexUtilsTS.ts"
+		"indexUtilsTS.ts",
+		"indexPremiseTS.ts"
 	],
 	"include": [
 		"index.js",
