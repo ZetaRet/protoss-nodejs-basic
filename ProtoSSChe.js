@@ -37,6 +37,7 @@ var env = {},
 	stats = {
 		reqnum: null
 	};
+var instance;
 
 function setEnv(envobj) {
 	for (var k in envobj) env[k] = envobj[k];
@@ -57,11 +58,11 @@ function updateEnv() {
 
 function resetFSInterval() {
 	clearInterval(sid);
-	sid = setInterval(function() {
+	sid = setInterval(function () {
 		if (stats.reqnum !== reqnum) {
 			try {
 				stats.reqnum = reqnum;
-				fs.writeFile(sfile, JSON.stringify(stats), function(err) {});
+				fs.writeFile(sfile, JSON.stringify(stats), function (err) {});
 			} catch (e) {}
 		}
 	}, sidinterval);
@@ -107,7 +108,17 @@ function initFS() {
 	resetFSInterval();
 }
 
-initFS();
+function StartUp() {
+	initFS();
+
+	instance = getModuleInstance(useXServer ? (global.ProtoSSCheXServerPath || "") + xserverModule : null);
+}
+
+function ShutDown() {
+	stopFSInterval();
+
+	instance.serverche.htserv.close();
+}
 
 class ProtoSSChe {
 	constructor() {
@@ -240,7 +251,7 @@ class ProtoSSChe {
 
 		if (!request.aborted) {
 			if (!o.requestBodyMethods || o.requestBodyMethods.indexOf(request.method) !== -1) {
-				request.on('data', function(data) {
+				request.on('data', function (data) {
 					if (ended) return;
 					body += data;
 					if (body.length > maxBodyLength) {
@@ -251,11 +262,11 @@ class ProtoSSChe {
 					}
 				});
 			}
-			request.on('error', function(error) {
+			request.on('error', function (error) {
 				if (o.onErrorBody) o.onErrorBody(o, request, response, body, error);
 				o.onReadRequestBody(request, body, response);
 			});
-			request.on('end', function() {
+			request.on('end', function () {
 				if (!ended) {
 					ended = true;
 					if (o.onEndBody) o.onEndBody(o, request, response, body);
@@ -333,16 +344,20 @@ function getModuleInstance(xmodule) {
 	serverche.htserv = htserv;
 
 	return {
-		serverche, xpro, xprocls, xmodule
+		serverche,
+		xpro,
+		xprocls,
+		xmodule
 	};
 }
 
-var instance = getModuleInstance(useXServer ? (global.ProtoSSCheXServerPath || "") + xserverModule : null);
-
-module.exports.loadedModule = instance.xpro;
-module.exports.loadedModuleClass = instance.xprocls;
 module.exports.serverclass = ProtoSSChe;
-module.exports.serverche = instance.serverche;
+module.exports.loadedModule = () => instance.xpro;
+module.exports.loadedModuleClass = () => instance.xprocls;
+module.exports.serverche = () => instance.serverche;
+module.exports.instance = () => instance;
+module.exports.StartUp = StartUp;
+module.exports.ShutDown = ShutDown;
 module.exports.setEnv = setEnv;
 module.exports.resetFSInterval = resetFSInterval;
 module.exports.stopFSInterval = stopFSInterval;
