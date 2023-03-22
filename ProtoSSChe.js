@@ -4,38 +4,39 @@
  * XeltoSS Node Print of Basic ProtoSS Server
  **/
 
-var http = require('http'),
-	https = require('https'),
-	http2 = require('http2'),
-	fs = require('fs');
+var http = require("http"),
+	https = require("https"),
+	http2 = require("http2"),
+	fs = require("fs");
 
 var env = {},
 	dumpall = false,
-	dumpkeys = ['__reqid', 'complete', 'headers', 'url', 'method'],
+	dumpkeys = ["__reqid", "complete", "headers", "url", "method"],
 	omit = {
 		headers: {
-			"connection": 1,
+			connection: 1,
 			"user-agent": 1,
 			"cache-control": 1,
 			"accept-encoding": 1,
-			"accept": 1,
+			accept: 1,
 			"accept-language": 1,
-			"cookie": 1,
-			"host": 1,
-			"x-forwarded-proto": 1
-		}
+			cookie: 1,
+			host: 1,
+			"x-forwarded-proto": 1,
+		},
 	},
 	maxBodyLength = 10000,
 	htport = 8888,
 	reqnum = 0,
-	contenttype = 'text/plain',
-	cookieid = 'zetaretpid',
-	sid, sidinterval = 5000,
-	sfile = global.ProtoSSCheStatsFile || 'stats.json',
+	contenttype = "text/plain",
+	cookieid = "zetaretpid",
+	sid,
+	sidinterval = 5000,
+	sfile = global.ProtoSSCheStatsFile || "stats.json",
 	useXServer = false,
-	xserverModule = './modules/XProtoSSChe.js',
+	xserverModule = "./modules/XProtoSSChe.js",
 	stats = {
-		reqnum: null
+		reqnum: null,
 	};
 var instance;
 
@@ -157,8 +158,8 @@ class ProtoSSChe {
 				try {
 					v = request[k];
 					if (v.constructor !== Function) {
-						response.__data.push(k + ': ' + JSON.stringify(v));
-						response.__data.push('\n');
+						response.__data.push(k + ": " + JSON.stringify(v));
+						response.__data.push("\n");
 					}
 				} catch (e) {}
 			}
@@ -175,35 +176,37 @@ class ProtoSSChe {
 							}
 							v = vv;
 						}
-						response.__data.push(k + ': ' + JSON.stringify(v));
-						response.__data.push('\n');
+						response.__data.push(k + ": " + JSON.stringify(v));
+						response.__data.push("\n");
 					}
 				} catch (e) {}
 			}
 		}
 		if (request.url) {
-			response.__data.push('Route Object: ' + JSON.stringify(o.splitUrl(request.url)));
-			response.__data.push('\n');
+			response.__data.push("Route Object: " + JSON.stringify(o.splitUrl(request.url)));
+			response.__data.push("\n");
 		}
-		response.__data.push('Request Body: \n');
+		response.__data.push("Request Body: \n");
 		response.__data.push(body);
-		response.__data.push('\n');
+		response.__data.push("\n");
 		o.endResponse(request, response);
 		return o;
 	}
 
 	splitUrl(url) {
-		var i, vk, surl = {},
+		var i,
+			vk,
+			surl = {},
 			durl = decodeURI(url),
-			uro = durl.split('?'),
+			uro = durl.split("?"),
 			p = uro[0],
 			v = uro[1],
-			vs = v ? v.split('&') : [];
+			vs = v ? v.split("&") : [];
 
 		surl.url = durl;
 		surl.query = v;
 		surl.path = p;
-		surl.pages = p.split('/');
+		surl.pages = p.split("/");
 		if (surl.pages[surl.pages.length - 1] === "") surl.pages.pop();
 		if (surl.pages[0] === "") surl.pages.shift();
 		surl.root = surl.pages[0];
@@ -212,7 +215,7 @@ class ProtoSSChe {
 		surl.param = surl.pages[3];
 		surl.vars = {};
 		for (i = 0; i < vs.length; i++) {
-			vk = vs[i].split('=');
+			vk = vs[i].split("=");
 			surl.vars[vk[0]] = vk[1];
 		}
 
@@ -221,7 +224,7 @@ class ProtoSSChe {
 
 	rndstr(l) {
 		var ch = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-			str = '',
+			str = "",
 			chl = ch.length - 1;
 		while (l--) str += ch.charAt(Math.round(Math.random() * chl));
 		return str;
@@ -230,43 +233,43 @@ class ProtoSSChe {
 	getReqId() {
 		var o = this;
 		reqnum = (reqnum + 1) % Number.MAX_SAFE_INTEGER;
-		return o.rndstr(o.reqIdLength) + '-' + reqnum.toString(36);
+		return o.rndstr(o.reqIdLength) + "-" + reqnum.toString(36);
 	}
 
 	pushProtoSSResponse(request, response) {
 		var o = this;
-		response.__data.push('ProtoSS: https://github.com/ZetaRet/protoss \n');
-		response.__data.push('ProtoSS Node.js Server: https://github.com/ZetaRet/protoss-nodejs-basic \n');
-		response.__data.push('ProtoSS IDE for Atom: https://atom.io/packages/ide-protoss \n');
-		response.__data.push('ProtoSS Project: https://zetaret.com/projects/protoss/ \n');
-		response.__data.push('ProtoSS Website: https://protoss.zetaret.com/ \n');
-		response.__data.push('Request Method: ' + request.method + ' \n');
+		response.__data.push("ProtoSS: https://github.com/ZetaRet/protoss \n");
+		response.__data.push("ProtoSS Node.js Server: https://github.com/ZetaRet/protoss-nodejs-basic \n");
+		response.__data.push("ProtoSS IDE for Atom: https://atom.io/packages/ide-protoss \n");
+		response.__data.push("ProtoSS Project: https://zetaret.com/projects/protoss/ \n");
+		response.__data.push("ProtoSS Website: https://protoss.zetaret.com/ \n");
+		response.__data.push("Request Method: " + request.method + " \n");
 		return o;
 	}
 
 	readRequestBody(request, response) {
 		var o = this;
 		var ended = false,
-			body = '';
+			body = "";
 
 		if (!request.aborted) {
 			if (!o.requestBodyMethods || o.requestBodyMethods.indexOf(request.method) !== -1) {
-				request.on('data', function (data) {
+				request.on("data", function (data) {
 					if (ended) return;
 					body += data;
 					if (body.length > maxBodyLength) {
 						ended = true;
 						request.abort();
-						if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error('size'));
+						if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error("size"));
 						o.onReadRequestBody(request, body, response);
 					}
 				});
 			}
-			request.on('error', function (error) {
+			request.on("error", function (error) {
 				if (o.onErrorBody) o.onErrorBody(o, request, response, body, error);
 				o.onReadRequestBody(request, body, response);
 			});
-			request.on('end', function () {
+			request.on("end", function () {
 				if (!ended) {
 					ended = true;
 					if (o.onEndBody) o.onEndBody(o, request, response, body);
@@ -274,7 +277,7 @@ class ProtoSSChe {
 				}
 			});
 		} else {
-			if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error('abort'));
+			if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error("abort"));
 			o.onReadRequestBody(request, body, response);
 		}
 		return o;
@@ -283,7 +286,7 @@ class ProtoSSChe {
 	updateCookies(request, response, headers) {
 		var o = this;
 		if (o.cookieMethod) o.cookieMethod(o, request, response, headers);
-		else if (!request.headers.cookie) headers['set-cookie'] = cookieid + "=" + o.rndstr(32);
+		else if (!request.headers.cookie) headers["set-cookie"] = cookieid + "=" + o.rndstr(32);
 		return o;
 	}
 
@@ -291,7 +294,7 @@ class ProtoSSChe {
 		var o = this;
 		var input = response.__data.join(o.dataJoin || ""),
 			headers = {
-				'content-type': contenttype
+				"content-type": contenttype,
 			};
 		o.updateCookies(request, response, headers);
 		response.writeHead(200, headers);
@@ -322,8 +325,8 @@ function getModuleInstance(xmodule) {
 		env.statsin.https = true;
 		httpsop = {};
 		if (!env.statsout.httpsop) {
-			httpsop.keyPath = 'key.pem';
-			httpsop.certPath = 'cert.pem';
+			httpsop.keyPath = "key.pem";
+			httpsop.certPath = "cert.pem";
 		} else {
 			env.statsin.httpsop = env.statsout.httpsop;
 			for (sk in env.statsout.httpsop) httpsop[sk] = env.statsout.httpsop[sk];
@@ -347,7 +350,7 @@ function getModuleInstance(xmodule) {
 		serverche,
 		xpro,
 		xprocls,
-		xmodule
+		xmodule,
 	};
 }
 
