@@ -4,13 +4,14 @@
  * Card server based on lobby connectivity with micro apps
  **/
 
-var LobbyServer, xpros = require(global.CardServerRequireModule || './LobbyServer.js'),
-	events = require('events');
+var LobbyServer,
+	xpros = require(global.CardServerRequireModule || "./LobbyServer.js"),
+	events = require("events");
 
 const EVENTS = {
-	DRAW_CARD: 'drawCard'
+	DRAW_CARD: "drawCard",
 };
-const SERVERID = 'zetaret.node.modules::CardServer';
+const SERVERID = "zetaret.node.modules::CardServer";
 
 class Card extends Array {
 	constructor() {
@@ -70,7 +71,6 @@ class CardApp extends xpros.lobbyAppClass {
 		var o = this;
 		o.cardEvents.emit(EVENTS.DRAW_CARD, card, user, o);
 	}
-
 }
 
 class SideCardApp extends CardApp {
@@ -96,8 +96,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		initCards() {}
 
 		initCardAppServer() {}
-
-	}
+	};
 }
 
 module.exports.xpros = xpros;
@@ -106,6 +105,6 @@ module.exports.SERVERID = SERVERID;
 module.exports.cardClass = Card;
 module.exports.cardAppClass = CardApp;
 module.exports.sideCardAppClass = SideCardApp;
-module.exports.resetExtends = () => LobbyServer = null;
+module.exports.resetExtends = () => (LobbyServer = null);
 module.exports.getExtends = () => LobbyServer;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

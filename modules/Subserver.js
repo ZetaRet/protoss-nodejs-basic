@@ -4,13 +4,14 @@
  * Subserver of extended Server loaded as module.
  **/
 
-var XProtoSSChe, xpros = require(global.SubserverRequireModule || './XProtoSSChe.js'),
-	events = require('events');
+var XProtoSSChe,
+	xpros = require(global.SubserverRequireModule || "./XProtoSSChe.js"),
+	events = require("events");
 
 const EVENTS = {
-	VOID: ''
+	VOID: "",
 };
-const SERVERID = 'zetaret.node.modules::Subserver';
+const SERVERID = "zetaret.node.modules::Subserver";
 
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!XProtoSSChe) XProtoSSChe = xpros.getExtendedServerProtoSS(ProtoSSChe);
@@ -21,17 +22,17 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.routeMap = {};
 			o.codeMap = {};
 			o.noRouteCode = 404;
-			o.noRouteEvent = 'error404';
+			o.noRouteEvent = "error404";
 			o.debugRoute = true;
 			o.listener = new events.EventEmitter();
 			o.routeRegMap = {};
-			o.routeRegExp = new RegExp('^[\\w|\\-]+$');
+			o.routeRegExp = new RegExp("^[\\w|\\-]+$");
 			o.routeRegGet = null;
 			o.useProxy = true;
-			o.proxyPaths = '__proxypaths';
+			o.proxyPaths = "__proxypaths";
 			o.proxyMask = {};
 			o.noProxyCode = 400;
-			o.noProxyEvent = 'proxyNoRoute';
+			o.noProxyEvent = "proxyNoRoute";
 			o.emitExacts = false;
 			o.initRouteListener();
 		}
@@ -61,7 +62,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				if (robj.pageCurrent.match(regexp)) callback(server, robj, routeData, request, response);
 				else {
 					response.__rcode = server.noProxyCode;
-					if (server.noProxyEvent) server.listener.emit(server.noProxyEvent, server, robj, routeData, request, response);
+					if (server.noProxyEvent)
+						server.listener.emit(server.noProxyEvent, server, robj, routeData, request, response);
 				}
 			});
 		}
@@ -70,13 +72,13 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			var r = o.routeMap,
 				regmap = o.routeRegMap[path];
-			path.split('/').forEach((e, i, a) => {
+			path.split("/").forEach((e, i, a) => {
 				if (regmap) {
-					if (!regmap[i]) e = '*';
+					if (!regmap[i]) e = "*";
 				} else if (o.routeRegExp) {
-					if (!e.match(o.routeRegExp)) e = '*';
+					if (!e.match(o.routeRegExp)) e = "*";
 				} else if (o.routeRegGet) {
-					if (!o.routeRegGet(e, i, a)) e = '*';
+					if (!o.routeRegGet(e, i, a)) e = "*";
 				}
 				if (!r[e]) r[e] = {};
 				r = r[e];
@@ -88,7 +90,11 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		routeCallback(routeData, body, request, response) {
 			var o = this;
-			var cp, pp, p, i, r = o.routeMap,
+			var cp,
+				pp,
+				p,
+				i,
+				r = o.routeMap,
 				robj = response.__splitUrl,
 				l = robj.pages.length,
 				rawpath = robj.pages.join("/");
@@ -96,7 +102,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (l > 0) {
 				for (i = 0; i < l; i++) {
 					p = robj.pages[i];
-					cp = cp ? cp + '/' + p : p;
+					cp = cp ? cp + "/" + p : p;
 					robj.pageIndex = i;
 					robj.pageCurrent = cp;
 					robj.pageProxy = null;
@@ -107,7 +113,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 						if (o.noRouteEvent) o.listener.emit(o.noRouteEvent, o, robj, routeData, request, response);
 						break;
 					} else {
-						robj.exact = (cp === robj.rawpath);
+						robj.exact = cp === robj.rawpath;
 						if (!o.emitExacts || robj.exact) o.listener.emit(cp, o, robj, routeData, request, response);
 						if (o.useProxy && r[o.proxyPaths]) {
 							for (pp in r[o.proxyPaths]) {
@@ -133,8 +139,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		initRouteListener() {
 			var o = this;
 			o.pathListenerX = o.pathListener.bind(o);
-			Object.defineProperty(o, 'pathListenerX', {
-				enumerable: false
+			Object.defineProperty(o, "pathListenerX", {
+				enumerable: false,
 			});
 			o.addPathListener(o.noRouteEvent);
 			return o;
@@ -150,12 +156,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var headers = response.__headers || {};
 			return headers;
 		}
-	}
+	};
 }
 
 module.exports.xpros = xpros;
 module.exports.EVENTS = EVENTS;
 module.exports.SERVERID = SERVERID;
-module.exports.resetExtends = () => XProtoSSChe = null;
+module.exports.resetExtends = () => (XProtoSSChe = null);
 module.exports.getExtends = () => XProtoSSChe;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

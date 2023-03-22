@@ -7,12 +7,12 @@
 var ExtendProtoSSChe;
 
 const EVENTS = {
-	INIT_REQUEST: 'initRequest',
-	ROUTE: 'route',
-	ASYNC_RESPONSE: 'pushProtoSSAsyncResponse',
-	END_RESPONSE: 'endResponse'
+	INIT_REQUEST: "initRequest",
+	ROUTE: "route",
+	ASYNC_RESPONSE: "pushProtoSSAsyncResponse",
+	END_RESPONSE: "endResponse",
 };
-const SERVERID = 'zetaret.node.modules::XProtoSSChe';
+const SERVERID = "zetaret.node.modules::XProtoSSChe";
 
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!ExtendProtoSSChe) ExtendProtoSSChe = ProtoSSChe;
@@ -51,8 +51,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		flushAsyncBuffer() {
 			var o = this;
 			if (o.asyncBuffer.length > 0) {
-				o.asyncBuffer.forEach(e => o.routeCallback.call(o.routeScope, o.routeData, e[1].__body, e[0], e[1]));
-				o.asyncBuffer.forEach(e => o.endResponse(e[0], e[1]));
+				o.asyncBuffer.forEach((e) => o.routeCallback.call(o.routeScope, o.routeData, e[1].__body, e[0], e[1]));
+				o.asyncBuffer.forEach((e) => o.endResponse(e[0], e[1]));
 				o.asyncBuffer = [];
 			}
 		}
@@ -63,7 +63,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (o.layerServer) body = o.layerInitRequest(request, response, body);
 			if (request.url) {
 				response.__splitUrl = o.splitUrl(request.url);
-				if (o.postJSON && request.headers['content-type'] === 'application/json') {
+				if (o.postJSON && request.headers["content-type"] === "application/json") {
 					try {
 						response.__splitUrl.post = JSON.parse(body);
 					} catch (e) {
@@ -105,7 +105,10 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		endResponse(request, response) {
 			var o = this;
 			if (o.emitRR) response.emit(EVENTS.END_RESPONSE, o, request, response);
-			var input = response.__data.join(o.dataJoin || ""),
+			var input =
+					(response.__dataPrefix || "") +
+					response.__data.join(response.__dataJoin || o.dataJoin || "") +
+					(response.__dataSuffix || ""),
 				headers = o.addHeaders(request, response);
 			if (o.autoCookie) o.updateCookies(request, response, headers);
 			if (o.layerServer) input = o.layerEndResponse(request, response, input, headers);
@@ -113,11 +116,11 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			response.end(input);
 			return o;
 		}
-	}
+	};
 }
 
 module.exports.EVENTS = EVENTS;
 module.exports.SERVERID = SERVERID;
-module.exports.resetExtends = () => ExtendProtoSSChe = null;
+module.exports.resetExtends = () => (ExtendProtoSSChe = null);
 module.exports.getExtends = () => ExtendProtoSSChe;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

@@ -4,26 +4,27 @@
  * Lobby auth and rooms of Subserver.
  **/
 
-var Subserver, xpros = require(global.LobbyServerRequireModule || './Subserver.js'),
-	http = require('http'),
-	https = require('https'),
-	events = require('events');
+var Subserver,
+	xpros = require(global.LobbyServerRequireModule || "./Subserver.js"),
+	http = require("http"),
+	https = require("https"),
+	events = require("events");
 
 const EVENTS = {
-	CONNECT_ERROR: 'connectError',
-	LOBBY_UPDATE: 'lobbyUpdate',
-	ON_CONNECTED: 'onConnected',
-	NEW_USER: 'newUser',
-	UPDATE_USER: 'updateUser',
-	REMOVE_USER: 'removeUser',
-	NEW_ROOM: 'newRoom',
-	UPDATE_ROOM: 'updateRoom',
-	REMOVE_ROOM: 'removeRoom',
-	NEW_APP: 'newApp',
-	UPDATE_APP: 'updateApp',
-	REMOVE_APP: 'removeApp'
+	CONNECT_ERROR: "connectError",
+	LOBBY_UPDATE: "lobbyUpdate",
+	ON_CONNECTED: "onConnected",
+	NEW_USER: "newUser",
+	UPDATE_USER: "updateUser",
+	REMOVE_USER: "removeUser",
+	NEW_ROOM: "newRoom",
+	UPDATE_ROOM: "updateRoom",
+	REMOVE_ROOM: "removeRoom",
+	NEW_APP: "newApp",
+	UPDATE_APP: "updateApp",
+	REMOVE_APP: "removeApp",
 };
-const SERVERID = 'zetaret.node.modules::LobbyServer';
+const SERVERID = "zetaret.node.modules::LobbyServer";
 
 class LobbyUser extends Array {
 	constructor() {
@@ -64,14 +65,17 @@ class LobbyApp extends Array {
 
 	meetsRequirements(user) {
 		var o = this;
-		var v, k, pk, res = true,
+		var v,
+			k,
+			pk,
+			res = true,
 			pre = user.getUserPrerequisites();
 		for (k in o.requirements) {
 			v = o.requirements[k];
 			pk = pre[k];
 			if (pk) {
 				if (v.constructor === Function) res = v(k, pk, pre, user, o);
-				else res = (pk === v);
+				else res = pk === v;
 			} else {
 				res = false;
 			}
@@ -104,9 +108,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var bp = {};
 			bp.enumerable = false;
 			o.onConnectedX = o.onConnected.bind(o);
-			Object.defineProperty(o, 'onConnectedX', bp);
+			Object.defineProperty(o, "onConnectedX", bp);
 			o.onConnectErrorX = o.onConnectError.bind(o);
-			Object.defineProperty(o, 'onConnectErrorX', bp);
+			Object.defineProperty(o, "onConnectErrorX", bp);
 		}
 
 		initRooms() {}
@@ -116,9 +120,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		connectTo(options, data, secure) {
 			var o = this;
 			if (!options.port) options.port = secure ? 443 : 80;
-			if (!options.method) options.method = 'GET';
+			if (!options.method) options.method = "GET";
 			var req = (secure ? https : http).request(options, o.onConnectedX || o.onConnected.bind(o));
-			req.on('error', o.onConnectErrorX || o.onConnectError.bind(o));
+			req.on("error", o.onConnectErrorX || o.onConnectError.bind(o));
 			if (data) req.write(data);
 			req.end();
 			return req;
@@ -128,8 +132,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			return new Promise((resolve, reject) => {
 				const req = o.connectTo(options, data, secure);
-				req.addEventListener(EVENTS.ON_CONNECTED, d => resolve(d));
-				req.addEventListener('error', e => reject(req));
+				req.addEventListener(EVENTS.ON_CONNECTED, (d) => resolve(d));
+				req.addEventListener("error", (e) => reject(req));
 			});
 		}
 
@@ -137,19 +141,19 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			o.lobbyEvents.emit(EVENTS.CONNECT_ERROR, e, o);
 			if (o.debugRoute) {
-				console.log('Lobby connect error: ' + o.lobbyId);
+				console.log("Lobby connect error: " + o.lobbyId);
 				console.log(e);
 			}
 		}
 
 		onConnected(res) {
 			var o = this;
-			var d = '';
-			res.setEncoding(res.req.__encoding || 'utf8');
-			res.on('data', chunk => d += chunk);
-			res.on('end', () => {
+			var d = "";
+			res.setEncoding(res.req.__encoding || "utf8");
+			res.on("data", (chunk) => (d += chunk));
+			res.on("end", () => {
 				if (o.debugRoute) {
-					console.log('Lobby connect data: ');
+					console.log("Lobby connect data: ");
 					console.log(d);
 				}
 				res.emit(EVENTS.ON_CONNECTED, d, o);
@@ -218,8 +222,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.lobbyEvents.emit(EVENTS.NEW_APP, a, o);
 			return a;
 		}
-
-	}
+	};
 }
 
 module.exports.xpros = xpros;
@@ -228,6 +231,6 @@ module.exports.SERVERID = SERVERID;
 module.exports.lobbyUserClass = LobbyUser;
 module.exports.lobbyRoomClass = LobbyRoom;
 module.exports.lobbyAppClass = LobbyApp;
-module.exports.resetExtends = () => Subserver = null;
+module.exports.resetExtends = () => (Subserver = null);
 module.exports.getExtends = () => Subserver;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;

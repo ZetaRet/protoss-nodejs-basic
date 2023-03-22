@@ -4,8 +4,9 @@
  * Voyage model of Subserver.
  **/
 
-var Subserver, xpros = require(global.VoyageRequireModule || './Subserver.js');
-const SERVERID = 'zetaret.node.modules::Voyage';
+var Subserver,
+	xpros = require(global.VoyageRequireModule || "./Subserver.js");
+const SERVERID = "zetaret.node.modules::Voyage";
 
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!Subserver) Subserver = xpros.getExtendedServerProtoSS(ProtoSSChe);
@@ -20,17 +21,17 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		voya(route, port) {
 			var o = this;
-			var k, map = o.routeMap;
+			var k,
+				map = o.routeMap;
 			if (port >= 0) o.htserv.close().listen(port);
 			for (k in route) map[k] = route[k];
 			return o;
 		}
-
-	}
+	};
 }
 
 module.exports.xpros = xpros;
 module.exports.SERVERID = SERVERID;
-module.exports.resetExtends = () => Subserver = null;
+module.exports.resetExtends = () => (Subserver = null);
 module.exports.getExtends = () => Subserver;
 module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;
