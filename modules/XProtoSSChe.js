@@ -52,7 +52,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			if (o.asyncBuffer.length > 0) {
 				o.asyncBuffer.forEach((e) => o.routeCallback.call(o.routeScope, o.routeData, e[1].__body, e[0], e[1]));
-				o.asyncBuffer.forEach((e) => o.endResponse(e[0], e[1]));
+				o.asyncBuffer.forEach((e) => {
+					if (!e[1].__async) o.endResponse(e[0], e[1]);
+				});
 				o.asyncBuffer = [];
 			}
 		}
