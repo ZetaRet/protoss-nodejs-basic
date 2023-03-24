@@ -60,15 +60,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			}
 		}
 
-		onReadRequestBody(request, body, response) {
+		async onReadRequestBody(request, body, response) {
 			var o = this;
-			if (o.middleware.length > 0) {
-				var m, r;
-				for (m = 0; m < o.middleware.length; m++) {
-					r = o.middleware[m](request, response, body);
-					if (r) break;
-				}
-			}
+
 			if (o.emitRR) request.emit(EVENTS.INIT_REQUEST, o, request, response);
 			if (o.layerServer) body = o.layerInitRequest(request, response, body);
 			if (request.url) {
@@ -82,6 +76,16 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				}
 			}
 			response.__body = body;
+
+			if (o.middleware.length > 0) {
+				var m, r;
+				for (m = 0; m < o.middleware.length; m++) {
+					r = o.middleware[m](request, response, body);
+					if (r && r.constructor === Promise) r = await r;
+					if (r === true) break;
+				}
+			}
+
 			if (o.emitRR) response.emit(EVENTS.ROUTE, o, request, response);
 			if (o.routeCallback) {
 				if (o.asyncGrid && o.asyncGrid(o, request, response)) {
@@ -112,18 +116,30 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			return input;
 		}
 
-		endResponse(request, response) {
+		wrapResponseString(response, data) {
+			var o = this;
+			var input = (response.__dataPrefix || "") + data + (response.__dataSuffix || "");
+			return input;
+		}
+
+		async endResponse(request, response) {
 			var o = this;
 			if (o.emitRR) response.emit(EVENTS.END_RESPONSE, o, request, response);
-			var input =
-					(response.__dataPrefix || "") +
-					response.__data.join(response.__dataJoin || o.dataJoin || "") +
-					(response.__dataSuffix || ""),
-				headers = o.addHeaders(request, response);
+			var input;
+			var typeofdata = response.__data[0] ? response.__data[0].constructor : null;
+			if (typeofdata === Promise) {
+				input = await response.__data[0];
+				if (input.constructor === String) input = o.wrapResponseString(response, input);
+			} else if (typeofdata !== String) {
+				input = response.__data[0];
+			} else {
+				input = o.wrapResponseString(response, response.__data.join(response.__dataJoin || o.dataJoin || ""));
+			}
+			var headers = o.addHeaders(request, response);
 			if (o.autoCookie) o.updateCookies(request, response, headers);
 			if (o.layerServer) input = o.layerEndResponse(request, response, input, headers);
 			response.writeHead(response.__rcode || 200, headers);
-			response.end(input);
+			response.end(input, response.__encoding);
 			return o;
 		}
 	};
