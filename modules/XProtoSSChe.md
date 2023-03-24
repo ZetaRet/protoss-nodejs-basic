@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.9.1*  
+> *Version: 1.10.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -34,6 +34,10 @@ default true, check incoming `content-type` header and parse body as JSON, add a
 #  
 __layerServer__ Boolean  
 default false, use for proxy, cache, compress, encode, encrypt, content type based responses  
+
+#  
+__middleware__ Array  
+default [],   
 
 #  
 __emitRR__ Boolean  

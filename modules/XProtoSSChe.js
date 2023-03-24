@@ -26,6 +26,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.autoCookie = false;
 			o.postJSON = true;
 			o.layerServer = false;
+			o.middleware = [];
 			o.emitRR = false;
 			o.asyncGrid = null;
 			o.asyncBuffer = [];
@@ -61,6 +62,13 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		onReadRequestBody(request, body, response) {
 			var o = this;
+			if (o.middleware.length > 0) {
+				var m, r;
+				for (m = 0; m < o.middleware.length; m++) {
+					r = o.middleware[m](request, response, body);
+					if (r) break;
+				}
+			}
 			if (o.emitRR) request.emit(EVENTS.INIT_REQUEST, o, request, response);
 			if (o.layerServer) body = o.layerInitRequest(request, response, body);
 			if (request.url) {
