@@ -34,4 +34,30 @@ var p,
 		"auth/logout": apiController.onLogout,
 	};
 
+server.middleware.push(function (request, response, body) {
+	console.log("Middleware first:", request.headers, request.url, response.__splitUrl, body);
+
+	var uri = response.__splitUrl.pages;
+	var i,
+		path = "",
+		found = false;
+	for (i = 0; i < uri.length; i++) {
+		path += uri[i];
+		if (paths[path]) {
+			found = true;
+			break;
+		}
+		path += "/";
+	}
+	if (!found) return false;
+	console.log("Execute on " + path);
+	return new Promise((resolver) => {
+		console.log("Start Session check in Database.");
+		setTimeout(() => {
+			console.log("Session End.");
+			resolver(false);
+		}, 500);
+	});
+});
+
 for (p in paths) server.addPathListener(p, paths[p]);
