@@ -134,6 +134,7 @@ class ProtoSSChe {
 		this.dataJoin = null;
 		this.reqIdLength = 31;
 		this.requestBodyMethods = null;
+		this.readRequestOnError = true;
 	}
 
 	getAppRequest(request) {
@@ -261,13 +262,13 @@ class ProtoSSChe {
 						ended = true;
 						request.abort();
 						if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error("size"));
-						o.onReadRequestBody(request, body, response);
+						if (o.readRequestOnError) o.onReadRequestBody(request, body, response);
 					}
 				});
 			}
 			request.on("error", function (error) {
 				if (o.onErrorBody) o.onErrorBody(o, request, response, body, error);
-				o.onReadRequestBody(request, body, response);
+				if (o.readRequestOnError) o.onReadRequestBody(request, body, response);
 			});
 			request.on("end", function () {
 				if (!ended) {
@@ -278,7 +279,7 @@ class ProtoSSChe {
 			});
 		} else {
 			if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error("abort"));
-			o.onReadRequestBody(request, body, response);
+			if (o.readRequestOnError) o.onReadRequestBody(request, body, response);
 		}
 		return o;
 	}
