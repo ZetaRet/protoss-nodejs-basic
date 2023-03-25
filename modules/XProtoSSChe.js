@@ -25,6 +25,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (routeData) o.routeData = routeData;
 			o.autoCookie = false;
 			o.postJSON = true;
+			o.contentParsers = {};
 			o.layerServer = false;
 			o.middleware = [];
 			o.emitRR = false;
@@ -67,9 +68,18 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (o.layerServer) body = o.layerInitRequest(request, response, body);
 			if (request.url) {
 				response.__splitUrl = o.splitUrl(request.url);
-				if (o.postJSON && request.headers["content-type"] === "application/json") {
+				const ctype = request.headers["content-type"];
+				if (o.postJSON && ctype === "application/json") {
 					try {
 						response.__splitUrl.post = JSON.parse(body);
+					} catch (e) {
+						response.__splitUrl.post = {};
+					}
+				} else if (o.contentParsers[ctype]) {
+					try {
+						let parsedData = o.contentParsers[ctype](body, request.headers);
+						if (parsedData.constructor === Promise) parsedData = await parsedData;
+						response.__splitUrl.post = parsedData;
 					} catch (e) {
 						response.__splitUrl.post = {};
 					}

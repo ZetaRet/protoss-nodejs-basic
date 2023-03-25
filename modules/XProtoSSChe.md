@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.10.0*  
+> *Version: 1.11.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -30,6 +30,10 @@ default false, used in `endResponse` to call `updateCookies`
 #  
 __postJSON__ Boolean  
 default true, check incoming `content-type` header and parse body as JSON, add as `post` to route object  
+
+#  
+__contentParsers__ Object  
+default {},   
 
 #  
 __layerServer__ Boolean  
