@@ -55,6 +55,17 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (o.debugRoute) console.log(robj);
 		}
 
+		addMethodPathListener(method, path, callback) {
+			var o = this;
+			const methodup = method.toUpperCase();
+			return o.addPathListener(path, function (server, robj, routeData, request, response) {
+				console.log(request.method, request.path);
+				if (request.method.toUpperCase() === methodup) {
+					callback(server, robj, routeData, request, response);
+				}
+			});
+		}
+
 		addRegPathListener(path, callback) {
 			var o = this;
 			var regexp = o.setRouteRegExp(path);

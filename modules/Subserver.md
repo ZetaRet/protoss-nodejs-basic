@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.9.1*  
+> *Version: 1.10.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -104,6 +104,14 @@ __pathListener(*zetaret.node.modules.Subserver* server, *Object* robj, *Object* 
 - __request*__ - __*http.ClientRequest|http.IncomingMessage*__,   
 - __response*__ - __*http.ServerResponse*__,   
 > *return __void__*  
+
+##  
+__addMethodPathListener(*String* method, *String* path, *Function* callback) : *Function*__  
+  
+- __method*__ - __*String*__,   
+- __path*__ - __*String*__,   
+- __callback*__ - __*Function*__,   
+> *return __Function__*  
 
 ##  
 __addRegPathListener(*String* path, *Function* callback) : *Function*__  
