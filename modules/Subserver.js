@@ -59,7 +59,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			const methodup = method.toUpperCase();
 			return o.addPathListener(path, function (server, robj, routeData, request, response) {
-				console.log(request.method, request.path);
 				if (request.method.toUpperCase() === methodup) {
 					callback(server, robj, routeData, request, response);
 				}
