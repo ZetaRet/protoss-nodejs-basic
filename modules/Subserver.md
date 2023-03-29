@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.10.0*  
+> *Version: 1.11.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -111,6 +111,15 @@ __addMethodPathListener(*String* method, *String* path, *Function* callback) : *
 - __method*__ - __*String*__,   
 - __path*__ - __*String*__,   
 - __callback*__ - __*Function*__,   
+> *return __Function__*  
+
+##  
+__addParamsPathListener(*String* path, *Function* callback, *String* method, *Boolean* autoRoute) : *Function*__  
+  
+- __path*__ - __*String*__,   
+- __callback*__ - __*Function*__,   
+- method - __*String*__,   
+- autoRoute - __*Boolean*__,   
 > *return __Function__*  
 
 ##  

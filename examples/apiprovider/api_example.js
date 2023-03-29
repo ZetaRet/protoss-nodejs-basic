@@ -17,6 +17,7 @@ var route = {
 		getdata: {},
 		setdata: {},
 		deletedata: {},
+		postdata: {},
 	},
 	auth: {
 		login: {},
@@ -61,3 +62,24 @@ server.middleware.push(function (request, response, body) {
 });
 
 for (p in paths) server.addPathListener(p, paths[p]);
+
+server.addMethodPathListener("POST", "api/postdata", function (server, robj, routeData, request, response) {
+	console.log("Post data:", robj);
+});
+
+server.addParamsPathListener(
+	"profile/:profileid",
+	function (server, robj, routeData, request, response) {
+		console.log("profile:", robj.vars.profileid, robj, server.routeMap);
+	},
+	"GET",
+	true
+);
+server.addParamsPathListener(
+	"page/{^[\\w|\\-]+$}",
+	function (server, robj, routeData, request, response) {
+		console.log("page:", robj.pages[1], robj, server.routeMap);
+	},
+	"GET",
+	true
+);

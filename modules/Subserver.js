@@ -65,6 +65,68 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			});
 		}
 
+		addParamsPathListener(path, callback, method, autoRoute) {
+			var o = this;
+			const methodup = method ? method.toUpperCase() : null;
+			var paramPath = [];
+			var r = o.routeMap;
+			var listenPath = path
+				.split("/")
+				.map((e) => {
+					var param = e;
+					if (param.charAt(0) === "{" && param.charAt(param.length - 1) === "}") {
+						param = new RegExp(param.substring(1, param.length - 1));
+						if (autoRoute) {
+							if (!r["*"]) r["*"] = {};
+							r = r["*"];
+						}
+					} else if (param.charAt(0) === ":") {
+						if (autoRoute) {
+							if (!r["*"]) r["*"] = {};
+							r = r["*"];
+						}
+					} else {
+						if (autoRoute) {
+							if (!r[param]) r[param] = {};
+							r = r[param];
+						}
+					}
+					paramPath.push(param);
+					return "*";
+				})
+				.join("/");
+
+			return o.addPathListener(listenPath, function (server, robj, routeData, request, response) {
+				if (!methodup || request.method.toUpperCase() === methodup) {
+					var pcsplit = robj.pageCurrent.split("/");
+					var i,
+						k,
+						param,
+						paramc,
+						vars = {};
+
+					if (paramPath.length <= pcsplit.length) {
+						for (i = 0; i < paramPath.length; i++) {
+							param = paramPath[i];
+							paramc = param.constructor;
+							if (paramc === RegExp && !pcsplit[i].match(param)) break;
+							else if (paramc === String && param.charAt(0) === ":")
+								vars[param.substring(1)] = pcsplit[i];
+							else if (paramc === String && param !== pcsplit[i]) break;
+						}
+						if (i === paramPath.length) {
+							var newrobj = { ...robj };
+							newrobj.vars = { ...robj.vars };
+							for (k in vars) {
+								newrobj.vars[k] = vars[k];
+							}
+							callback(server, newrobj, routeData, request, response);
+						}
+					}
+				}
+			});
+		}
+
 		addRegPathListener(path, callback) {
 			var o = this;
 			var regexp = o.setRouteRegExp(path);
@@ -107,23 +169,27 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				r = o.routeMap,
 				robj = response.__splitUrl,
 				l = robj.pages.length,
-				rawpath = robj.pages.join("/");
+				rawpath = robj.pages.join("/"),
+				stars = "";
 			robj.rawpath = rawpath;
 			if (l > 0) {
 				for (i = 0; i < l; i++) {
 					p = robj.pages[i];
 					cp = cp ? cp + "/" + p : p;
+					stars = stars ? stars + "/*" : "*";
 					robj.pageIndex = i;
 					robj.pageCurrent = cp;
 					robj.pageProxy = null;
 					if (o.useProxy && (p === o.proxyPaths || o.proxyMask[cp] || o.proxyMask[p])) r = null;
 					else r = r[p] || r["*"];
+
 					if (!r) {
 						response.__rcode = o.noRouteCode;
 						if (o.noRouteEvent) o.listener.emit(o.noRouteEvent, o, robj, routeData, request, response);
 						break;
 					} else {
 						robj.exact = cp === robj.rawpath;
+						o.listener.emit(stars, o, robj, routeData, request, response);
 						if (!o.emitExacts || robj.exact) o.listener.emit(cp, o, robj, routeData, request, response);
 						if (o.useProxy && r[o.proxyPaths]) {
 							for (pp in r[o.proxyPaths]) {
