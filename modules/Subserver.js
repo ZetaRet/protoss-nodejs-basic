@@ -100,7 +100,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				if (!methodup || request.method.toUpperCase() === methodup) {
 					var pcsplit = robj.pageCurrent.split("/");
 					var i,
-						k,
 						param,
 						paramc,
 						vars = {};
@@ -116,10 +115,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 						}
 						if (i === paramPath.length) {
 							var newrobj = { ...robj };
-							newrobj.vars = { ...robj.vars };
-							for (k in vars) {
-								newrobj.vars[k] = vars[k];
-							}
+							newrobj.vars = { ...robj.vars, ...vars };
 							callback(server, newrobj, routeData, request, response);
 						}
 					}

@@ -7,7 +7,8 @@
 var http = require("http"),
 	https = require("https"),
 	http2 = require("http2"),
-	fs = require("fs");
+	fs = require("fs"),
+	Buffer = require("buffer").Buffer;
 
 var env = {},
 	dumpall = false,
@@ -133,6 +134,7 @@ class ProtoSSChe {
 		this.onEndBody = null;
 		this.dataJoin = null;
 		this.reqIdLength = 31;
+		this.keepBufferPerContentType = {};
 		this.requestBodyMethods = null;
 		this.readRequestOnError = true;
 	}
@@ -239,11 +241,7 @@ class ProtoSSChe {
 
 	pushProtoSSResponse(request, response) {
 		var o = this;
-		response.__data.push("ProtoSS: https://github.com/ZetaRet/protoss \n");
 		response.__data.push("ProtoSS Node.js Server: https://github.com/ZetaRet/protoss-nodejs-basic \n");
-		response.__data.push("ProtoSS IDE for Atom: https://atom.io/packages/ide-protoss \n");
-		response.__data.push("ProtoSS Project: https://zetaret.com/projects/protoss/ \n");
-		response.__data.push("ProtoSS Website: https://protoss.zetaret.com/ \n");
 		response.__data.push("Request Method: " + request.method + " \n");
 		return o;
 	}
@@ -251,14 +249,21 @@ class ProtoSSChe {
 	readRequestBody(request, response) {
 		var o = this;
 		var ended = false,
+			bodyBuffer = [],
+			bodyLength = 0,
 			body = "";
+		var ctype = request.headers["content-type"];
+		if (ctype) ctype = ctype.split(";")[0];
+		var keepbuffer = env.keepBodyBuffer && o.keepBufferPerContentType[ctype] ? true : false;
 
 		if (!request.aborted) {
 			if (!o.requestBodyMethods || o.requestBodyMethods.indexOf(request.method) !== -1) {
 				request.on("data", function (data) {
 					if (ended) return;
+					if (keepbuffer) bodyBuffer.push(data);
+					bodyLength += data.length;
 					body += data;
-					if (body.length > maxBodyLength) {
+					if (bodyLength > maxBodyLength) {
 						ended = true;
 						request.abort();
 						if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error("size"));
@@ -272,6 +277,7 @@ class ProtoSSChe {
 			});
 			request.on("end", function () {
 				if (!ended) {
+					if (keepbuffer) request.__bodyBuffer = Buffer.concat(bodyBuffer);
 					ended = true;
 					if (o.onEndBody) o.onEndBody(o, request, response, body);
 					o.onReadRequestBody(request, body, response);

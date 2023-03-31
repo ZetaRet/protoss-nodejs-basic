@@ -69,15 +69,16 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (request.url) {
 				response.__splitUrl = o.splitUrl(request.url);
 				const ctype = request.headers["content-type"];
+				var ctypeCheck = ctype ? ctype.split(";")[0] : null;
 				if (o.postJSON && ctype === "application/json") {
 					try {
 						response.__splitUrl.post = JSON.parse(body);
 					} catch (e) {
 						response.__splitUrl.post = {};
 					}
-				} else if (o.contentParsers[ctype]) {
+				} else if (o.contentParsers[ctypeCheck]) {
 					try {
-						let parsedData = o.contentParsers[ctype](body, request.headers);
+						let parsedData = o.contentParsers[ctypeCheck](body, request.headers, request);
 						if (parsedData.constructor === Promise) parsedData = await parsedData;
 						response.__splitUrl.post = parsedData;
 					} catch (e) {
