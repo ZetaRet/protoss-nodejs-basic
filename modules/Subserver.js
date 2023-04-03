@@ -116,6 +116,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 						if (i === paramPath.length) {
 							var newrobj = { ...robj };
 							newrobj.vars = { ...robj.vars, ...vars };
+							newrobj.paramsPathData = {
+								path: path,
+								listenPath: listenPath,
+								paramPath: paramPath,
+								params: vars,
+							};
 							callback(server, newrobj, routeData, request, response);
 						}
 					}
