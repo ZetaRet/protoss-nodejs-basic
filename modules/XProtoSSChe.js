@@ -72,7 +72,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				var ctypeCheck = ctype ? ctype.split(";")[0] : null;
 				if (o.postJSON && ctype === "application/json") {
 					try {
-						response.__splitUrl.post = JSON.parse(body);
+						response.__splitUrl.post = JSON.parse(body.constructor === String ? body : body.toString());
 					} catch (e) {
 						response.__splitUrl.post = {};
 					}
@@ -149,6 +149,18 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var headers = o.addHeaders(request, response);
 			if (o.autoCookie) o.updateCookies(request, response, headers);
 			if (o.layerServer) input = o.layerEndResponse(request, response, input, headers);
+
+			if (o.responseMiddleware.length > 0) {
+				var m, r;
+				const output = { data: input };
+				for (m = 0; m < o.responseMiddleware.length; m++) {
+					r = o.responseMiddleware[m](request, response, output);
+					if (r && r.constructor === Promise) r = await r;
+					if (r === true) break;
+				}
+				input = output.data;
+			}
+
 			response.writeHead(response.__rcode || 200, headers);
 			response.end(input, response.__encoding);
 			return o;

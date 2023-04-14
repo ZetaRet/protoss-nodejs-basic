@@ -137,6 +137,8 @@ class ProtoSSChe {
 		this.keepBufferPerContentType = {};
 		this.requestBodyMethods = null;
 		this.readRequestOnError = true;
+		this.requestMiddleware = [];
+		this.responseMiddleware = [];
 	}
 
 	getAppRequest(request) {
@@ -275,10 +277,22 @@ class ProtoSSChe {
 				if (o.onErrorBody) o.onErrorBody(o, request, response, body, error);
 				if (o.readRequestOnError) o.onReadRequestBody(request, body, response);
 			});
-			request.on("end", function () {
+			request.on("end", async function () {
 				if (!ended) {
 					if (keepbuffer) request.__bodyBuffer = Buffer.concat(bodyBuffer);
 					ended = true;
+
+					if (o.requestMiddleware.length > 0) {
+						var m, r;
+						const input = { data: body, ctype: ctype };
+						for (m = 0; m < o.requestMiddleware.length; m++) {
+							r = o.requestMiddleware[m](request, response, input);
+							if (r && r.constructor === Promise) r = await r;
+							if (r === true) break;
+						}
+						body = input.data;
+					}
+
 					if (o.onEndBody) o.onEndBody(o, request, response, body);
 					o.onReadRequestBody(request, body, response);
 				}

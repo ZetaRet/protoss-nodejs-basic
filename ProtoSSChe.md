@@ -2,7 +2,7 @@
 > __Basic ProtoSS Node.js Server__  
 # Simple printed server from ProtoSS Packages using XeltoSS synthesis  
 > *Requires: http, https, http2, fs*  
-> *Version: 1.10.1*  
+> *Version: 1.11.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -62,6 +62,14 @@ default null,
 #  
 __readRequestOnError__ Boolean  
 default true,   
+
+#  
+__requestMiddleware__ Array  
+default [],   
+
+#  
+__responseMiddleware__ Array  
+default [],   
 
 
 ##  

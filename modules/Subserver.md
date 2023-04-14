@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.11.0*  
+> *Version: 1.12.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -34,6 +34,10 @@ default true,
 
 #  
 __listener__ events.EventEmitter  
+default new,   
+
+#  
+__pathEmitter__ events.EventEmitter  
 default new,   
 
 #  

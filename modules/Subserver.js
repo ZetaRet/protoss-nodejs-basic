@@ -25,6 +25,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.noRouteEvent = "error404";
 			o.debugRoute = true;
 			o.listener = new events.EventEmitter();
+			o.pathEmitter = new events.EventEmitter();
 			o.routeRegMap = {};
 			o.routeRegExp = new RegExp("^[\\w|\\-]+$");
 			o.routeRegGet = null;
@@ -40,13 +41,13 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		addPathListener(path, callback) {
 			var o = this;
 			if (!callback) callback = o.pathListenerX || o.pathListener.bind(o);
-			o.listener.on(path, callback);
+			o.pathEmitter.on(path, callback);
 			return callback;
 		}
 
 		removePathListener(path, callback) {
 			var o = this;
-			o.listener.remove(path, callback);
+			o.pathEmitter.remove(path, callback);
 			return o;
 		}
 
@@ -191,12 +192,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 						break;
 					} else {
 						robj.exact = cp === robj.rawpath;
-						o.listener.emit(stars, o, robj, routeData, request, response);
-						if (!o.emitExacts || robj.exact) o.listener.emit(cp, o, robj, routeData, request, response);
+						o.pathEmitter.emit(stars, o, robj, routeData, request, response);
+						if (!o.emitExacts || robj.exact) o.pathEmitter.emit(cp, o, robj, routeData, request, response);
 						if (o.useProxy && r[o.proxyPaths]) {
 							for (pp in r[o.proxyPaths]) {
 								robj.pageProxy = pp;
-								o.listener.emit(pp, o, robj, routeData, request, response);
+								o.pathEmitter.emit(pp, o, robj, routeData, request, response);
 							}
 						}
 						if (response.__breakRoute) break;
@@ -204,7 +205,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				}
 			} else {
 				robj.exact = true;
-				o.listener.emit(EVENTS.VOID, o, robj, routeData, request, response);
+				o.pathEmitter.emit(EVENTS.VOID, o, robj, routeData, request, response);
 			}
 			if (o.codeMap[rawpath]) response.__rcode = o.codeMap[rawpath];
 		}
