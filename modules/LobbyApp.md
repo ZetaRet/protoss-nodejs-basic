@@ -42,5 +42,3 @@ __meetsRequirements(*Object* user) : *Boolean*__
 - __user*__ - __*Object*__,   
 > *return __Boolean__*  
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

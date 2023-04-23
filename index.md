@@ -9,5 +9,3 @@ __required*__
 ## zetaret.node::index  
 
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

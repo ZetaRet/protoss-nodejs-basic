@@ -62,5 +62,3 @@ default module,
 __sideCardAppClass__ [SideCardApp](SideCardApp.md)  
 default module,   
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

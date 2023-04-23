@@ -41,5 +41,3 @@ default load,
 __SERVERID__ String  
 default supername,   
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

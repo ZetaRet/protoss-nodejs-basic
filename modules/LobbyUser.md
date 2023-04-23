@@ -37,5 +37,3 @@ __getUserPrerequisites() : *Object*__
   
 > *return __Object__*  
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

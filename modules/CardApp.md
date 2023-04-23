@@ -64,5 +64,3 @@ __drawCard(*Object* card, *Object* user) : *void*__
 - __user*__ - __*Object*__,   
 > *return __void__*  
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

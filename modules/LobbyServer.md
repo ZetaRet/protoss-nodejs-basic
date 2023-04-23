@@ -166,5 +166,3 @@ default module,
 __lobbyAppClass__ [LobbyApp](LobbyApp.md)  
 default module,   
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

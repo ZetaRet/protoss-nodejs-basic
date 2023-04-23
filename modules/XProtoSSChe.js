@@ -90,8 +90,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 			if (o.middleware.length > 0) {
 				var m, r;
+				const midobj = {};
 				for (m = 0; m < o.middleware.length; m++) {
-					r = o.middleware[m](request, response, body);
+					r = o.middleware[m](request, response, body, midobj);
 					if (r && r.constructor === Promise) r = await r;
 					if (r === true) break;
 				}
@@ -152,7 +153,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 			if (o.responseMiddleware.length > 0) {
 				var m, r;
-				const output = { data: input };
+				const output = { data: input, headers };
 				for (m = 0; m < o.responseMiddleware.length; m++) {
 					r = o.responseMiddleware[m](request, response, output);
 					if (r && r.constructor === Promise) r = await r;

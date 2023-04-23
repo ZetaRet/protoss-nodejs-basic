@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Basic extender and nullifier__  
 # Extended ProtoSSChe Server loaded as module  
-> *Version: 1.11.0*  
+> *Version: 1.11.1*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -152,5 +152,3 @@ default const,
 __SERVERID__ String  
 default supername,   
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

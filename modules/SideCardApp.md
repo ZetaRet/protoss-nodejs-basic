@@ -28,5 +28,3 @@ __SideCardApp() : *void*__
   
 > *return __void__*  
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator
