@@ -1,6 +1,9 @@
 {
 	"name": "protoss-nodejs-basic",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"author": "Zeta Ret",
-	"license": "MIT"
+	"license": "MIT",
+	"dependencies": {
+		"@types/protoss-nodejs-basic": "git+https://github.com/ZetaRet/protoss-nodejs-basic-types.git"
+	}
 }
