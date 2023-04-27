@@ -35,8 +35,8 @@ var p,
 		"auth/logout": apiController.onLogout,
 	};
 
-server.middleware.push(function (request, response, body) {
-	console.log("Middleware first:", request.headers, request.url, response.__splitUrl, body);
+server.middleware.push(function (request, response, midobj) {
+	console.log("Process Middleware first");
 
 	var uri = response.__splitUrl.pages;
 	var i,
@@ -51,6 +51,7 @@ server.middleware.push(function (request, response, body) {
 		path += "/";
 	}
 	if (!found) return false;
+	console.log("Middleware:", request.headers, request.url, response.__splitUrl, midobj.body);
 	console.log("Execute on " + path);
 	return new Promise((resolver) => {
 		console.log("Start Session check in Database.");

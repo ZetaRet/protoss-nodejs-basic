@@ -31,8 +31,7 @@ class APIController {
 	}
 
 	setJSON(data, response) {
-		response.__headers["content-type"] = "application/json";
-		response.__data.push(JSON.stringify(data));
+		response.__json(data);
 	}
 }
 

@@ -41,6 +41,12 @@ var env = {},
 	};
 var instance;
 
+http.ServerResponse.prototype.__json = http2.Http2ServerResponse.prototype.__json = function (data, code) {
+	this.__headers["content-type"] = "application/json";
+	this.__data.push(JSON.stringify(data));
+	if (code !== undefined) this.__rcode = code;
+};
+
 function setEnv(envobj) {
 	for (var k in envobj) env[k] = envobj[k];
 	updateEnv();
@@ -284,7 +290,7 @@ class ProtoSSChe {
 
 					if (o.requestMiddleware.length > 0) {
 						var m, r;
-						const input = { data: body, ctype: ctype };
+						const input = { data: body, ctype };
 						for (m = 0; m < o.requestMiddleware.length; m++) {
 							r = o.requestMiddleware[m](request, response, input);
 							if (r && r.constructor === Promise) r = await r;

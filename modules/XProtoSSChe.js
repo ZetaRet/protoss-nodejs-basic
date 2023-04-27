@@ -90,9 +90,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 			if (o.middleware.length > 0) {
 				var m, r;
-				const midobj = {};
+				const midobj = { body };
 				for (m = 0; m < o.middleware.length; m++) {
-					r = o.middleware[m](request, response, body, midobj);
+					r = o.middleware[m](request, response, midobj);
 					if (r && r.constructor === Promise) r = await r;
 					if (r === true) break;
 				}
