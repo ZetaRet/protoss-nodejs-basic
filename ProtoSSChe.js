@@ -41,6 +41,14 @@ var env = {},
 	};
 var instance;
 
+const ServerEnum = {
+	XProtoSSChe: "./modules/XProtoSSChe.js",
+	Subserver: "./modules/Subserver.js",
+	Voyage: "./modules/Voyage.js",
+	LobbyServer: "./modules/LobbyServer.js",
+	CardServer: "./modules/CardServer.js",
+};
+
 http.ServerResponse.prototype.__json = http2.Http2ServerResponse.prototype.__json = function (data, code) {
 	this.__headers["content-type"] = "application/json";
 	this.__data.push(JSON.stringify(data));
@@ -60,7 +68,7 @@ function updateEnv() {
 	if (env.contenttype !== undefined) contenttype = env.contenttype;
 	if (env.sidinterval !== undefined) {
 		sidinterval = env.sidinterval;
-		resetFSInterval();
+		if (!global.EnableGlobalStatsFile) resetFSInterval();
 	}
 }
 
@@ -80,6 +88,33 @@ function stopFSInterval() {
 	clearInterval(sid);
 }
 
+function applyExternalFile(sj) {
+	if (sj) {
+		env.statsout = sj;
+		if (sj.reqnum !== undefined && sj.reqnum.constructor === Number) {
+			reqnum = sj.reqnum;
+			stats.reqnum = reqnum;
+		}
+		if (sj.xserver !== undefined && sj.xserver.constructor === Boolean) {
+			useXServer = sj.xserver;
+			stats.xserver = useXServer;
+		}
+		if (sj.xserverModule !== undefined && sj.xserverModule.constructor === String) {
+			xserverModule = sj.xserverModule;
+			if (xserverModule.charAt(0) === "#") xserverModule = ServerEnum[xserverModule.substring(1)];
+			stats.xserverModule = xserverModule;
+		}
+		if (sj.cookieid !== undefined && sj.cookieid.constructor === String) {
+			cookieid = sj.cookieid;
+			stats.cookieid = cookieid;
+		}
+		if (sj.htport !== undefined && sj.htport.constructor === Number) {
+			htport = sj.htport;
+			stats.htport = htport;
+		}
+	}
+}
+
 function initFS() {
 	env.statsin = stats;
 	try {
@@ -87,37 +122,21 @@ function initFS() {
 			var sj = fs.readFileSync(sfile);
 			try {
 				sj = JSON.parse(sj) || {};
-				if (sj) {
-					env.statsout = sj;
-					if (sj.reqnum !== undefined && sj.reqnum.constructor === Number) {
-						reqnum = sj.reqnum;
-						stats.reqnum = reqnum;
-					}
-					if (sj.xserver !== undefined && sj.xserver.constructor === Boolean) {
-						useXServer = sj.xserver;
-						stats.xserver = useXServer;
-					}
-					if (sj.xserverModule !== undefined && sj.xserverModule.constructor === String) {
-						xserverModule = sj.xserverModule;
-						stats.xserverModule = xserverModule;
-					}
-					if (sj.cookieid !== undefined && sj.cookieid.constructor === String) {
-						cookieid = sj.cookieid;
-						stats.cookieid = cookieid;
-					}
-					if (sj.htport !== undefined && sj.htport.constructor === Number) {
-						htport = sj.htport;
-						stats.htport = htport;
-					}
-				}
+				applyExternalFile(sj);
 			} catch (e) {}
 		}
 	} catch (e) {}
 	resetFSInterval();
 }
 
+function initGlobalFile() {
+	env.statsin = stats;
+	applyExternalFile(global.GlobalStatsFile);
+}
+
 function StartUp() {
-	initFS();
+	if (!global.EnableGlobalStatsFile) initFS();
+	else initGlobalFile();
 
 	instance = getModuleInstance(useXServer ? (global.ProtoSSCheXServerPath || "") + xserverModule : null);
 }
@@ -382,6 +401,7 @@ function getModuleInstance(xmodule) {
 }
 
 module.exports.serverclass = ProtoSSChe;
+module.exports.ServerEnum = ServerEnum;
 module.exports.loadedModule = () => instance.xpro;
 module.exports.loadedModuleClass = () => instance.xprocls;
 module.exports.serverche = () => instance.serverche;

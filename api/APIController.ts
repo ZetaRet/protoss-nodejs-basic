@@ -6,11 +6,11 @@ class APIController implements zetaret.node.api.APIController {
 	public apiPrefix: string;
 
 	constructor() {
-		this.ctype = 'application/json';
+		this.ctype = "application/json";
 		this.api = [];
 		this.server = null;
 		this.db = {};
-		this.apiPrefix = 'api/';
+		this.apiPrefix = "api/";
 	}
 
 	public addServer(server: zetaret.node.modules.Subserver): void {
@@ -20,8 +20,7 @@ class APIController implements zetaret.node.api.APIController {
 	}
 
 	public setHeaders(response: zetaret.node.RoutedResponse): void {
-		if (response.__headers)
-			(response.__headers as any)['content-type'] = this.ctype;
+		if (response.__headers) (response.__headers as any)["content-type"] = this.ctype;
 	}
 
 	public pushData(response: zetaret.node.RoutedResponse, data: object): void {
