@@ -257,5 +257,3 @@ __attrToObject(*Array* aa, *Object* el, *Number* cursor) : *zetaret.node.utils.h
 - cursor - __*Number*__, used in `debugCase`  
 > *return __zetaret.node.utils.html::HTMLParser__*  
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

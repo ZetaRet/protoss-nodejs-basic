@@ -207,5 +207,3 @@ __despace(*String* v, *String* type) : *String*__
 __EVENTS__ Object  
 default const,   
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

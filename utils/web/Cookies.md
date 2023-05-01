@@ -115,5 +115,3 @@ __transformCookieObject(*Object* headers, *Boolean* remove) : *Cookies*__
 - remove - __*Boolean*__,   
 > *return __Cookies__*  
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

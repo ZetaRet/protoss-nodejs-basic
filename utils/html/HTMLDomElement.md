@@ -54,5 +54,3 @@ build classes on element index position
 - subc - __*Boolean*__, continuously sub-channel elements  
 > *return __zetaret.node.utils.html::HTMLDomElement__*  
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

@@ -31,5 +31,3 @@ __valueOf() : *Number*__
   
 > *return __Number__*  
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

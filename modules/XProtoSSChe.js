@@ -99,7 +99,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			}
 
 			if (o.emitRR) response.emit(EVENTS.ROUTE, o, request, response);
-			if (o.routeCallback) {
+			if (o.routeCallback && !response.__breakRoute) {
 				if (o.asyncGrid && o.asyncGrid(o, request, response)) {
 					response.__async = true;
 					o.asyncBuffer.push([request, response]);

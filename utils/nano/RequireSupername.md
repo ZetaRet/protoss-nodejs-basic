@@ -92,5 +92,3 @@ __loadFromJSON(*String* json, *String* dir) : *void*__
 - __dir*__ - __*String*__,   
 > *return __void__*  
 
----  
-### MarkDown - JsonDox 1.02 - Zeta Ret Zetadmin Documentation Generator

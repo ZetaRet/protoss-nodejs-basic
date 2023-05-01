@@ -123,7 +123,13 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 								paramPath: paramPath,
 								params: vars,
 							};
-							callback(server, newrobj, routeData, request, response);
+							if (callback.constructor === Array) {
+								for (let ci = 0; ci<callback.length; ci++) {
+									callback[ci](server, newrobj, routeData, request, response);
+									if (response.__breakRoute) break;
+								}
+							}
+							else callback(server, newrobj, routeData, request, response);
 						}
 					}
 				}
