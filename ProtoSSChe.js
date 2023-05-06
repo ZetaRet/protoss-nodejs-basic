@@ -281,7 +281,8 @@ class ProtoSSChe {
 			body = "";
 		var ctype = request.headers["content-type"];
 		if (ctype) ctype = ctype.split(";")[0];
-		var keepbuffer = env.keepBodyBuffer && o.keepBufferPerContentType[ctype] ? true : false;
+		var myenv = o.env || env;
+		var keepbuffer = (myenv.keepBodyBuffer && o.keepBufferPerContentType[ctype]) || myenv.swapBodyBuffer ? true : false;
 
 		if (!request.aborted) {
 			if (!o.requestBodyMethods || o.requestBodyMethods.indexOf(request.method) !== -1) {
@@ -305,7 +306,9 @@ class ProtoSSChe {
 			request.on("end", async function () {
 				if (!ended) {
 					if (keepbuffer) request.__bodyBuffer = Buffer.concat(bodyBuffer);
+					if (myenv.swapBodyBuffer) body = request.__bodyBuffer;
 					ended = true;
+					if (request.url) response.__splitUrl = o.splitUrl(request.url);
 
 					if (o.requestMiddleware.length > 0) {
 						var m, r;

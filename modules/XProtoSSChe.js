@@ -67,7 +67,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (o.emitRR) request.emit(EVENTS.INIT_REQUEST, o, request, response);
 			if (o.layerServer) body = o.layerInitRequest(request, response, body);
 			if (request.url) {
-				response.__splitUrl = o.splitUrl(request.url);
+				if (!response.__splitUrl) response.__splitUrl = o.splitUrl(request.url);
 				const ctype = request.headers["content-type"];
 				var ctypeCheck = ctype ? ctype.split(";")[0] : null;
 				if (o.postJSON && ctype === "application/json") {

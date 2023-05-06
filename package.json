@@ -1,6 +1,6 @@
 {
 	"name": "protoss-nodejs-basic",
-	"version": "2.2.0",
+	"version": "2.3.0",
 	"author": "Zeta Ret",
 	"license": "MIT",
 	"dependencies": {
