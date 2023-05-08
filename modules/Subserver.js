@@ -11,6 +11,11 @@ var XProtoSSChe,
 const EVENTS = {
 	VOID: "",
 };
+const ROUTER_SWITCH = {
+	AddPathListener: "addPathListener",
+	AddMethodPathListener: "addMethodPathListener",
+	AddParamsPathListener: "addParamsPathListener",
+};
 const SERVERID = "zetaret.node.modules::Subserver";
 
 function getExtendedServerProtoSS(ProtoSSChe) {
@@ -124,12 +129,11 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 								params: vars,
 							};
 							if (callback.constructor === Array) {
-								for (let ci = 0; ci<callback.length; ci++) {
+								for (let ci = 0; ci < callback.length; ci++) {
 									callback[ci](server, newrobj, routeData, request, response);
 									if (response.__breakRoute) break;
 								}
-							}
-							else callback(server, newrobj, routeData, request, response);
+							} else callback(server, newrobj, routeData, request, response);
 						}
 					}
 				}
@@ -139,7 +143,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		addRegPathListener(path, callback) {
 			var o = this;
 			var regexp = o.setRouteRegExp(path);
-			return o.addPathListener(path, (server, robj, routeData, request, response) => {
+			var listenPath = path.split("/").map(() => "*");
+			return o.addPathListener(listenPath, (server, robj, routeData, request, response) => {
 				if (robj.pageCurrent.match(regexp)) callback(server, robj, routeData, request, response);
 				else {
 					response.__rcode = server.noProxyCode;
@@ -229,6 +234,30 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			});
 			o.addPathListener(o.noRouteEvent);
 			return o;
+		}
+
+		addRouter(router) {
+			var o = this;
+			var prefix = router.prefix;
+			router.adds.forEach((routerAdd) => {
+				var c,
+					m = routerAdd.method,
+					a = routerAdd.arguments;
+
+				switch (m) {
+					case ROUTER_SWITCH.AddPathListener:
+						c = o.addPathListener(prefix + a[0], a[1]);
+						break;
+					case ROUTER_SWITCH.AddMethodPathListener:
+						c = o.addMethodPathListener(a[0], prefix + a[1], a[2]);
+						break;
+					case ROUTER_SWITCH.AddParamsPathListener:
+						c = o.addParamsPathListener(prefix + a[0], a[1], a[2], a[3]);
+						break;
+				}
+
+				router.returns.push({ add: routerAdd, server: o, callback: c });
+			});
 		}
 
 		pushProtoSSResponse(request, response) {

@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.12.1*  
+> *Version: 1.13.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -159,6 +159,12 @@ set routeScope to self
 __initRouteListener() : *zetaret.node.modules::Subserver*__  
   
 > *return __zetaret.node.modules::Subserver__*  
+
+##  
+__addRouter(*zetaret.node.api.Router* router) : *void*__  
+  
+- router - __*zetaret.node.api.Router*__,   
+> *return __void__*  
 
 ##  
 __pushProtoSSResponse(*http.ClientRequest|http.IncomingMessage* request, *http.ServerResponse* response) : *zetaret.node.modules::Subserver*__  

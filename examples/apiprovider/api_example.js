@@ -11,6 +11,17 @@ console.log(server);
 const apiControllerMod = require("zetaret.node.examples.apiprovider::APIController");
 var apiController = new apiControllerMod.APIController();
 
+var Router = require("zetaret.node.api::Router").Router;
+var rinst = new Router();
+rinst.prefix = "api.v2/";
+rinst.addParamsPathListener("profile/:profileid",
+	function (server, robj, routeData, request, response) {
+		console.log("profile:", robj.vars.profileid, robj, server.routeMap);
+	},
+	"GET",
+	true
+);
+
 var route = {
 	"favicon.ico": {},
 	api: {
@@ -84,3 +95,5 @@ server.addParamsPathListener(
 	"GET",
 	true
 );
+
+server.addRouter(rinst);
