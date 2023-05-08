@@ -143,7 +143,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		addRegPathListener(path, callback) {
 			var o = this;
 			var regexp = o.setRouteRegExp(path);
-			var listenPath = path.split("/").map(() => "*");
+			var listenPath = path.split("/").map(() => "*").join("/");
 			return o.addPathListener(listenPath, (server, robj, routeData, request, response) => {
 				if (robj.pageCurrent.match(regexp)) callback(server, robj, routeData, request, response);
 				else {
