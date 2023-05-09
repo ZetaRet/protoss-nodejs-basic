@@ -4,6 +4,9 @@
  * Extended ProtoSSChe Server loaded as module.
  **/
 
+var http = require("http"),
+	http2 = require("http2");
+
 var ExtendProtoSSChe;
 
 const EVENTS = {
@@ -13,6 +16,24 @@ const EVENTS = {
 	END_RESPONSE: "endResponse",
 };
 const SERVERID = "zetaret.node.modules::XProtoSSChe";
+
+var h1srpro = http.ServerResponse.prototype,
+	h2srpro = http.Http2ServerResponse.prototype;
+h1srpro.__asyncEnd = h2srpro.__asyncEnd = function (code) {
+	if (code !== undefined) this.__rcode = code;
+	this.emit(EVENTS.ASYNC_RESPONSE);
+};
+h1srpro.__asyncDataEnd = h2srpro.__asyncDataEnd = function (data, code) {
+	this.__data.push(data);
+	if (code !== undefined) this.__rcode = code;
+	this.emit(EVENTS.ASYNC_RESPONSE);
+};
+h1srpro.__asyncJsonEnd = h2srpro.__asyncJsonEnd = function (data, code) {
+	this.__headers["content-type"] = "application/json";
+	this.__data.push(JSON.stringify(data));
+	if (code !== undefined) this.__rcode = code;
+	this.emit(EVENTS.ASYNC_RESPONSE);
+};
 
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!ExtendProtoSSChe) ExtendProtoSSChe = ProtoSSChe;
@@ -141,9 +162,17 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var typeofdata = response.__data[0] ? response.__data[0].constructor : null;
 			if (typeofdata === Promise) {
 				input = await response.__data[0];
-				if (input.constructor === String) input = o.wrapResponseString(response, input);
+				var typeofinput = input.constructor;
+				if (typeofinput === String) input = o.wrapResponseString(response, input);
+				else if (typeofinput === Object || typeofinput === Array) {
+					input = JSON.stringify(input);
+					response.__headers["content-type"] = "application/json";
+				}
 			} else if (typeofdata !== String) {
-				input = response.__data[0];
+				if (typeofdata === Object || typeofdata === Array) {
+					input = JSON.stringify(response.__data[0]);
+					response.__headers["content-type"] = "application/json";
+				} else input = response.__data[0];
 			} else {
 				input = o.wrapResponseString(response, response.__data.join(response.__dataJoin || o.dataJoin || ""));
 			}

@@ -14,7 +14,8 @@ var apiController = new apiControllerMod.APIController();
 var Router = require("zetaret.node.api::Router").Router;
 var rinst = new Router();
 rinst.prefix = "api.v2/";
-rinst.addParamsPathListener("profile/:profileid",
+rinst.addParamsPathListener(
+	"profile/:profileid",
 	function (server, robj, routeData, request, response) {
 		console.log("profile:", robj.vars.profileid, robj, server.routeMap);
 	},
@@ -26,6 +27,7 @@ var route = {
 	"favicon.ico": {},
 	api: {
 		getdata: {},
+		getdbdata: {},
 		setdata: {},
 		deletedata: {},
 		postdata: {},
@@ -40,6 +42,7 @@ server.voya(route);
 var p,
 	paths = {
 		"api/getdata": apiController.onGetData,
+		"api/getdbdata": apiController.onGetDB,
 		"api/setdata": apiController.onSetData,
 		"api/deletedata": apiController.onDeleteData,
 		"auth/login": apiController.onLogin,
