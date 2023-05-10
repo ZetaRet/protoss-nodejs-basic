@@ -197,6 +197,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (l > 0) {
 				for (i = 0; i < l; i++) {
 					p = robj.pages[i];
+					if (p === "*") p = "";
 					cp = cp ? cp + "/" + p : p;
 					stars = stars ? stars + "/*" : "*";
 					robj.pageIndex = i;

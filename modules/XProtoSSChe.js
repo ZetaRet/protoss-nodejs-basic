@@ -157,6 +157,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		async endResponse(request, response) {
 			var o = this;
+			if (response.__await) await response.__await;
 			if (o.emitRR) response.emit(EVENTS.END_RESPONSE, o, request, response);
 			var input;
 			var typeofdata = response.__data[0] ? response.__data[0].constructor : null;
