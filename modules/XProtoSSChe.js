@@ -18,7 +18,7 @@ const EVENTS = {
 const SERVERID = "zetaret.node.modules::XProtoSSChe";
 
 var h1srpro = http.ServerResponse.prototype,
-	h2srpro = http.Http2ServerResponse.prototype;
+	h2srpro = http2.Http2ServerResponse.prototype;
 h1srpro.__asyncEnd = h2srpro.__asyncEnd = function (code) {
 	if (code !== undefined) this.__rcode = code;
 	this.emit(EVENTS.ASYNC_RESPONSE);
