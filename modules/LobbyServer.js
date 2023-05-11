@@ -8,7 +8,8 @@ var Subserver,
 	xpros = require(global.LobbyServerRequireModule || "./Subserver.js"),
 	http = require("http"),
 	https = require("https"),
-	events = require("events");
+	events = require("events"),
+	Buffer = require("buffer").Buffer;
 
 const EVENTS = {
 	CONNECT_ERROR: "connectError",
@@ -148,10 +149,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		onConnected(res) {
 			var o = this;
-			var d = "";
+			var sbb = o.env.swapBodyBuffer;
+			var d = sbb ? [] : "";
 			res.setEncoding(res.req.__encoding || "utf8");
-			res.on("data", (chunk) => (d += chunk));
+			res.on("data", (chunk) => (sbb ? d.push(chunk) : (d += chunk)));
 			res.on("end", () => {
+				if (sbb) d = Buffer.concat(d);
 				if (o.debugRoute) {
 					console.log("Lobby connect data: ");
 					console.log(d);

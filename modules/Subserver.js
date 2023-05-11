@@ -29,6 +29,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.noRouteCode = 404;
 			o.noRouteEvent = "error404";
 			o.debugRoute = true;
+			o.debugRouteList = [];
 			o.listener = new events.EventEmitter();
 			o.pathEmitter = new events.EventEmitter();
 			o.routeRegMap = {};
@@ -45,6 +46,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		addPathListener(path, callback) {
 			var o = this;
+			if (o.debugRouteList) o.debugRouteList.push(path);
 			if (!callback) callback = o.pathListenerX || o.pathListener.bind(o);
 			o.pathEmitter.on(path, callback);
 			return callback;
@@ -78,6 +80,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		addParamsPathListener(path, callback, method, autoRoute) {
 			var o = this;
+			if (o.debugRouteList) o.debugRouteList.push(path);
 			const methodup = method ? method.toUpperCase() : null;
 			var paramPath = [];
 			var r = o.routeMap;
@@ -147,6 +150,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		addRegPathListener(path, callback) {
 			var o = this;
+			if (o.debugRouteList) o.debugRouteList.push(path);
 			var regexp = o.setRouteRegExp(path);
 			var listenPath = path
 				.split("/")

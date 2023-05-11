@@ -2,7 +2,7 @@
 > __Route map listener server__  
 # Subserver of extended Server loaded as module  
 > *Requires: events*  
-> *Version: 1.13.0*  
+> *Version: 1.14.0*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -31,6 +31,10 @@ default 'error404',
 #  
 __debugRoute__ Boolean  
 default true,   
+
+#  
+__debugRouteList__ Array  
+default [],   
 
 #  
 __listener__ events.EventEmitter  
