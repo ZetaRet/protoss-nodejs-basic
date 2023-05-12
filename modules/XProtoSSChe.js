@@ -196,7 +196,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				input = output.data;
 			}
 
-			if (response.headersSent) response.writeHead(response.__rcode || 200, headers);
+			if (!response.headersSent) response.writeHead(response.__rcode || 200, headers);
 			response.end(input, response.__encoding);
 			return o;
 		}
