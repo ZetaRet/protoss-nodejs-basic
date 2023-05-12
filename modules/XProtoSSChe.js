@@ -156,9 +156,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		}
 
 		async endResponse(request, response) {
+			if (response.__disablePipeline) return;
 			var o = this;
+
 			if (response.__await) await response.__await;
 			if (o.emitRR) response.emit(EVENTS.END_RESPONSE, o, request, response);
+
 			var input;
 			var typeofdata = response.__data[0] ? response.__data[0].constructor : null;
 			if (typeofdata === Promise) {
@@ -174,9 +177,10 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 					input = JSON.stringify(response.__data[0]);
 					response.__headers["content-type"] = "application/json";
 				} else input = response.__data[0];
-			} else {
+			} else if (response.__data.length > 0) {
 				input = o.wrapResponseString(response, response.__data.join(response.__dataJoin || o.dataJoin || ""));
 			}
+
 			var headers = o.addHeaders(request, response);
 			if (o.autoCookie) o.updateCookies(request, response, headers);
 			if (o.layerServer) input = o.layerEndResponse(request, response, input, headers);
@@ -192,7 +196,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				input = output.data;
 			}
 
-			response.writeHead(response.__rcode || 200, headers);
+			if (response.headersSent) response.writeHead(response.__rcode || 200, headers);
 			response.end(input, response.__encoding);
 			return o;
 		}

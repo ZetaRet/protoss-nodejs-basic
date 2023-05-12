@@ -284,6 +284,9 @@ class ProtoSSChe {
 		var myenv = o.env || env;
 		var keepbuffer = (myenv.keepBodyBuffer && o.keepBufferPerContentType[ctype]) || myenv.swapBodyBuffer ? true : false;
 
+		if (request.headers["request_url"]) request.url = request.headers["request_url"];
+		if (request.headers["request_method"]) request.method = request.headers["request_method"];
+
 		if (!request.aborted) {
 			if (!o.requestBodyMethods || o.requestBodyMethods.indexOf(request.method) !== -1) {
 				request.on("data", function (data) {
