@@ -17,7 +17,7 @@ console.log(serv);
 serv.codeMap["node/login"] = 401;
 serv.routeMap = {
 	"": {},
-	node: {
+	"node": {
 		services: {
 			service1: {},
 			service2: {

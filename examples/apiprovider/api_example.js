@@ -25,14 +25,14 @@ rinst.addParamsPathListener(
 
 var route = {
 	"favicon.ico": {},
-	api: {
+	"api": {
 		getdata: {},
 		getdbdata: {},
 		setdata: {},
 		deletedata: {},
 		postdata: {},
 	},
-	auth: {
+	"auth": {
 		login: {},
 		logout: {},
 	},
