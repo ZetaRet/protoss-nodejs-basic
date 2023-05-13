@@ -4,6 +4,10 @@
 	"author": "Zeta Ret",
 	"license": "MIT",
 	"scripts": {
+		"example_basic": "node ./examples/basic/example.js",
+		"example_api": "node ./examples/apiprovider/api_example.js",
+		"example_fileload": "node ./examples/fileload/file_example.js",
+		"example_htmlserver": "node ./examples/htmlserverload/server_example.js",
 		"prettier-ts-check": "prettier --check \"ts/**/*.js\"",
 		"prettier-ts-write": "prettier --write \"ts/**/*.js\"",
 		"tsc": "tsc --project ./tsconfig.json",
