@@ -123,8 +123,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 							param = paramPath[i];
 							paramc = param.constructor;
 							if (paramc === RegExp && !pcsplit[i].match(param)) break;
-							else if (paramc === String && param.charAt(0) === ":")
-								vars[param.substring(1)] = pcsplit[i];
+							else if (paramc === String && param.charAt(0) === ":") vars[param.substring(1)] = pcsplit[i];
 							else if (paramc === String && param !== pcsplit[i]) break;
 						}
 						if (i === paramPath.length) {

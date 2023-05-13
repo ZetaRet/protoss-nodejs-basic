@@ -43,16 +43,16 @@ const CardAppInstance = new CardApp();
 const SideCardAppInstance = new SideCardApp();
 const VoyageInstance = new Voyage();
 [
-    ProtoSSCheInstance,
-    XProtoSSCheInstance,
-    SubserverInstance,
-    LobbyServerInstance,
-    LobbyAppInstance,
-    LobbyRoomInstance,
-    LobbyUserInstance,
-    CardServerInstance,
-    CardInstance,
-    CardAppInstance,
-    SideCardAppInstance,
-    VoyageInstance
+	ProtoSSCheInstance,
+	XProtoSSCheInstance,
+	SubserverInstance,
+	LobbyServerInstance,
+	LobbyAppInstance,
+	LobbyRoomInstance,
+	LobbyUserInstance,
+	CardServerInstance,
+	CardInstance,
+	CardAppInstance,
+	SideCardAppInstance,
+	VoyageInstance,
 ].forEach((e) => console.log(e));

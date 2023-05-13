@@ -14,22 +14,24 @@ class Cookies {
 		o.setCookiePath = false;
 		o.setCookieExpires = false;
 		o.cookieExpirePeriod = 24 * 60 * 60 * 1000;
-		o.cookie = '';
+		o.cookie = "";
 		o.cookieMap = {};
-		o.reserved = ['Created', 'Expires', 'Path', 'Max-Age', 'Domain', 'HttpOnly', 'Secure', 'SameSite'];
+		o.reserved = ["Created", "Expires", "Path", "Max-Age", "Domain", "HttpOnly", "Secure", "SameSite"];
 	}
 
 	parseCookie(cookie) {
 		var o = this;
 		o.cookie = cookie;
-		var i, kv, p = {},
-			sp = cookie.split(';'),
+		var i,
+			kv,
+			p = {},
+			sp = cookie.split(";"),
 			l = sp.length;
 		for (i = 0; i < l; i++) {
-			kv = sp[i].split('=');
-			p[decodeURIComponent(kv[0].trim())] = kv[1] ? kv[1].trim() : '';
+			kv = sp[i].split("=");
+			p[decodeURIComponent(kv[0].trim())] = kv[1] ? kv[1].trim() : "";
 		}
-		o.reserved.forEach(r => {
+		o.reserved.forEach((r) => {
 			delete p[r];
 			delete p[r.toLowerCase()];
 		});
@@ -50,7 +52,7 @@ class Cookies {
 	readCookie(headers, key, headerName) {
 		var o = this;
 		var cv = headers[headerName || o.headerName],
-			r = RegExp('(^|;' + ' ' + ')' + encodeURIComponent(key) + '=([^;]*)').exec(cv);
+			r = RegExp("(^|;" + " " + ")" + encodeURIComponent(key) + "=([^;]*)").exec(cv);
 		return r ? r[2] : null;
 	}
 
@@ -58,14 +60,14 @@ class Cookies {
 		var o = this;
 		var k, dd, c;
 		if (!options) options = {};
-		c = key ? key + (value ? "=" + value : '') : '';
+		c = key ? key + (value ? "=" + value : "") : "";
 		if (o.setCookieExpires && expires) {
 			dd = new Date();
-			dd.setTime(dd.getTime() + (expires * o.cookieExpirePeriod));
+			dd.setTime(dd.getTime() + expires * o.cookieExpirePeriod);
 			c += "; Expires=" + dd.toGMTString();
 		}
 		if (o.setCookiePath) c += "; Path=" + o.cookiePath;
-		for (k in options) c += '; ' + k + (options[k] ? '=' + options[k] : '');
+		for (k in options) c += "; " + k + (options[k] ? "=" + options[k] : "");
 		if (useObject) {
 			if (!headers[o.setObjectHeaderKey]) headers[o.setObjectHeaderKey] = {};
 			if (key) headers[o.setObjectHeaderKey][key] = c;
@@ -77,7 +79,7 @@ class Cookies {
 
 	deleteCookie(headers, key, useObject) {
 		var o = this;
-		o.writeCookie(headers, key, '', -1, useObject);
+		o.writeCookie(headers, key, "", -1, useObject);
 		return o;
 	}
 
@@ -92,7 +94,7 @@ class Cookies {
 		var s = [],
 			co = headers[o.setObjectHeaderKey];
 		if (co) {
-			headers[o.setHeaderKey] = s.join(';');
+			headers[o.setHeaderKey] = s.join(";");
 		}
 		if (remove) delete headers[o.setObjectHeaderKey];
 		return o;

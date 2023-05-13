@@ -4,17 +4,18 @@
  * Require by Supername
  **/
 
-var fs = require('fs'),
-	path = require('path');
+var fs = require("fs"),
+	path = require("path");
 
-var rf, maps = {},
+var rf,
+	maps = {},
 	supernames = {},
 	namespaces = {},
 	verified = {},
-	ext = ['js'];
+	ext = ["js"];
 
 function setPathSupername(supername, paths) {
-	paths.forEach(p => maps[p] = supername);
+	paths.forEach((p) => (maps[p] = supername));
 }
 
 function setSupername(supername, path) {
@@ -35,20 +36,25 @@ function resolveFilename() {
 }
 
 function verifySupername(id) {
-	var mid = id.match(new RegExp('[\\w|.]*[:]?[:]?[\\w]*'));
+	var mid = id.match(new RegExp("[\\w|.]*[:]?[:]?[\\w]*"));
 	if (mid) {
-		var found, ns, nsa, ex, fd, midr = id.replace(new RegExp('[:]+'), '.'),
-			midrspl = midr.split('.'),
+		var found,
+			ns,
+			nsa,
+			ex,
+			fd,
+			midr = id.replace(new RegExp("[:]+"), "."),
+			midrspl = midr.split("."),
 			cls = midrspl.pop(),
-			midrns = midrspl.join('.');
+			midrns = midrspl.join(".");
 		verified[id] = [midrns, cls];
 		for (ns in namespaces) {
 			nsa = namespaces[ns];
-			if (('.' + midrns + '.').startsWith('.' + ns + '.')) {
-				found = nsa.find(p => {
-					fd = path.resolve(p, (midrspl.length > 1 ? '.' : '') + midr.substr(ns.length).split('.').join(path.sep));
-					if (ex = ext.find(e => fs.existsSync(fd + '.' + e))) {
-						supernames[id] = fd + '.' + ex;
+			if (("." + midrns + ".").startsWith("." + ns + ".")) {
+				found = nsa.find((p) => {
+					fd = path.resolve(p, (midrspl.length > 1 ? "." : "") + midr.substr(ns.length).split(".").join(path.sep));
+					if ((ex = ext.find((e) => fs.existsSync(fd + "." + e)))) {
+						supernames[id] = fd + "." + ex;
 						return true;
 					}
 				});
@@ -73,7 +79,7 @@ function initRequireSupername() {
 
 function loadFromJSON(json, dir) {
 	var nsmap = JSON.parse(fs.readFileSync(path.resolve(dir, json)));
-	for (var ns in nsmap) nsmap[ns].forEach((e, i, a) => a[i] = path.resolve(dir, e));
+	for (var ns in nsmap) nsmap[ns].forEach((e, i, a) => (a[i] = path.resolve(dir, e)));
 	setNamespaceMap(nsmap);
 }
 

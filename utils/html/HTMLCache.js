@@ -4,22 +4,22 @@
  * HTML cache from parser
  **/
 
-var fs = require('fs'),
-	path = require('path'),
-	events = require('events');
+var fs = require("fs"),
+	path = require("path"),
+	events = require("events");
 
 const EVENTS = {
-	SET_STRUCT: 'setStruct',
-	ADD_PAGE: 'addPage',
-	EXE_PAGE: 'exePage',
-	RENDER_CONTENT: 'renderContent',
-	RECACHE: 'recache',
-	SWAP_JS: 'swapJs',
-	SWAP_CSS: 'swapCss',
-	WATCH: 'watch',
-	ON_WATCH: 'onWatch',
-	WATCH_FILE: 'watchFile',
-	RESET_WATCHERS: 'resetWatchers'
+	SET_STRUCT: "setStruct",
+	ADD_PAGE: "addPage",
+	EXE_PAGE: "exePage",
+	RENDER_CONTENT: "renderContent",
+	RECACHE: "recache",
+	SWAP_JS: "swapJs",
+	SWAP_CSS: "swapCss",
+	WATCH: "watch",
+	ON_WATCH: "onWatch",
+	WATCH_FILE: "watchFile",
+	RESET_WATCHERS: "resetWatchers",
 };
 
 class HTMLCache {
@@ -46,8 +46,9 @@ class HTMLCache {
 
 	getStruct(id) {
 		var o = this;
-		var c, s = o.structs[id];
-		if (s.constructor === Array) c = s.map(e => o.getStruct(e)).join('');
+		var c,
+			s = o.structs[id];
+		if (s.constructor === Array) c = s.map((e) => o.getStruct(e)).join("");
 		else c = o.getPage(s);
 		return c;
 	}
@@ -58,10 +59,10 @@ class HTMLCache {
 			parser: parser,
 			hfile: hfile,
 			dir: dir,
-			hfileloc: '',
+			hfileloc: "",
 			binders: null,
 			execfg: null,
-			content: ''
+			content: "",
 		};
 		parser.id = page;
 		var hfileloc = path.resolve(path.resolve(dir, hfile)).split(path.sep);
@@ -84,7 +85,7 @@ class HTMLCache {
 		if (!cfg) cfg = {};
 		pdata.execfg = cfg;
 		pdata.binders = {};
-		pdata.content = '';
+		pdata.content = "";
 		o.resetBinders(page);
 		if (cfg.swapjs) o.swapJS(page, cfg.jsh, cfg.despacejs);
 		if (cfg.swapcss) o.swapCSS(page, cfg.cssh, cfg.despacecss);
@@ -94,7 +95,8 @@ class HTMLCache {
 
 	renderContent(page) {
 		var o = this;
-		var c, pdata = o.pages[page],
+		var c,
+			pdata = o.pages[page],
 			hpinst = pdata.parser,
 			cfg = pdata.execfg;
 		o.events.emit(EVENTS.RENDER_CONTENT, page, pdata, o);
@@ -110,7 +112,7 @@ class HTMLCache {
 		for (p in o.pages) {
 			pdata = o.pages[p];
 			if (pdata.binders && pdata.binders[page]) {
-				pdata.content = '';
+				pdata.content = "";
 				o.resetBinders(p);
 			}
 		}
@@ -155,20 +157,22 @@ class HTMLCache {
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
 		o.events.emit(EVENTS.SWAP_CSS, page, pdata, o);
-		hpinst.search('link', 'type', 'text/css').forEach(e => {
-			var swap, pr, f = e.attr.href;
+		hpinst.search("link", "type", "text/css").forEach((e) => {
+			var swap,
+				pr,
+				f = e.attr.href;
 			if (f) {
 				pr = path.resolve(pdata.hfileloc, f);
 				if (fs.existsSync(pr)) {
 					delete e.attr.href;
 					delete e.attr.rel;
-					e.type = 'style';
+					e.type = "style";
 					e.closed = false;
-					e.ending = '>';
+					e.ending = ">";
 					e.elements = [fs.readFileSync(pr).toString()];
-					if (despace) e.elements[0] = o.despace(e.elements[0], 'css');
+					if (despace) e.elements[0] = o.despace(e.elements[0], "css");
 					swap = true;
-					if (o.watchFiles) o.watchFile(pr, page, 'css');
+					if (o.watchFiles) o.watchFile(pr, page, "css");
 				}
 			}
 			if (handler) handler(page, pdata, e, swap);
@@ -180,16 +184,18 @@ class HTMLCache {
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
 		o.events.emit(EVENTS.SWAP_JS, page, pdata, o);
-		hpinst.search('script', 'type', 'text/javascript').forEach(e => {
-			var swap, pr, f = e.attr.src;
+		hpinst.search("script", "type", "text/javascript").forEach((e) => {
+			var swap,
+				pr,
+				f = e.attr.src;
 			if (f) {
 				pr = path.resolve(pdata.hfileloc, f);
 				if (fs.existsSync(pr)) {
 					delete e.attr.src;
 					e.elements = [fs.readFileSync(pr).toString()];
-					if (despace) e.elements[0] = o.despace(e.elements[0], 'js');
+					if (despace) e.elements[0] = o.despace(e.elements[0], "js");
 					swap = true;
-					if (o.watchFiles) o.watchFile(pr, page, 'js');
+					if (o.watchFiles) o.watchFile(pr, page, "js");
 				}
 			}
 			if (handler) handler(page, pdata, e, swap);
@@ -197,7 +203,7 @@ class HTMLCache {
 	}
 
 	defaultRenderTemplate(hcache, page, pdata, hpinst, cfg) {
-		hpinst.search('#template').forEach(t => {
+		hpinst.search("#template").forEach((t) => {
 			var sp = t.attr.section;
 			t.norender = true;
 			if (pdata.binders) pdata.binders[sp] = true;
@@ -233,14 +239,16 @@ class HTMLCache {
 			watchers[longfile] = setTimeout(() => {
 				delete watchers[longfile];
 				if (debug) console.log(e, f, longfile, page, type, stats);
-				if (recacheOnChange && e === 'change') o.recache(page);
+				if (recacheOnChange && e === "change") o.recache(page);
 				if (listener) listener(e, f, longfile, page, type, stats);
 				o.events.emit(EVENTS.ON_WATCH, e, f, longfile, page, type, stats, o);
 			}, watchinterval);
 		}
 
 		return {
-			watchers, watchinterval, watchmethod
+			watchers,
+			watchinterval,
+			watchmethod,
 		};
 	}
 
@@ -261,18 +269,19 @@ class HTMLCache {
 
 	despace(v, type) {
 		var o = this;
-		if (!o.despaceRules[' ']) v = v.replace(new RegExp('[\\s]+', 'g'), ' ', v);
-		var i, chars = (o.despaceChars[type] || ':(|{}=,\?\!\&\-\+\*/%<>');
-		for (i = 0; i < chars.length; i++) v = v.replace(new RegExp('[\\s]*[' + chars.charAt(i) + '][\\s]*', 'g'), chars.charAt(i));
-		if (!o.despaceRules['^']) v = v.replace(new RegExp('[\\s]*[\\^][\\s]*', 'g'), '^');
-		if (!o.despaceRules['.']) v = v.replace(new RegExp('[.][\\s]*', 'g'), '.');
-		if (!o.despaceRules['[']) v = v.replace(new RegExp('[\\[][\\s]*', 'g'), '[');
-		if (!o.despaceRules[']']) v = v.replace(new RegExp('[\\s]*[\\]]', 'g'), ']');
-		if (!o.despaceRules[')']) v = v.replace(new RegExp('[\\s]*[\\)]', 'g'), ')');
-		if (!o.despaceRules[';']) v = v.replace(new RegExp('[;][\\s]*', 'g'), ';');
+		if (!o.despaceRules[" "]) v = v.replace(new RegExp("[\\s]+", "g"), " ", v);
+		var i,
+			chars = o.despaceChars[type] || ":(|{}=,?!&-+*/%<>";
+		for (i = 0; i < chars.length; i++)
+			v = v.replace(new RegExp("[\\s]*[" + chars.charAt(i) + "][\\s]*", "g"), chars.charAt(i));
+		if (!o.despaceRules["^"]) v = v.replace(new RegExp("[\\s]*[\\^][\\s]*", "g"), "^");
+		if (!o.despaceRules["."]) v = v.replace(new RegExp("[.][\\s]*", "g"), ".");
+		if (!o.despaceRules["["]) v = v.replace(new RegExp("[\\[][\\s]*", "g"), "[");
+		if (!o.despaceRules["]"]) v = v.replace(new RegExp("[\\s]*[\\]]", "g"), "]");
+		if (!o.despaceRules[")"]) v = v.replace(new RegExp("[\\s]*[\\)]", "g"), ")");
+		if (!o.despaceRules[";"]) v = v.replace(new RegExp("[;][\\s]*", "g"), ";");
 		return v;
 	}
-
 }
 
 module.exports.EVENTS = EVENTS;

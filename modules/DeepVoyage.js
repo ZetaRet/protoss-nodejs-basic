@@ -1,19 +1,19 @@
-var Voyage, xpros = require(global.DeepVoyageRequireModule || "./Voyage.js");
+var Voyage,
+	xpros = require(global.DeepVoyageRequireModule || "./Voyage.js");
 const SERVERID = "zetaret.node.modules::DeepVoyage";
 function getExtendedServerProtoSS(ProtoSSChe) {
-    if (!Voyage)
-        Voyage = xpros.getExtendedServerProtoSS(ProtoSSChe);
-    return class DeepVoyage extends Voyage {
-        constructor() {
-            super();
-            this.configTypeServer();
-        }
-        configTypeServer() { }
-        initVoyage() { }
-        voya(route, port) {
-            return this;
-        }
-    };
+	if (!Voyage) Voyage = xpros.getExtendedServerProtoSS(ProtoSSChe);
+	return class DeepVoyage extends Voyage {
+		constructor() {
+			super();
+			this.configTypeServer();
+		}
+		configTypeServer() {}
+		initVoyage() {}
+		voya(route, port) {
+			return this;
+		}
+	};
 }
 module.exports.xpros = xpros;
 module.exports.SERVERID = SERVERID;

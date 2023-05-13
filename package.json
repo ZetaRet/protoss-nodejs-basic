@@ -1,8 +1,14 @@
 {
 	"name": "protoss-nodejs-basic",
-	"version": "2.8.0",
+	"version": "2.9.0",
 	"author": "Zeta Ret",
 	"license": "MIT",
+	"scripts": {
+		"prettier-ts-check": "prettier --check \"ts/**/*.js\"",
+		"prettier-ts-write": "prettier --write \"ts/**/*.js\"",
+		"tsc": "tsc --project ./tsconfig.json",
+		"tsc-pretty": "npm run tsc & npm run prettier-ts-write"
+	},
 	"dependencies": {
 		"@types/protoss-nodejs-basic": "git+https://github.com/ZetaRet/protoss-nodejs-basic-types.git"
 	}

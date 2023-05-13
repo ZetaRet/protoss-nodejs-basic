@@ -18,10 +18,10 @@ const RequireSupernameModuleLoaded = RequireSupernameModule;
 const CookiesCTOR = Cookies_1.Cookies;
 const CookiesInstance = new CookiesCTOR();
 [
-    HTMLCacheInstance,
-    HTMLParserInstance,
-    HTMLDomElementInstance,
-    StringLengthInstance,
-    RequireSupernameModuleLoaded,
-    CookiesInstance
+	HTMLCacheInstance,
+	HTMLParserInstance,
+	HTMLDomElementInstance,
+	StringLengthInstance,
+	RequireSupernameModuleLoaded,
+	CookiesInstance,
 ].forEach((e) => console.log(e));
