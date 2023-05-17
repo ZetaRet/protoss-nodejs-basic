@@ -65,7 +65,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 
 		pathListener(server, robj, routeData, request, response) {
 			var o = this;
-			if (o.debugRoute) console.log(robj);
+			if (o.debugRoute) console.log(robj, request.url, request.method);
 		}
 
 		addMethodPathListener(method, path, callback) {
@@ -245,6 +245,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				enumerable: false,
 			});
 			o.addPathListener(o.noRouteEvent);
+			o.listener.on(o.noRouteEvent, o.pathListenerX);
 			return o;
 		}
 

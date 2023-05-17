@@ -1,5 +1,4 @@
 const fs = require("fs");
-const Buffer = require("buffer").Buffer;
 const multipart = require("./multipart.js");
 
 const rsn = require("./../../utils/nano/RequireSupername.js");
@@ -7,6 +6,8 @@ rsn.initRequireSupername();
 rsn.loadFromJSON("namespacemap.json", __dirname);
 
 global.ProtoSSCheStatsFile = __dirname + "/" + "filestats.json";
+
+const ListDir = require("zetaret.node.utils.web::ListDir").ListDir;
 
 var mod = require("zetaret.node::index");
 mod.setEnv({ maxBodyLength: 10 * 1000 * 1000, keepBodyBuffer: true });
@@ -62,11 +63,18 @@ server.addMethodPathListener("GET", "api/filedownload", function (server, robj, 
 	var file = __dirname + "/files/" + filename;
 	var filedata = fs.readFileSync(file, "binary");
 
-	response.__headers["Content-disposition"] = "attachment; filename=" + filename;
-	response.__headers["Content-type"] = "image/png";
+	response.__headers["Content-Disposition"] = "attachment; filename=" + filename;
+	response.__headers["Content-Type"] = "image/png";
 	response.__headers["Content-Length"] = filedata.length;
 
 	response.__encoding = "binary";
 
 	response.__data.push(filedata);
+});
+
+ListDir(server, "js", __dirname, { ext: ["js", "json"] });
+ListDir(server, "images", __dirname + "/files", {
+	ext: ["png"],
+	streamExt: { png: true },
+	cacheControl: { png: 60 * 60 * 1 },
 });
