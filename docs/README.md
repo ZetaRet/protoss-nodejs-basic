@@ -1,5 +1,26 @@
 ## ProtoSS Node.js Server  
 
+### Features of the server  
+
+- d.ts types  
+- global configuration  
+- environment configuration  
+- fileless startup  
+- examples  
+- asynchronous server with pipeline  
+- subserver with route management  
+- router class on the side  
+- custom headers  
+- custom prototypes  
+- middlewares  
+- content parsers  
+- directory listing per endpoint for static assets and streaming  
+- automated json, string or buffer, and promise-based response  
+- connectivity between servers  
+- html support  
+
+### Description  
+
 Simple printed server from [ProtoSS Packages](https://github.com/ZetaRet/protoss) using [XeltoSS](https://github.com/ZetaRet/protoss/blob/master/xeltoss/XeltoSS.md) synthesis.  
 
 `GZIP` is applied automatically using `content-type header` and `Apache/NGINX` configuration based on root folder.  
