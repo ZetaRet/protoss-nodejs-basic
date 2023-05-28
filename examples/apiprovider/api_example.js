@@ -100,3 +100,29 @@ server.addParamsPathListener(
 );
 
 server.addRouter(rinst);
+
+const DataValidator = require("zetaret.node.api.DataValidator").DataValidator;
+var dv = new DataValidator();
+dv.log = true;
+var data = {
+	key1: 3,
+	key2: "Astral-1",
+	key3: false,
+	key4: "CustomStringToPassTest",
+	key6: {
+		k1: "Star",
+		k2: null,
+		k3: true,
+	},
+	key7: [1, 2, 5],
+};
+var validator = {
+	key1: { required: true, type: "number", min: 0 },
+	key2: { type: "string", regexp: new RegExp("^[\\w|\\-]+$") },
+	key3: { type: "bool" },
+	key4: { type: "func", tester: (k, value) => value === "CustomStringToPassTest" },
+	key5: { required: true, type: "string", defaults: "key5value" },
+	key6: { required: true, validation: { k1: { type: "string" }, k2: { type: "number" }, k3: { type: "bool" } } },
+	key7: { required: true, type: "array", validation: {}, element: { type: "number" } },
+};
+console.log("Validator:", dv.validate(data, validator), data);
