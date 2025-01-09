@@ -1,0 +1,21 @@
+<head>
+	<title>Stock Test</title>
+</head>
+<body>
+	<label>Open Console using F12 or CTRL+SHIFT+I to view best UI of JSON Data in Network Preview</label>
+	<hr/>
+	<form action="./api/newStock/" method="GET">
+		<button>New Stock Market</button>
+	</form>
+	<hr/>
+	<form action="./api/stockHistory/" method="GET">
+		<button>View Stock History</button>
+	</form>
+	<hr/>
+	<form action="./api/buyStock/" method="GET">
+		<input name="buyPoint" placeholder="Buy Point"/>
+		<input name="sellPoint" placeholder="Sell Point"/>
+		<input name="totalValue" placeholder="Total Value"/>
+		<button>Buy Stock</button>
+	</form>
+</body>
