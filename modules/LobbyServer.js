@@ -9,7 +9,7 @@ var Subserver,
 	http = require("http"),
 	https = require("https"),
 	events = require("events"),
-	Buffer = require("buffer").Buffer;
+	{ Buffer } = require("buffer");
 
 const EVENTS = {
 	CONNECT_ERROR: "connectError",

@@ -1,0 +1,98 @@
+{
+	"ProtoSS Server": {
+		"prefix": [
+			"protoss",
+			"protoss-server",
+			"server",
+			"new-server"
+		],
+		"body": [
+			"var ${1:server},",
+			"\txpros = require(global.${2:newserver}RequireModule || \"./${1:server}.js\");",
+			"",
+			"const EVENTS = {",
+			"};",
+			"const SERVERID = \"zetaret.node.modules::${2:newserver}\";",
+			"",
+			"function getExtendedServerProtoSS(ProtoSSChe) {",
+			"\tif (!${1:server}) ${1:server} = xpros.getExtendedServerProtoSS(ProtoSSChe);",
+			"\treturn class ${2:newserver} extends ${1:server} {",
+			"\t\tconstructor() {",
+			"\t\t\tsuper();",
+			"\t\t\tvar o = this;",
+			"\t\t}",
+			"\t};",
+			"}",
+			"",
+			"module.exports.xpros = xpros;",
+			"module.exports.EVENTS = EVENTS;",
+			"module.exports.SERVERID = SERVERID;",
+			"module.exports.resetExtends = () => (${1:server} = null);",
+			"module.exports.getExtends = () => ${1:server};",
+			"module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;"
+		],
+		"description": "New ProtoSS Server."
+	},
+	"ProtoSS Require Router": {
+		"prefix": [
+			"require-router",
+			"import-router",
+			"protoss-router"
+		],
+		"body": [
+			"const { Router } = require(\"zetaret.node.api::Router\");"
+		],
+		"description": "Require ProtoSS Router"
+	},
+	"ProtoSS New Router": {
+		"prefix": [
+			"router",
+			"new-router",
+			"protoss-router",
+			"config-router"
+		],
+		"body": [
+			"var ${1:routervar} = new Router();",
+			"${1:routervar}.prefix = \"${2:routerprefix}\";",
+			"${1:routervar}.addParamsPathListener(",
+			"\t\"${3:route}\",",
+			"\tfunction (server, robj, routeData, request, response) {",
+			"\t},",
+			"\t\"${4:GET}\",",
+			"\ttrue",
+			");",
+			"",
+			"${4:server}.addRouter(${1:routervar});"
+		],
+		"description": "New ProtoSS Router"
+	},
+	"ProtoSS Server Add Method Listener": {
+		"prefix": [
+			"server-add-listener",
+			"server-method-listener",
+			"protoss-server-listener"
+		],
+		"body": [
+			"${1:server}.addMethodPathListener(\"${2:POST}\", \"${3:route}\", function (server, robj, routeData, request, response) {",
+			"});"
+		],
+		"description": "Add Method Listener to ProtoSS Server"
+	},
+	"ProtoSS Server Add Params Listener": {
+		"prefix": [
+			"server-add-listener",
+			"server-params-listener",
+			"protoss-server-listener"
+		],
+		"body": [
+			"${1:server}.addParamsPathListener(",
+			"\t\"${2:route}\",",
+			"\tfunction (server, robj, routeData, request, response) {",
+			"\t},",
+			"\t\"${3:GET}\",",
+			"\ttrue",
+			");"
+		],
+		"description": "Add Params Listener to ProtoSS Server"
+	}
+}

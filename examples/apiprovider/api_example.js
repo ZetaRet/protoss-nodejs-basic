@@ -8,10 +8,10 @@ var mod = require("zetaret.node::index");
 const server = mod.serverche();
 console.log(server);
 
-const apiControllerMod = require("zetaret.node.examples.apiprovider::APIController");
-var apiController = new apiControllerMod.APIController();
+const { APIController } = require("zetaret.node.examples.apiprovider::APIController");
+var apiController = new APIController();
 
-var Router = require("zetaret.node.api::Router").Router;
+const { Router } = require("zetaret.node.api::Router");
 var rinst = new Router();
 rinst.prefix = "api.v2/";
 rinst.addParamsPathListener(
