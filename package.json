@@ -1,20 +1,22 @@
 {
 	"name": "protoss-nodejs-basic",
-	"version": "2.13.2",
+	"version": "2.13.3",
 	"author": "Zeta Ret",
 	"license": "MIT",
+	"type": "commonjs",
 	"scripts": {
 		"example_basic": "node ./examples/basic/example.js",
 		"example_api": "node ./examples/apiprovider/api_example.js",
 		"example_fileload": "node ./examples/fileload/file_example.js",
 		"example_htmlserver": "node ./examples/htmlserverload/server_example.js",
 		"example_stock": "node ./examples/stock/dist/app.js",
-		"prettier-ts-check": "prettier --check \"ts/**/*.js\"",
-		"prettier-ts-write": "prettier --write \"ts/**/*.js\"",
+		"prettier-ts-check": "prettier --check \"dist/**/*.js\"",
+		"prettier-ts-write": "prettier --write \"dist/**/*.js\"",
 		"tsc": "tsc --project ./tsconfig.json",
-		"tsc-pretty": "npm run tsc & npm run prettier-ts-write"
+		"tsc-pretty": "npm run tsc & npm run prettier-ts-write",
+		"start": "node index.js"
 	},
 	"dependencies": {
-		"@types/protoss-nodejs-basic": "git+https://github.com/ZetaRet/protoss-nodejs-basic-types.git#v2.13.2"
+		"@types/protoss-nodejs-basic": "git+https://github.com/ZetaRet/protoss-nodejs-basic-types.git#v2.13.3"
 	}
 }

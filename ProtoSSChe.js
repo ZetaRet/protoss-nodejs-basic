@@ -393,7 +393,8 @@ function getNodeServer(requestListener, envd, port) {
 function getModuleInstance(xmodule) {
 	var serverche, xpro, xprocls;
 	if (xmodule) {
-		xpro = require(xmodule);
+		if (global.ProtoSSCheRequire) xpro = global.ProtoSSCheRequire(xmodule);
+		else xpro = require(xmodule);
 		xprocls = xpro.getExtendedServerProtoSS(ProtoSSChe);
 		serverche = new xprocls();
 	} else {

@@ -7,8 +7,10 @@
 		"removeComments": true,
 		"preserveConstEnums": true,
 		"sourceMap": false,
-		"allowJs": true,
-		"outDir": "ts/"
+		"allowJs": false,
+		"checkJs": false,
+		"newLine": "lf",
+		"outDir": "dist/"
 	},
 	"files": [
 		"indexTS.ts",
