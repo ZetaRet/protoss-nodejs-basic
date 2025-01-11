@@ -3,7 +3,7 @@
 		"prefix": [
 			"protoss",
 			"protoss-server",
-			"server",
+			"server-common",
 			"new-server"
 		],
 		"body": [
@@ -31,18 +31,59 @@
 			"module.exports.getExtends = () => ${1:server};",
 			"module.exports.getExtendedServerProtoSS = getExtendedServerProtoSS;"
 		],
-		"description": "New ProtoSS Server."
+		"description": "New ProtoSS Common Server."
+	},
+	"ProtoSS Server Module": {
+		"prefix": [
+			"protoss",
+			"protoss-server",
+			"server-module",
+			"new-server"
+		],
+		"body": [
+			"var ${1:server};",
+			"const xprosMod = require(global.${2:newserver}RequireModule || \"./${1:server}.js\");",
+			"export const xpros = xprosMod;",
+			"",
+			"export const EVENTS = {",
+			"};",
+			"export const SERVERID = \"zetaret.node.modules::${2:newserver}\";",
+			"",
+			"export function getExtendedServerProtoSS(ProtoSSChe) {",
+			"\tif (!${1:server}) ${1:server} = xpros.getExtendedServerProtoSS(ProtoSSChe);",
+			"\treturn class ${2:newserver} extends ${1:server} {",
+			"\t\tconstructor() {",
+			"\t\t\tsuper();",
+			"\t\t\tvar o = this;",
+			"\t\t}",
+			"\t};",
+			"}",
+			"",
+			"module.exports.xpros = xpros;",
+			"export const resetExtends = () => (${1:server} = null);",
+			"export const getExtends = () => ${1:server};"
+		],
+		"description": "New ProtoSS Module Server."
 	},
 	"ProtoSS Require Router": {
 		"prefix": [
 			"require-router",
-			"import-router",
 			"protoss-router"
 		],
 		"body": [
 			"const { Router } = require(\"zetaret.node.api::Router\");"
 		],
 		"description": "Require ProtoSS Router"
+	},
+	"ProtoSS Import Router": {
+		"prefix": [
+			"import-router",
+			"protoss-router"
+		],
+		"body": [
+			"import { Router } from \"protoss-nodejs-basic/api/Router.js\";"
+		],
+		"description": "Import ProtoSS Router"
 	},
 	"ProtoSS New Router": {
 		"prefix": [
@@ -114,5 +155,163 @@
 			"const __dirname = dirname(__filename);"
 		],
 		"description": "Add missing functions of type module folders"
+	},
+	"Module Require": {
+		"prefix": [
+			"module",
+			"module-require",
+			"module-import"
+		],
+		"body": [
+			"import { createRequire } from \"module\";",
+			"const require = createRequire(import.meta.url);"
+		],
+		"description": "Add missing require function of type module folders"
+	},
+	"Module Dirname Filename": {
+		"prefix": [
+			"module",
+			"module-filename",
+			"module-dirname"
+		],
+		"body": [
+			"import { fileURLToPath } from \"url\";",
+			"import { dirname } from \"path\";",
+			"",
+			"const __filename = fileURLToPath(import.meta.url);",
+			"const __dirname = dirname(__filename);"
+		],
+		"description": "Add missing dirname and filename of type module folders"
+	},
+	"ProtoSS Node CRUD APIController": {
+		"prefix": [
+			"router",
+			"crud",
+			"api-controller",
+			"data-service",
+			"class-module"
+		],
+		"body": [
+			"class ${1:Router} {",
+			"\tconstructor() {",
+			"\t\tthis.apicontroller = new ${2:APIController}();",
+			"\t}",
+			"",
+			"\tinitialize(routes, serverOrRouter, listenerName) {",
+			"\t\tfor (var k in routes) {",
+			"\t\t\tlet v = routes[k];",
+			"\t\t\tswitch (listenerName) {",
+			"\t\t\t\tcase \"addMethodPathListener\":",
+			"\t\t\t\t\tserverOrRouter.addMethodPathListener(v.method, k, this.apicontroller[\"on\" + v.callback], v.method);",
+			"\t\t\t\t\tbreak;",
+			"\t\t\t\tcase \"addParamsPathListener\":",
+			"\t\t\t\t\tserverOrRouter.addParamsPathListener(k, this.apicontroller[\"on\" + v.callback], v.method, true);",
+			"\t\t\t\t\tbreak;",
+			"\t\t\t\tdefault:",
+			"\t\t\t\t\tserverOrRouter[listenerName](k, this.apicontroller[\"on\" + v.callback]);",
+			"\t\t\t}",
+			"\t\t}",
+			"\t}",
+			"",
+			"\tinitCRUD(prefix, serverOrRouter, listenerName) {",
+			"\t\tvar routes = {};",
+			"\t\troutes[prefix + \"GetData/:dataid\"] = { callback: \"GetData\", method: \"GET\" };",
+			"\t\troutes[prefix + \"SetData\"] = { callback: \"SetData\", method: \"POST\" };",
+			"\t\troutes[prefix + \"PostData\"] = { callback: \"PostData\", method: \"POST\" };",
+			"\t\troutes[prefix + \"DeleteData/:dataid\"] = { callback: \"DeleteData\", method: \"GET\" };",
+			"\t\troutes[prefix + \"GetDB\"] = { callback: \"GetDB\", method: \"POST\" };",
+			"",
+			"\t\tthis.initialize(routes, serverOrRouter, listenerName);",
+			"\t}",
+			"}",
+			"",
+			"class ${3:DataService} {",
+			"\tconstructor() {}",
+			"",
+			"\tonGetData(server, robj, routeData, request, response) {",
+			"\t\tconsole.log(\"Get Data ${3:DataService}\");",
+			"\t\tconsole.log(robj);",
+			"\t\tthis.setJSON({ testdata: { key1: \"2\" } }, response);",
+			"\t}",
+			"",
+			"\tonSetData(server, robj, routeData, request, response) {",
+			"\t\tconsole.log(\"Set Data ${3:DataService}\");",
+			"\t\tconsole.log(robj);",
+			"\t\tthis.setJSON({ result: \"success\" }, response);",
+			"\t}",
+			"",
+			"\tonPostData(server, robj, routeData, request, response) {",
+			"\t\tconsole.log(\"Post Data ${3:DataService}\");",
+			"\t\tconsole.log(robj);",
+			"\t\tthis.setJSON({ result: \"success\" }, response);",
+			"\t}",
+			"",
+			"\tonDeleteData(server, robj, routeData, request, response) {",
+			"\t\tconsole.log(\"Delete Data ${3:DataService}\");",
+			"\t\tconsole.log(robj);",
+			"\t\tthis.setJSON({ result: \"success\" }, response);",
+			"\t}",
+			"",
+			"\tonGetDB(server, robj, routeData, request, response) {",
+			"\t\tconsole.log(\"Get DB ${3:DataService}\");",
+			"\t\tconsole.log(robj);",
+			"\t\tvar dbdataPromiseObject = this.onGetDBData();",
+			"\t\tresponse.__data.push(dbdataPromiseObject);",
+			"\t}",
+			"",
+			"\tasync onGetDBData() {",
+			"\t\tvar dataFromDB = await new Promise((resolve) => {",
+			"\t\t\tsetTimeout(() => resolve({ dbdata: [] }), 500);",
+			"\t\t});",
+			"\t\treturn dataFromDB;",
+			"\t}",
+			"",
+			"\tsetJSON(data, response) {",
+			"\t\tresponse.__json(data);",
+			"\t}",
+			"}",
+			"",
+			"class ${2:APIController} {",
+			"\tconstructor() {",
+			"\t\tthis.dataService = new ${3:DataService}();",
+			"",
+			"\t\tthis.onGetData = this.onGetData.bind(this);",
+			"\t\tthis.onSetData = this.onSetData.bind(this);",
+			"\t\tthis.onPostData = this.onPostData.bind(this);",
+			"\t\tthis.onDeleteData = this.onDeleteData.bind(this);",
+			"\t\tthis.onGetDB = this.onGetDB.bind(this);",
+			"\t}",
+			"",
+			"\tonGetData(server, robj, routeData, request, response) {",
+			"\t\tconsole.log(\"Get Data ${2:APIController}\");",
+			"\t\tthis.dataService.onGetData(server, robj, routeData, request, response);",
+			"\t}",
+			"",
+			"\tonSetData(server, robj, routeData, request, response) {",
+			"\t\tconsole.log(\"Set Data ${2:APIController}\");",
+			"\t\tthis.dataService.onSetData(server, robj, routeData, request, response);",
+			"\t}",
+			"",
+			"\tonPostData(server, robj, routeData, request, response) {",
+			"\t\tconsole.log(\"Set Data ${2:APIController}\");",
+			"\t\tthis.dataService.onPostData(server, robj, routeData, request, response);",
+			"\t}",
+			"",
+			"\tonDeleteData(server, robj, routeData, request, response) {",
+			"\t\tconsole.log(\"Delete Data ${2:APIController}\");",
+			"\t\tthis.dataService.onDeleteData(server, robj, routeData, request, response);",
+			"\t}",
+			"",
+			"\tonGetDB(server, robj, routeData, request, response) {",
+			"\t\tconsole.log(\"Get DB ${2:APIController}\");",
+			"\t\tthis.dataService.onGetDB(server, robj, routeData, request, response);",
+			"\t}",
+			"}",
+			"",
+			"module.exports.${1:Router} = ${1:Router};",
+			"module.exports.${3:DataService} = ${3:DataService};",
+			"module.exports.${2:APIController} = ${2:APIController};"
+		],
+		"description": "Add Router with API CRUD Controller"
 	}
 }

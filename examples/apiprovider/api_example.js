@@ -40,6 +40,7 @@ var route = {
 server.voya(route);
 
 var p,
+	middlewarePaths = {},
 	paths = {
 		"api/getdata": apiController.onGetData,
 		"api/getdbdata": apiController.onGetDB,
@@ -48,11 +49,12 @@ var p,
 		"auth/login": apiController.onLogin,
 		"auth/logout": apiController.onLogout,
 	};
+for(p in paths) middlewarePaths[p] = true;
 
 server.middleware.push(function (request, response, midobj) {
-	console.log("Process Middleware first");
-
 	var uri = response.__splitUrl.pages;
+	console.log("Process Middleware first:", uri);
+
 	var i,
 		path = "",
 		found = false;
@@ -98,6 +100,14 @@ server.addParamsPathListener(
 	"GET",
 	true
 );
+server.addParamsPathListener(
+	"api.v3_beta/GetData/:dataid",
+	function (server, robj, routeData, request, response) {
+		console.log("api v3 page:", robj.vars.dataid, robj, server.routeMap);
+	},
+	"GET",
+	true
+);
 
 server.addRouter(rinst);
 
@@ -126,3 +136,8 @@ var validator = {
 	key7: { required: true, type: "array", validation: {}, element: { type: "number" } },
 };
 console.log("Validator:", dv.validate(data, validator), data);
+
+const snippetExampleModule = require("./APISnippetExample");
+const router1 = new snippetExampleModule.Router();
+router1.initCRUD("api.v3/", server, "addParamsPathListener");
+console.log(router1);
