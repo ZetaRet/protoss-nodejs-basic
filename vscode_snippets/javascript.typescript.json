@@ -1,5 +1,6 @@
 {
 	"ProtoSS Server": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"protoss",
 			"protoss-server",
@@ -34,6 +35,7 @@
 		"description": "New ProtoSS Common Server."
 	},
 	"ProtoSS Server Module": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"protoss",
 			"protoss-server",
@@ -41,7 +43,7 @@
 			"new-server"
 		],
 		"body": [
-			"var ${1:server};",
+			"var ${1:server}: zetaret.node.ProtoSSChe;",
 			"const xprosMod = require(global.${2:newserver}RequireModule || \"./${1:server}.js\");",
 			"export const xpros = xprosMod;",
 			"",
@@ -49,8 +51,8 @@
 			"};",
 			"export const SERVERID = \"zetaret.node.modules::${2:newserver}\";",
 			"",
-			"export function getExtendedServerProtoSS(ProtoSSChe) {",
-			"\tif (!${1:server}) ${1:server} = xpros.getExtendedServerProtoSS(ProtoSSChe);",
+			"export function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSChe) {",
+			"\tif (!${1:server}) ${1:server} = xpros.getExtendedServerProtoSS(ProtoSSChe) as any;",
 			"\treturn class ${2:newserver} extends ${1:server} {",
 			"\t\tconstructor() {",
 			"\t\t\tsuper();",
@@ -66,6 +68,7 @@
 		"description": "New ProtoSS Module Server."
 	},
 	"ProtoSS Require Router": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"require-router",
 			"protoss-router"
@@ -76,6 +79,7 @@
 		"description": "Require ProtoSS Router"
 	},
 	"ProtoSS Import Router": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"import-router",
 			"protoss-router"
@@ -86,6 +90,7 @@
 		"description": "Import ProtoSS Router"
 	},
 	"ProtoSS New Router": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"router",
 			"new-router",
@@ -108,6 +113,7 @@
 		"description": "New ProtoSS Router"
 	},
 	"ProtoSS Server Add Method Listener": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"server-add-listener",
 			"server-method-listener",
@@ -120,6 +126,7 @@
 		"description": "Add Method Listener to ProtoSS Server"
 	},
 	"ProtoSS Server Add Params Listener": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"server-add-listener",
 			"server-params-listener",
@@ -137,6 +144,7 @@
 		"description": "Add Params Listener to ProtoSS Server"
 	},
 	"Module Polyfill": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"module",
 			"module-require",
@@ -157,6 +165,7 @@
 		"description": "Add missing functions of type module folders"
 	},
 	"Module Require": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"module",
 			"module-require",
@@ -169,6 +178,7 @@
 		"description": "Add missing require function of type module folders"
 	},
 	"Module Dirname Filename": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"module",
 			"module-filename",
@@ -184,6 +194,7 @@
 		"description": "Add missing dirname and filename of type module folders"
 	},
 	"ProtoSS Node CRUD APIController": {
+		"scope": "javascript,typescript",
 		"prefix": [
 			"router",
 			"crud",

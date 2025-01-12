@@ -383,6 +383,10 @@ function getNodeServer(requestListener, envd, port) {
 	if (!htserv.request) htserv.request = http.request;
 	if (!htserv.srequest) htserv.srequest = https.request;
 	if (port >= 0) htserv.listen(port);
+	if (envd.statsout) {
+		if (envd.statsout.keepAliveTimeout) htserv.keepAliveTimeout = envd.statsout.keepAliveTimeout * 1000;
+		if (envd.statsout.headersTimeout) htserv.headersTimeout = envd.statsout.headersTimeout * 1000;
+	}
 
 	return {
 		httpsop,
