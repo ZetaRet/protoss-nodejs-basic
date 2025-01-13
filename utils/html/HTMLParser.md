@@ -2,7 +2,7 @@
 > __Simple HTML parser__  
 # RegExp XML processor to object and reversed conversion to HTML  
 > *Requires: fs, path, events*  
-> *Version: 1.9.1*  
+> *Version: 1.9.2*  
 > *Date: 2019 - Today*  
 
 __required*__

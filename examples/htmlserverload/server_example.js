@@ -47,8 +47,15 @@ for (var p in PAGES) {
 var currentSessionData = { profileName: "LoggedUser1" };
 
 const watchers = htcache.getWatchers(null, 500, true, true);
-
-htcache.setPages(PAGES, htmlparser.HTMLParser, watchers, true);
+function decorateParser(hpinst, o, p, op, pages) {
+	hpinst.jsonSpace = 2;
+	hpinst.exeMethods.exeAppScreen = function (el, htcache, hpinst, p, op, pages) {
+		console.log("#exe", el);
+		el.elements.push(hpinst.getElement("div", false, { id: "app-screen-inset" }));
+		el.elements.push("\n");
+	};
+}
+htcache.setPages(PAGES, htmlparser.HTMLParser, watchers, true, decorateParser);
 
 function isLocal(req) {
 	return ["::1", "127.0.0.1"].indexOf(req.connection.remoteAddress) !== -1;

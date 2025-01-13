@@ -57,6 +57,12 @@ class HTMLParser {
 			"+": "type",
 			"?": "_",
 		};
+		o.exeMethods = {};
+		o.exeOn = "exe";
+		o.exeAttr = "node";
+		o.exeJS = "js";
+		o.jsonReplacer = null;
+		o.jsonSpace = null;
 	}
 
 	getFilePath(file, dir) {
@@ -99,7 +105,7 @@ class HTMLParser {
 	}
 
 	getDomJSON() {
-		return JSON.stringify(this.dom);
+		return JSON.stringify(this.dom, this.jsonReplacer, this.jsonSpace);
 	}
 
 	domToString(dom, nowhite, pretty, prefix) {

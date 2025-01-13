@@ -127,21 +127,33 @@ class HTMLCache {
 		o.exePage(page, pdata.execfg);
 	}
 
-	setPages(pages, HTMLParser, watchers, log) {
+	setPages(pages, HTMLParser, watchers, log, decorateParser) {
 		var o = this;
 		var hpinst, p, op;
 
 		for (p in pages) {
 			op = pages[p];
 			hpinst = new HTMLParser();
+			if (decorateParser) decorateParser(hpinst, o, p, op, pages);
 			hpinst.useAutomaton = op.useAutomaton || false;
 			hpinst.debug = op.debug || false;
 			if (op.closeTags) hpinst.closeTags = op.closeTags;
 			if (op.cfgParser) op.cfgParser(hpinst, p, op);
 			hpinst.parseFromFile(op.hfile, op.dir);
 			o.addPage(op.id, hpinst, op.hfile, op.dir);
+			var exes = hpinst.search(null, hpinst.exeOn, hpinst.exeAttr);
+			if (exes.length > 0) {
+				exes.forEach((el) => {
+					let method = el.attr[hpinst.exeJS];
+					if (hpinst.exeMethods[method]) {
+						hpinst.exeMethods[method](el, o, hpinst, p, op, pages);
+					}
+				});
+			}
 			if (log) {
+				console.log("\x1b[34m #Get Dom JSON:\x1b[0m");
 				console.log(hpinst.getDomJSON());
+				console.log("\x1b[34m #Dom To String:\x1b[0m");
 				console.log(hpinst.domToString());
 			}
 		}
@@ -159,12 +171,19 @@ class HTMLCache {
 		o.events.emit(EVENTS.SWAP_CSS, page, pdata, o);
 		hpinst.search("link", "type", "text/css").forEach((e) => {
 			var swap,
+				browserpath,
 				pr,
 				f = e.attr.href,
-				prefix = e.attr.prefix;
+				fileid = f.split("/").pop(),
+				prefix = e.attr.prefix,
+				base = e.attr.base;
 
-			if (prefix) {
-				var browserpath = path.join(prefix, f).split("\\").join("/");
+			if (base) {
+				browserpath = path.join(base, fileid).split("\\").join("/");
+				delete e.attr.base;
+				e.attr.href = browserpath;
+			} else if (prefix) {
+				browserpath = path.join(prefix, f).split("\\").join("/");
 				delete e.attr.prefix;
 				e.attr.href = browserpath;
 			} else if (f) {
@@ -192,12 +211,19 @@ class HTMLCache {
 		o.events.emit(EVENTS.SWAP_JS, page, pdata, o);
 		hpinst.search("script", "type", "text/javascript").forEach((e) => {
 			var swap,
+				browserpath,
 				pr,
 				f = e.attr.src,
-				prefix = e.attr.prefix;
+				fileid = f.split("/").pop(),
+				prefix = e.attr.prefix,
+				base = e.attr.base;
 
-			if (prefix) {
-				var browserpath = path.join(prefix, f).split("\\").join("/");
+			if (base) {
+				browserpath = path.join(base, fileid).split("\\").join("/");
+				delete e.attr.base;
+				e.attr.src = browserpath;
+			} else if (prefix) {
+				browserpath = path.join(prefix, f).split("\\").join("/");
 				delete e.attr.prefix;
 				e.attr.src = browserpath;
 			} else if (f) {
