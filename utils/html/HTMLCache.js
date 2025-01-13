@@ -160,8 +160,14 @@ class HTMLCache {
 		hpinst.search("link", "type", "text/css").forEach((e) => {
 			var swap,
 				pr,
-				f = e.attr.href;
-			if (f) {
+				f = e.attr.href,
+				prefix = e.attr.prefix;
+
+			if (prefix) {
+				var browserpath = path.join(prefix, f).split("\\").join("/");
+				delete e.attr.prefix;
+				e.attr.href = browserpath;
+			} else if (f) {
 				pr = path.resolve(pdata.hfileloc, f);
 				if (fs.existsSync(pr)) {
 					delete e.attr.href;
@@ -187,8 +193,14 @@ class HTMLCache {
 		hpinst.search("script", "type", "text/javascript").forEach((e) => {
 			var swap,
 				pr,
-				f = e.attr.src;
-			if (f) {
+				f = e.attr.src,
+				prefix = e.attr.prefix;
+
+			if (prefix) {
+				var browserpath = path.join(prefix, f).split("\\").join("/");
+				delete e.attr.prefix;
+				e.attr.src = browserpath;
+			} else if (f) {
 				pr = path.resolve(pdata.hfileloc, f);
 				if (fs.existsSync(pr)) {
 					delete e.attr.src;

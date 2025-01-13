@@ -1,5 +1,6 @@
 const fs = require("fs");
 const multipart = require("./multipart.js");
+const { join } = require("path");
 
 const rsn = require("./../../utils/nano/RequireSupername.js");
 rsn.initRequireSupername();
@@ -73,7 +74,7 @@ server.addMethodPathListener("GET", "api/filedownload", function (server, robj, 
 });
 
 ListDir(server, "js", __dirname, { ext: ["js", "json"] });
-ListDir(server, "images", __dirname + "/files", {
+ListDir(server, "images", join(__dirname, "/files"), {
 	ext: ["png"],
 	streamExt: { png: true },
 	cacheControl: { png: 60 * 60 * 1 },

@@ -43,7 +43,7 @@ function ListDir(serverobj, path, dir, config) {
 
 			if (!nofile && fs.existsSync(filename)) {
 				stream = (se && se[ext]) || (sf && sf[fileid]);
-				ccn = cc[ext];
+				ccn = cc ? cc[ext] : null;
 
 				if (stream) {
 					response.__disablePipeline = true;

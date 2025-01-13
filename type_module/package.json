@@ -1,0 +1,9 @@
+{
+	"name": "protoss-nodejs-basic-module",
+	"version": "1.0.0",
+	"author": "Zeta Ret",
+	"license": "MIT",
+	"type": "module",
+	"scripts": {},
+	"dependencies": {}
+}

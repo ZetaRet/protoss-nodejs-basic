@@ -4,6 +4,8 @@ rsn.loadFromJSON("namespacemap.json", __dirname);
 
 global.ProtoSSCheStatsFile = __dirname + "/" + "stats.json";
 
+const { join } = require("path");
+
 var mod = require("zetaret.node::index");
 const server = mod.serverche();
 console.log(server);
@@ -64,3 +66,7 @@ server.addPathListener("", function (server, robj, routeData, request, response)
 	if (robj.vars.recache && isLocal(request)) htcache.recache(PAGES.HOME.id);
 	response.__data.push(replaceParams(htcache.getStruct(PAGES.HOME.id), currentSessionData));
 });
+
+const { ListDir } = require("zetaret.node.utils.web::ListDir");
+
+ListDir(server, "assets", join(__dirname, "/html"), { ext: ["js", "css"] });

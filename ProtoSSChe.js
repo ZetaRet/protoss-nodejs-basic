@@ -4,6 +4,8 @@
  * XeltoSS Node Print of Basic ProtoSS Server
  **/
 
+if (!require) var require = global.require;
+
 var http = require("http"),
 	https = require("https"),
 	http2 = require("http2"),
