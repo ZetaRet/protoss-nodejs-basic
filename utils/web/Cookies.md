@@ -1,7 +1,7 @@
 > __Author: Zeta Ret__  
 > __Cookies - parse, read, write, delete__  
 # Configurable Cookie class  
-> *Version: 1.4.0*  
+> *Version: 1.4.1*  
 > *Date: 2019 - Today*  
 
 __required*__

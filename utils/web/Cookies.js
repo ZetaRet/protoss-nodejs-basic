@@ -17,15 +17,17 @@ class Cookies {
 		o.cookie = "";
 		o.cookieMap = {};
 		o.reserved = ["Created", "Expires", "Path", "Max-Age", "Domain", "HttpOnly", "Secure", "SameSite"];
+		o.responseHeaders = {};
+		o.debug = false;
 	}
 
 	parseCookie(cookie) {
 		var o = this;
-		o.cookie = cookie;
+		o.cookie = cookie || "";
 		var i,
 			kv,
 			p = {},
-			sp = cookie.split(";"),
+			sp = o.cookie.split(";"),
 			l = sp.length;
 		for (i = 0; i < l; i++) {
 			kv = sp[i].split("=");
@@ -69,9 +71,11 @@ class Cookies {
 		if (o.setCookiePath) c += "; Path=" + o.cookiePath;
 		for (k in options) c += "; " + k + (options[k] ? "=" + options[k] : "");
 		if (useObject) {
+			if (o.debug) console.log("#writeCookie obj", headers, o.setObjectHeaderKey, key, c, value, expires);
 			if (!headers[o.setObjectHeaderKey]) headers[o.setObjectHeaderKey] = {};
 			if (key) headers[o.setObjectHeaderKey][key] = c;
 		} else {
+			if (o.debug) console.log("#writeCookie key", headers, o.setHeaderKey, key, c, value, expires);
 			headers[o.setHeaderKey] = c;
 		}
 		return o;
@@ -89,12 +93,15 @@ class Cookies {
 		return o;
 	}
 
-	transformCookieObject(headers, remove) {
+	transformCookieObject(headers, remove, response) {
 		var o = this;
 		var s = [],
 			co = headers[o.setObjectHeaderKey];
 		if (co) {
+			if (o.debug) console.log("transform cookie object", s, co);
+			s = Object.values(co);
 			headers[o.setHeaderKey] = s.join(";");
+			if (response) response.setHeader(o.setHeaderKey, headers[o.setHeaderKey]);
 		}
 		if (remove) delete headers[o.setObjectHeaderKey];
 		return o;
