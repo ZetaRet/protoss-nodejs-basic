@@ -50,10 +50,35 @@ function exportServerVar(name, json, pretty) {
 
 var currentSessionData = { profileName: "LoggedUser1", profileDescription: "Logged User Description" };
 
+const ob_classes = {};
+const ob_output_css = {};
+ob_classes.home = {
+	serverexam: { "padding": "4px", "background": "#aaa", "border-radius": "2px", "display": "block" },
+	proname: { "padding": "2px", "color": "#333", "font-weight": "bold", "display": "block" },
+	prodesc: { padding: "1px", color: "666", display: "block" },
+};
+
+function obfuscateCSS(id) {
+	var css = ob_classes[id];
+	var cssout = [];
+	ob_output_css[id] = {};
+	for (var c in css) {
+		var cv = css[c];
+		var cvstr = [];
+		for (var v in cv) {
+			var cvv = cv[v];
+			cvstr.push(v + ":" + cvv + ";");
+		}
+		ob_output_css[c] = "_" + server.rndstr(16);
+		cssout.push("." + ob_output_css[c] + "{" + cvstr.join("") + "}");
+	}
+	return cssout.join("\n");
+}
+
 const watchers = htcache.getWatchers(null, 500, true, true);
 function decorateParser(hpinst, o, p, op) {
 	hpinst.jsonSpace = 2;
-	//hpinst.exeDeleteOnSet = true;
+	hpinst.exeDeleteOnSet = true;
 	hpinst.exeMethods.addDataHeadScript = function (el, htcache, hpinst, p, op) {
 		console.log("#addDataHeadScript", p, el);
 		let expvar = { any: { name: "server" }, num: 3, bool: true, tostr: "string", time: new Date().toISOString() };
@@ -72,6 +97,16 @@ function decorateParser(hpinst, o, p, op) {
 	hpinst.exeMethods.exeProfileDescription = function (el, htcache, hpinst, p, op) {
 		console.log("#exeProfileDescription", p, el);
 		el.elements[0] = replaceParams(el.elements[0], currentSessionData);
+	};
+	hpinst.exeMethods.obfuscateCSS = function (el, htcache, hpinst, p, op) {
+		console.log("#obfuscateCSS", p, el);
+		el.elements[0] = obfuscateCSS("home");
+	};
+	hpinst.exeMethods.applyobcls = function (el, htcache, hpinst, p, op) {
+		console.log("#applyobcls", p, el);
+		if (!el.attr.class) el.attr.class = "";
+		el.attr.class += ob_output_css[el.attr.obcls];
+		if (hpinst.exeDeleteOnSet) delete el.attr.obcls;
 	};
 }
 htcache.setPages(PAGES, htmlparser.HTMLParser, watchers, true, decorateParser);

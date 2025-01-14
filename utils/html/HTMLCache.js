@@ -134,9 +134,13 @@ class HTMLCache {
 		if (exes.length > 0) {
 			exes.forEach((el) => {
 				let method = el.attr[hpinst.exeJS];
-				if (hpinst.exeMethods[method]) {
-					hpinst.exeMethods[method](el, o, hpinst, id, pdata);
-				}
+				if (!method) return;
+				let marr = method.split(" ");
+				marr.forEach((mel) => {
+					if (hpinst.exeMethods[mel]) {
+						hpinst.exeMethods[mel](el, o, hpinst, id, pdata);
+					}
+				});
 				if (hpinst.exeDeleteOnSet) {
 					delete el.attr[hpinst.exeOn];
 					delete el.attr[hpinst.exeJS];

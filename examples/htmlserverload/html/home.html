@@ -1,9 +1,9 @@
 <html>
 <#template section="head" #>
 <body>
-<span>HTML Server Load Example</span>
-<div id="profile-name">Hello, {{profileName}}</div>
-<div id="profile-description" exe="node" js="exeProfileDescription">Description: {{profileDescription}}</div>
+<span obcls="serverexam" exe="node" js="applyobcls">HTML Server Load Example</span>
+<div id="profile-name" obcls="proname" exe="node" js="applyobcls">Hello, {{profileName}}</div>
+<div id="profile-description" exe="node" js="exeProfileDescription applyobcls" obcls="prodesc">Description: <b>{{profileDescription}}</b></div>
 <div id="app-screen" exe="node" js="exeAppScreen">
 </div>
 </body>
