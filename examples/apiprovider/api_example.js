@@ -55,34 +55,12 @@ var p,
 	};
 for (p in paths) middlewarePaths[p] = true;
 
-const LiveSessions = {};
-
-function bakeCookie(request, response) {
-	let cook = request.headers.cookie;
-	let session = null;
-	let cookieobj = new Cookies();
-	cookieobj.debug = true;
-	cookieobj.setCookiePath = true;
-	cookieobj.setCookieExpires = true;
-	cookieobj.parseCookieRequest(request);
-	request.cookieObject = cookieobj;
-	console.log("\x1b[34m #Middleware Cookie:\x1b[0m", cook, cookieobj.cookieMap);
-	if (!cookieobj.cookieMap.session) {
-		console.log("WRITE NEW COOKIE");
-		cookieobj.writeCookie(cookieobj.responseHeaders, "session", server.rndstr(32), 30, true);
-		cookieobj.transformCookieObject(cookieobj.responseHeaders, false, response);
-		console.log("RESPONSE COOKIE", cookieobj.responseHeaders["set-cookie"]);
-		session = cookieobj.readCookie(cookieobj.responseHeaders["set-cookie-object"], "session", "session");
-	} else {
-		session = cookieobj.cookieMap.session;
-	}
-	if (!LiveSessions[session]) LiveSessions[session] = { time: new Date(), count: 0 };
-	LiveSessions[session].count++;
-	console.log("Middleware Live Session Count:", session, LiveSessions[session].count);
-}
+const CookieHelperModule = require("zetaret.node.utils.web::CookieHelper");
+CookieHelperModule.settings.debug = true;
+CookieHelperModule.settings.rndstr = (rl) => server.rndstr(rl);
 
 server.middleware.push(function (request, response, midobj) {
-	bakeCookie(request, response);
+	CookieHelperModule.bakeCookie(request, response);
 
 	var uri = response.__splitUrl.pages;
 	console.log("\x1b[36m #Process Middleware first:\x1b[0m", uri);

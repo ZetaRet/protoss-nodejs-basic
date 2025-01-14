@@ -44,36 +44,17 @@ for (var p in PAGES) {
 	};
 }
 
-function exportServerVar(name, json, pretty) {
-	return "var " + name + "=" + JSON.stringify(json, null, pretty ? 2 : null);
-}
-
 var currentSessionData = { profileName: "LoggedUser1", profileDescription: "Logged User Description" };
 
-const ob_classes = {};
-const ob_output_css = {};
-ob_classes.home = {
+const obfuscateMod = require("zetaret.node.utils.html::ObfuscateCSSHelper");
+const replaceHTMLMod = require("zetaret.node.utils.html::ReplaceHTMLParams");
+
+var homeCSS = {
 	serverexam: { "padding": "4px", "background": "#aaa", "border-radius": "2px", "display": "block" },
 	proname: { "padding": "2px", "color": "#333", "font-weight": "bold", "display": "block" },
 	prodesc: { padding: "1px", color: "666", display: "block" },
 };
-
-function obfuscateCSS(id) {
-	var css = ob_classes[id];
-	var cssout = [];
-	ob_output_css[id] = {};
-	for (var c in css) {
-		var cv = css[c];
-		var cvstr = [];
-		for (var v in cv) {
-			var cvv = cv[v];
-			cvstr.push(v + ":" + cvv + ";");
-		}
-		ob_output_css[c] = "_" + server.rndstr(16);
-		cssout.push("." + ob_output_css[c] + "{" + cvstr.join("") + "}");
-	}
-	return cssout.join("\n");
-}
+obfuscateMod.setClassName("home", homeCSS);
 
 const watchers = htcache.getWatchers(null, 500, true, true);
 function decorateParser(hpinst, o, p, op) {
@@ -82,12 +63,12 @@ function decorateParser(hpinst, o, p, op) {
 	hpinst.exeMethods.addDataHeadScript = function (el, htcache, hpinst, p, op) {
 		console.log("#addDataHeadScript", p, el);
 		let expvar = { any: { name: "server" }, num: 3, bool: true, tostr: "string", time: new Date().toISOString() };
-		el.elements.push(exportServerVar("exportedVar", expvar));
+		el.elements.push(replaceHTMLMod.exportServerVar("exportedVar", expvar));
 	};
 	hpinst.exeMethods.addDataHeadScript2 = function (el, htcache, hpinst, p, op) {
 		console.log("#addDataHeadScript2", p, el);
 		let expvar = { anyData2: { name2: "fromServer" }, num2: 3, bool2: true, tostr2: "string" };
-		el.elements.push(exportServerVar("exportedVar2", expvar, true));
+		el.elements.push(replaceHTMLMod.exportServerVar("exportedVar2", expvar, true));
 	};
 	hpinst.exeMethods.exeAppScreen = function (el, htcache, hpinst, p, op) {
 		console.log("#exeAppScreen", p, el);
@@ -96,17 +77,15 @@ function decorateParser(hpinst, o, p, op) {
 	};
 	hpinst.exeMethods.exeProfileDescription = function (el, htcache, hpinst, p, op) {
 		console.log("#exeProfileDescription", p, el);
-		el.elements[0] = replaceParams(el.elements[0], currentSessionData);
+		el.elements[0] = replaceHTMLMod.replaceParams(el.elements[0], currentSessionData);
 	};
 	hpinst.exeMethods.obfuscateCSS = function (el, htcache, hpinst, p, op) {
 		console.log("#obfuscateCSS", p, el);
-		el.elements[0] = obfuscateCSS("home");
+		el.elements[0] = obfuscateMod.obfuscateCSS("home", (rl) => server.rndstr(rl));
 	};
 	hpinst.exeMethods.applyobcls = function (el, htcache, hpinst, p, op) {
 		console.log("#applyobcls", p, el);
-		if (!el.attr.class) el.attr.class = "";
-		el.attr.class += ob_output_css[el.attr.obcls];
-		if (hpinst.exeDeleteOnSet) delete el.attr.obcls;
+		obfuscateMod.applyObCSS(el, hpinst);
 	};
 }
 htcache.setPages(PAGES, htmlparser.HTMLParser, watchers, true, decorateParser);
@@ -115,17 +94,10 @@ function isLocal(req) {
 	return ["::1", "127.0.0.1"].indexOf(req.connection.remoteAddress) !== -1;
 }
 
-function replaceParams(string, data, prefix, suffix) {
-	if (!prefix) prefix = "{{";
-	if (!suffix) suffix = "}}";
-	var regex = new RegExp(prefix + "(" + Object.keys(data).join("|") + ")" + suffix, "g");
-	return string.replace(regex, (m, $1) => data[$1] || m);
-}
-
 server.addPathListener("", function (server, robj, routeData, request, response) {
 	response.__headers["content-type"] = "text/html";
 	if (robj.vars.recache && isLocal(request)) htcache.recache(PAGES.HOME.id);
-	response.__data.push(replaceParams(htcache.getStruct(PAGES.HOME.id), currentSessionData));
+	response.__data.push(replaceHTMLMod.replaceParams(htcache.getStruct(PAGES.HOME.id), currentSessionData));
 });
 
 const { ListDir } = require("zetaret.node.utils.web::ListDir");
