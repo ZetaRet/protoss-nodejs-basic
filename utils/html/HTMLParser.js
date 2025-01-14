@@ -61,6 +61,7 @@ class HTMLParser {
 		o.exeOn = "exe";
 		o.exeAttr = "node";
 		o.exeJS = "js";
+		o.exeDeleteOnSet = false;
 		o.jsonReplacer = null;
 		o.jsonSpace = null;
 	}

@@ -86,6 +86,7 @@ class HTMLCache {
 		pdata.execfg = cfg;
 		pdata.binders = {};
 		pdata.content = "";
+		o.execDom(hpinst, page, pdata);
 		o.resetBinders(page);
 		if (cfg.swapjs) o.swapJS(page, cfg.jsh, cfg.despacejs);
 		if (cfg.swapcss) o.swapCSS(page, cfg.cssh, cfg.despacecss);
@@ -127,6 +128,23 @@ class HTMLCache {
 		o.exePage(page, pdata.execfg);
 	}
 
+	execDom(hpinst, id, pdata) {
+		var o = this;
+		var exes = hpinst.search(null, hpinst.exeOn, hpinst.exeAttr);
+		if (exes.length > 0) {
+			exes.forEach((el) => {
+				let method = el.attr[hpinst.exeJS];
+				if (hpinst.exeMethods[method]) {
+					hpinst.exeMethods[method](el, o, hpinst, id, pdata);
+				}
+				if (hpinst.exeDeleteOnSet) {
+					delete el.attr[hpinst.exeOn];
+					delete el.attr[hpinst.exeJS];
+				}
+			});
+		}
+	}
+
 	setPages(pages, HTMLParser, watchers, log, decorateParser) {
 		var o = this;
 		var hpinst, p, op;
@@ -134,22 +152,13 @@ class HTMLCache {
 		for (p in pages) {
 			op = pages[p];
 			hpinst = new HTMLParser();
-			if (decorateParser) decorateParser(hpinst, o, p, op, pages);
+			if (decorateParser) decorateParser(hpinst, o, p, op);
 			hpinst.useAutomaton = op.useAutomaton || false;
 			hpinst.debug = op.debug || false;
 			if (op.closeTags) hpinst.closeTags = op.closeTags;
 			if (op.cfgParser) op.cfgParser(hpinst, p, op);
 			hpinst.parseFromFile(op.hfile, op.dir);
 			o.addPage(op.id, hpinst, op.hfile, op.dir);
-			var exes = hpinst.search(null, hpinst.exeOn, hpinst.exeAttr);
-			if (exes.length > 0) {
-				exes.forEach((el) => {
-					let method = el.attr[hpinst.exeJS];
-					if (hpinst.exeMethods[method]) {
-						hpinst.exeMethods[method](el, o, hpinst, p, op, pages);
-					}
-				});
-			}
 			if (log) {
 				console.log("\x1b[34m #Get Dom JSON:\x1b[0m");
 				console.log(hpinst.getDomJSON());

@@ -2,7 +2,7 @@
 > __HTML page cache utility__  
 # Swap JS/CSS from filepath into tag as relative, cache as page content  
 > *Requires: fs, path, events*  
-> *Version: 1.8.2*  
+> *Version: 1.8.3*  
 > *Date: 2019 - Today*  
 
 __required*__
@@ -132,12 +132,13 @@ __recache(*String* page) : *void*__
 > *return __void__*  
 
 ##  
-__setPages(*Object* pages, *zetaret.node.utils.html.HTMLParser* HTMLParser, *Object* watchers, *Boolean* log) : *void*__  
+__setPages(*Object* pages, *zetaret.node.utils.html.HTMLParser* HTMLParser, *Object* watchers, *Boolean* log, *Function* decorateParser) : *void*__  
   
 - __pages*__ - __*Object*__,   
 - __HTMLParser*__ - __*zetaret.node.utils.html.HTMLParser*__,   
 - watchers - __*Object*__,   
 - log - __*Boolean*__,   
+- decorateParser - __*Function*__,   
 > *return __void__*  
 
 ##  

@@ -44,15 +44,34 @@ for (var p in PAGES) {
 	};
 }
 
-var currentSessionData = { profileName: "LoggedUser1" };
+function exportServerVar(name, json, pretty) {
+	return "var " + name + "=" + JSON.stringify(json, null, pretty ? 2 : null);
+}
+
+var currentSessionData = { profileName: "LoggedUser1", profileDescription: "Logged User Description" };
 
 const watchers = htcache.getWatchers(null, 500, true, true);
-function decorateParser(hpinst, o, p, op, pages) {
+function decorateParser(hpinst, o, p, op) {
 	hpinst.jsonSpace = 2;
-	hpinst.exeMethods.exeAppScreen = function (el, htcache, hpinst, p, op, pages) {
-		console.log("#exe", el);
+	//hpinst.exeDeleteOnSet = true;
+	hpinst.exeMethods.addDataHeadScript = function (el, htcache, hpinst, p, op) {
+		console.log("#addDataHeadScript", p, el);
+		let expvar = { any: { name: "server" }, num: 3, bool: true, tostr: "string", time: new Date().toISOString() };
+		el.elements.push(exportServerVar("exportedVar", expvar));
+	};
+	hpinst.exeMethods.addDataHeadScript2 = function (el, htcache, hpinst, p, op) {
+		console.log("#addDataHeadScript2", p, el);
+		let expvar = { anyData2: { name2: "fromServer" }, num2: 3, bool2: true, tostr2: "string" };
+		el.elements.push(exportServerVar("exportedVar2", expvar, true));
+	};
+	hpinst.exeMethods.exeAppScreen = function (el, htcache, hpinst, p, op) {
+		console.log("#exeAppScreen", p, el);
 		el.elements.push(hpinst.getElement("div", false, { id: "app-screen-inset" }));
 		el.elements.push("\n");
+	};
+	hpinst.exeMethods.exeProfileDescription = function (el, htcache, hpinst, p, op) {
+		console.log("#exeProfileDescription", p, el);
+		el.elements[0] = replaceParams(el.elements[0], currentSessionData);
 	};
 }
 htcache.setPages(PAGES, htmlparser.HTMLParser, watchers, true, decorateParser);
