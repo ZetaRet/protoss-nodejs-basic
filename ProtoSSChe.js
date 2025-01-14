@@ -43,6 +43,21 @@ var env = {},
 	};
 var instance;
 
+const ERRORS = {
+	UNCAUGHT_EXCEPTION: "uncaughtException",
+	UNCAUGHT_EXCEPTION_MONITOR: "uncaughtExceptionMonitor",
+	UNHANDLED_REJECTION: "unhandledRejection",
+	UNHANDLED_PROMISE_REJECTION_WARNING: "UnhandledPromiseRejectionWarning",
+	WARNING: "warning",
+	ABORT: "abort",
+};
+
+const EVENTS = {
+	DATA: "data",
+	ERROR: "error",
+	END: "end",
+};
+
 const ServerEnum = {
 	XProtoSSChe: "./modules/XProtoSSChe.js",
 	Subserver: "./modules/Subserver.js",
@@ -72,6 +87,30 @@ function updateEnv() {
 		sidinterval = env.sidinterval;
 		if (!global.EnableGlobalStatsFile) resetFSInterval();
 	}
+}
+
+const globalExceptionsAndErrors = {};
+function onGlobalError(error) {
+	process.on(error, function (err) {
+		pushGlobalError(error, err);
+	});
+}
+function pushGlobalError(error, err) {
+	if (!globalExceptionsAndErrors[error]) globalExceptionsAndErrors[error] = [];
+	globalExceptionsAndErrors[error].push(err);
+	console.log("\x1b[31m #Global " + error + "\x1b[0m:", err.name, err.stack);
+}
+function uncaughtExceptionGlobal() {
+	if (!global.onGlobalError) {
+		global.onGlobalError = onGlobalError;
+		global.pushGlobalError = pushGlobalError;
+		global.globalExceptionsAndErrors = globalExceptionsAndErrors;
+	} else return;
+	onGlobalError(ERRORS.UNCAUGHT_EXCEPTION);
+	onGlobalError(ERRORS.UNCAUGHT_EXCEPTION_MONITOR);
+	onGlobalError(ERRORS.UNHANDLED_REJECTION);
+	onGlobalError(ERRORS.UNHANDLED_PROMISE_REJECTION_WARNING);
+	onGlobalError(ERRORS.WARNING);
 }
 
 function resetFSInterval() {
@@ -137,6 +176,8 @@ function initGlobalFile() {
 }
 
 function StartUp() {
+	if (global.EnableGlobalExceptions) uncaughtExceptionGlobal();
+
 	if (!global.EnableGlobalStatsFile) initFS();
 	else initGlobalFile();
 
@@ -291,7 +332,7 @@ class ProtoSSChe {
 
 		if (!request.aborted) {
 			if (!o.requestBodyMethods || o.requestBodyMethods.indexOf(request.method) !== -1) {
-				request.on("data", function (data) {
+				request.on(EVENTS.DATA, function (data) {
 					if (ended) return;
 					if (keepbuffer) bodyBuffer.push(data);
 					bodyLength += data.length;
@@ -304,11 +345,11 @@ class ProtoSSChe {
 					}
 				});
 			}
-			request.on("error", function (error) {
+			request.on(EVENTS.ERROR, function (error) {
 				if (o.onErrorBody) o.onErrorBody(o, request, response, body, error);
 				if (o.readRequestOnError) o.onReadRequestBody(request, body, response);
 			});
-			request.on("end", async function () {
+			request.on(EVENTS.END, async function () {
 				if (!ended) {
 					if (keepbuffer) request.__bodyBuffer = Buffer.concat(bodyBuffer);
 					if (myenv.swapBodyBuffer) body = request.__bodyBuffer;
@@ -331,7 +372,7 @@ class ProtoSSChe {
 				}
 			});
 		} else {
-			if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error("abort"));
+			if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error(ERRORS.ABORT));
 			if (o.readRequestOnError) o.onReadRequestBody(request, body, response);
 		}
 		return o;
