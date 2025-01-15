@@ -1,8 +1,14 @@
 "use strict";
 exports.__esModule = true;
-exports.getBoundary = exports.parse = void 0;
 
-var Buffer = require("buffer").Buffer;
+const { Buffer } = require("buffer");
+
+const settings = {
+	debug: false,
+	debugData: false,
+};
+exports.settings = settings;
+
 var ParsingState;
 (function (ParsingState) {
 	ParsingState[(ParsingState["INIT"] = 0)] = "INIT";
@@ -10,6 +16,7 @@ var ParsingState;
 	ParsingState[(ParsingState["READING_DATA"] = 2)] = "READING_DATA";
 	ParsingState[(ParsingState["READING_PART_SEPARATOR"] = 3)] = "READING_PART_SEPARATOR";
 })(ParsingState || (ParsingState = {}));
+
 function parse(multipartBodyBuffer, boundary) {
 	var lastline = "";
 	var contentDispositionHeader = "";
@@ -139,3 +146,34 @@ function process(part) {
 	});
 	return input;
 }
+
+function contentParser(body, headers, request) {
+	if (settings.debug) console.log("#Parse multiform data");
+	var boundary = getBoundary(headers["content-type"]);
+	if (settings.debug) console.log(" #Boundary:", boundary);
+
+	var parseddata = parse(request.__bodyBuffer, boundary);
+	if (settings.debugData) console.log(" #Parsed Data", parseddata);
+	var formdata = {
+		boundary: boundary,
+		parts: parseddata,
+		byname: {},
+	};
+	parseddata.forEach((e) => {
+		formdata.byname[e.name] = e;
+	});
+	if (settings.debugData) console.log(" #Form Data", formdata);
+
+	return formdata;
+}
+exports.contentParser = contentParser;
+
+function configParser(server, callback) {
+	server.keepBufferPerContentType["multipart/form-data"] = true;
+	server.contentParsers["multipart/form-data"] = (body, headers, request) => {
+		let res = contentParser(body, headers, request);
+		if (callback) callback(res);
+		return res;
+	};
+}
+exports.configParser = configParser;
