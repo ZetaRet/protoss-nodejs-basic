@@ -9,13 +9,9 @@ const settings = {
 };
 const ob_classes = {};
 const ob_output_css = {};
-ob_classes.home = {
-	serverexam: { "padding": "4px", "background": "#aaa", "border-radius": "2px", "display": "block" },
-	proname: { "padding": "2px", "color": "#333", "font-weight": "bold", "display": "block" },
-	prodesc: { padding: "1px", color: "666", display: "block" },
-};
+
 function setClassName(id, obj) {
-	ob_output_css[id] = obj;
+	ob_classes[id] = obj;
 }
 
 function obfuscateCSS(id, rnd) {

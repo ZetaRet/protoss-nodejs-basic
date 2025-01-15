@@ -97,7 +97,7 @@ function isLocal(req) {
 server.addPathListener("", function (server, robj, routeData, request, response) {
 	response.__headers["content-type"] = "text/html";
 	if (robj.vars.recache && isLocal(request)) htcache.recache(PAGES.HOME.id);
-	response.__data.push(replaceHTMLMod.replaceParams(htcache.getStruct(PAGES.HOME.id), currentSessionData));
+	response.__data.push(replaceHTMLMod.replaceParamsWrapper(htcache.getStruct(PAGES.HOME.id), currentSessionData));
 });
 
 const { ListDir } = require("zetaret.node.utils.web::ListDir");
