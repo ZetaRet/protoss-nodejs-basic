@@ -4,6 +4,9 @@ rsn.loadFromJSON("namespacemap.json", __dirname);
 
 global.ProtoSSCheStatsFile = __dirname + "/" + "apistats.json";
 
+const path = require("path");
+const fs = require("fs");
+
 var mod = require("zetaret.node::index");
 const server = mod.serverche();
 console.log(server);
@@ -11,7 +14,8 @@ console.log(server);
 const { APIController } = require("zetaret.node.examples.apiprovider::APIController");
 var apiController = new APIController();
 
-const { Cookies } = require("zetaret.node.utils.web::Cookies");
+const LoggingMod = require("zetaret.node.utils.web::Logging");
+const LoggingInst = new LoggingMod.Logging();
 
 const { Router } = require("zetaret.node.api::Router");
 var rinst = new Router();
@@ -94,10 +98,13 @@ server.addMethodPathListener("POST", "api/postdata", function (server, robj, rou
 	console.log("Post data:", robj);
 });
 
+fs.mkdirSync(path.join(__dirname, "./logs/auth/"), { recursive: true });
 server.addParamsPathListener(
 	"profile/:profileid",
 	function (server, robj, routeData, request, response) {
 		console.log("profile:", robj.vars.profileid, robj, server.routeMap);
+		let logstr = LoggingInst.logStr("localhost", new Date().getTime(), request.__reqid, robj, "md");
+		LoggingInst.logFile(path.join(__dirname, "./logs/auth/tail.md"), logstr);
 	},
 	"GET",
 	true
