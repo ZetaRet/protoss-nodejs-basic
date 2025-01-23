@@ -1,0 +1,10 @@
+{
+	"name": "protoss-nodejs-basic-examples-websocket",
+	"version": "1.0.0",
+	"author": "Zeta Ret",
+	"license": "MIT",
+	"scripts": {},
+	"dependencies": {
+		"ws": "^7.5.10"
+	}
+}

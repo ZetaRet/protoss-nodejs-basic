@@ -1,3 +1,6 @@
+declare module "zetaret.node.api::Router";
+declare module "protoss-nodejs-basic/api/Router.js";
+
 class Router implements zetaret.node.api.Router {
 	public prefix: string = "";
 	public adds: zetaret.node.api.RouterAdds[] = [];

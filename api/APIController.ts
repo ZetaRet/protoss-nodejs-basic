@@ -1,3 +1,6 @@
+declare module "zetaret.node.api::APIController";
+declare module "protoss-nodejs-basic/api/APIController.js";
+
 class APIController implements zetaret.node.api.APIController {
 	public ctype: string;
 	public api: Array<string>;

@@ -1,3 +1,6 @@
+declare module "zetaret.node.api::Randomizer";
+declare module "protoss-nodejs-basic/api/Randomizer.js";
+
 class Randomizer implements zetaret.node.api.Randomizer {
 	public Seed: number;
 	public Count: number;

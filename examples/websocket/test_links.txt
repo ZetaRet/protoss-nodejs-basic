@@ -1,0 +1,23 @@
+http://localhost:7005/
+http://localhost:7005/home
+
+
+http://localhost:7005/api/addclient?username=he		uid: 4VwPNUWdjrtHFqAYFwa5idnYOZaPtz
+http://localhost:7005/api/addclient?username=she		uid: wLhmMwGTGTtnM0vQDI1IHD5OSyoxpR
+http://localhost:7005/api/getclients
+http://localhost:7005/api/addgroup?group=g1&username=he&uid=GETUIDFROMADDCLIENT
+http://localhost:7005/api/addgroup?group=g1&username=she&uid=GETUIDFROMADDCLIENT
+http://localhost:7005/api/getgroups
+http://localhost:7005/api/getclients?group=g1
+
+
+sendWS('addclient',{username:'he'})
+sendWS('addclient',{username:'she'})
+sendWS('getclients')
+sendWS('addgroup', {username:cd.username,uid:cd.uid,group:'g1'})
+sendWS('getgroups')
+sendWS('getclients', {group:'g1'})
+
+sendWS('sendmessage',{target:'she', message:'zxczxcz'})
+sendWS('getmessages',{target:'she'})
+sendWS('getmessages')

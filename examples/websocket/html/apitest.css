@@ -1,0 +1,5 @@
+html { font-family: Arial; font-size: 12px; }
+#message-history { width: 298px; height: 298px; border: black 1px solid; border-radius: 2px; margin: 2px; }
+input, select { width: 300px; border-radius: 2px; border: black 1px solid; margin: 2px; padding: 2px; }
+input[type=button] { background: #dedede; }
+input[type=button]:hover { background: #fcfcfc; }

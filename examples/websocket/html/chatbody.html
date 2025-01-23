@@ -1,0 +1,45 @@
+<div class="chatbody">
+	<h2>Clients</h2>
+	<div class="clients">
+		<div>Add your client, uid will be returned and registered</div>
+		<input type="text" placeholder="Input username" id="username"/>
+		<input type="button" value="Add Client" onclick="addclientbtn()" id="addclient"/>
+	</div>
+	<div class="clients">
+		<select id="clientlist">
+			<option value="">[None]</option>
+		</select>
+		<input type="button" value="Get Clients" onclick="getclientsbtn()" id="getclients"/>
+	</div>
+	<h2>Groups</h2>
+	<div class="groups">
+		<input type="text" placeholder="Input group id" id="group"/>
+		<input type="button" value="Add to Group" onclick="addgroupbtn()" id="addgroup"/>
+	</div>
+	<div class="groups">
+		<select id="groups">
+			<option value="">[None]</option>
+		</select>
+		<input type="button" value="Get Groups" onclick="getgroupsbtn()" id="getgroups"/>
+	</div>
+	<div class="groups">
+		<select id="usergroups">
+			<option value="">[None]</option>
+		</select>
+		<input type="button" value="Get Clients in Groups" onclick="getusergroupsbtn()" id="getusergroups"/>
+	</div>
+	<h2>Messages</h2>
+	<div class="messages">
+		<div>Get clients or groups before sending the message</div>
+		<select id="messageoptions">
+			<option value="client">Client</option>
+			<option value="group">Group</option>
+		</select>
+		<div id="message-history"></div>
+		<input type="button" value="Get messages" onclick="getmessagesbtn()" id="getmessages"/>
+	</div>
+	<div class="messages">
+		<input type="text" placeholder="Input message" id="message"/>
+		<input type="button" value="Send" onclick="sendmessagebtn()" id="sendmessage"/>
+	</div>
+</div>
