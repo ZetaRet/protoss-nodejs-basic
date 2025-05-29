@@ -1,0 +1,97 @@
+{
+	"author": "Zeta Ret",
+	"description": "HTML page cache utility",
+	"text": "Swap JS/CSS from filepath into tag as relative, cache as page content",
+	"requires": "fs, path, events",
+	"version": "1.8.3",
+	"date": "2019 - Today",
+	"supername": "zetaret.node.utils.html::HTMLCache",
+	"inherits": null,
+	"interfaces": null,
+	"static": {
+		"public_properties": {
+			"EVENTS": "Object: const"
+		},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {
+		"structs": "Object: {}",
+		"autoStructPage": "Boolean: true",
+		"pages": "Object: {}",
+		"despaceChars": "Object: {}",
+		"despaceRules": "Object: {}",
+		"watchFiles": "Boolean: false",
+		"watchOptions": "Object: null",
+		"watchListener": "Function: null",
+		"watchMap": "Object: {}",
+		"events": "events.EventEmitter: new"
+	},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {
+		"HTMLCache": "",
+		"setStruct": "id*: String, pagesOrStructIds*: Array; return zetaret.node.utils.html::HTMLCache",
+		"getStruct": "id*: String; return String",
+		"addPage": "page*: String, parser*: zetaret.node.utils.html.HTMLParser, hfile*: String, dir*: String; return Object",
+		"getPage": "page*: String; return String",
+		"exePage": "page*: String, cfg: Object; return Object",
+		"renderContent": "page*: String; return String",
+		"resetBinders": "page*: String",
+		"recache": "page*: String",
+		"setPages": "pages*: Object, HTMLParser*: zetaret.node.utils.html.HTMLParser, watchers: Object, log: Boolean, decorateParser: Function",
+		"swapCSS": "page*: String, handler: Function",
+		"swapJS": "page*: String, handler: Function",
+		"defaultRenderTemplate": "hcache*: zetaret.node.utils.html.HTMLCache, page*: String, pdata*: Object, hpinst*: zetaret.node.utils.html.HTMLParser, cfg*: Object",
+		"watch": "listener*: Function, options: Object",
+		"getWatchers": "listener: Function, interval: Number, debug: Boolean, recacheOnChange: Boolean; return Object",
+		"watchFile": "pr*: String, page*: String, type*: String",
+		"resetWatchers": "",
+		"despace": "v*: String, type: String; return String"
+	},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {
+		"HTMLCache": {
+			"this": "create pages by id and cache content from HTMLParser, use in server response or save as file"
+		},
+		"addPage": {
+			"this": "create new page by id in cache",
+			"parser": "HTML template already converted to object",
+			"hfile": "html file location on drive and relative to JS/CSS paths inside, usually the same as HTMLParser",
+			"dir": "base directory to resolve html file, usually the same as HTMLParser",
+			"return": "cache object `{parser, hfile, dir, hfileloc, content}`"
+		},
+		"exePage": {
+			"this": "execute page script per configuration",
+			"cfg": "swap/handle/despace elements, execute `HTMLParser.domToString` {swapjs, jsh, despacejs, swapcss, cssh, despacecss, nowhite, pretty}"
+		}
+	},
+	"static_examples": {},
+	"examples": {
+		"HTMLCache": [
+			"var htmlparser = require('./path/to/utils/html/HTMLParser.js'),",
+			"\thtmlcache = require('./path/to/utils/html/HTMLCache.js'),",
+			"\thpinst = new htmlparser.HTMLParser(),",
+			"\thtcache = new htmlcache.HTMLCache();",
+			"var hfile = './path/to/html/apitest.html';",
+			"hpinst.parseFromFile(hfile, __dirname);",
+			"htcache.addPage('home', hpinst, hfile, __dirname);",
+			"htcache.exePage('home', {",
+			"\tswapjs: true,",
+			"\tswapcss: true,",
+			"\tdespacejs: true,",
+			"\tdespacecss: true",
+			"});",
+			"app.instance.server.addPathListener('', function(server, robj, routeData, request, response) {",
+			"\tresponse.__headers['content-type'] = 'text/html';",
+			"\tresponse.__data.push(htcache.getPage('home'));",
+			"});"
+		]
+	},
+	"imports": ["zetaret.node.utils.html::HTMLParser"]
+}

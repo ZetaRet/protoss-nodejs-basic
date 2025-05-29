@@ -1,0 +1,132 @@
+{
+	"author": "Zeta Ret",
+	"description": "Simple HTML parser",
+	"text": "RegExp XML processor to object and reversed conversion to HTML",
+	"requires": "fs, path, events",
+	"version": "1.9.2",
+	"date": "2019 - Today",
+	"supername": "zetaret.node.utils.html::HTMLParser",
+	"inherits": null,
+	"interfaces": null,
+	"static": {
+		"public_properties": {},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {
+		"id": "String: null",
+		"dom": "Object: null",
+		"str": "String: null",
+		"file": "String: null",
+		"dir": "String|Boolean: null",
+		"prettyPrefix": "String: '\\t'",
+		"prettyNewLine": "String: '\\n'",
+		"attrAsObject": "Boolean: true",
+		"debug": "Boolean: false",
+		"debugBuffer": "Array: []",
+		"parseCursor": "Number: 0",
+		"useAutomaton": "Boolean: false",
+		"autoOrder": "Boolean: false",
+		"automata": "Object: init",
+		"closeTags": "Array: []",
+		"watchFiles": "Boolean: false",
+		"watchOptions": "Object: null",
+		"watchListener": "Function: null",
+		"watcher": "fs.FSWatcher: null",
+		"whiteList": "Object: null",
+		"blackList": "Object: null",
+		"queryPrefix": "Object: init"
+	},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {
+		"HTMLParser": "",
+		"getFilePath": "file*: String, dir: String|Boolean; return String",
+		"loadFromFile": "file*: String, dir: String|Boolean; return String",
+		"parseFromFile": "file*: String, dir: String|Boolean; return String",
+		"parseFromString": "str*: String; return zetaret.node.utils.html::HTMLParser",
+		"watchFile": "fp: String, listener: Function, options: Object",
+		"getDomJSON": "; return String",
+		"domToString": "dom*: Object, nowhite: Boolean, pretty: Boolean, prefix: Array; return String",
+		"search": "type*: String|Array, attr*: String|Function, value*: String|Object, dom: Object; return Array",
+		"query": "selector*: String, methods: Object, classes: Boolean|Object; return Array",
+		"querySafe": "selector*: String, methods: Object, classes: Boolean|Object, debug: Function; return Array",
+		"debugCase": "text*: String, error: Error|Function, data: Object",
+		"cursorToCR": "cursor*: Number; return String",
+		"process": "s*: String, d*: Object; return Object",
+		"getClosedTag": "s*: String, el*: Object; return Object",
+		"getTag": "s*: String; return Object",
+		"getAutoTag": "tag*: Object; return Object",
+		"getElement": "type*: String, closed: Boolean, attr: Array|Object; return Object",
+		"attributes": "s*: String, el*: Object; return String",
+		"attrToObject": "aa*: Array, el*: Object, cursor: Number; return zetaret.node.utils.html::HTMLParser"
+	},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {
+		"prettyPrefix": "tag offset per depth, change to more tabs, or spaces, deleted prefix will generate elements on each line, use in `domToString`",
+		"prettyNewLine": "new line string upon creating new tag, use in `domToString`",
+		"useAutomaton": "parsing based on `automata` map, allows special tags, or define structure",
+		"autoOrder": "honor `automaton` order or html of parsing `automata` tags",
+		"automata": "[opener RegExp, closure RegExp, use attributes]",
+		"closeTags": "skip parsing elements and lookup to close the tag directly, i.e. `script` or `style`",
+		"whiteList": "map of keys to be allowed in `domToString` attributes",
+		"blackList": "map of keys to be disallowed in `domToString` attributes",
+		"HTMLParser": {
+			"this": "Parse simple XML structures with namespace into templates, swap content, or use HTMLCache, `useAutomaton` to support comments `<!--` or special tags `<!` `<?`. Must extend and override methods to supplement, or use multiple templates to create more complex HTML structure."
+		},
+		"getFilePath": {
+			"this": "resolves using path and base directory",
+			"file": "relative or absolute path to file, will merge with dir",
+			"dir": "`true` uses `file` as it is, without `path.resolve` or local/remote directory"
+		},
+		"search": {
+			"this": "search the dom per type of element, and/or attribute key and value"
+		},
+		"query": {
+			"this": "execute sequential search on the dom, and convert dom objects to classes",
+			"selector": "space separated sequence, use `queryPrefix` to identify attributes",
+			"methods": "object map per converted attribute, swap `attr` arguments to function handler in search",
+			"classes": "convert dom objects to classes in final return"
+		},
+		"process": {
+			"this": "implemented for performance, use strict tagging and closures"
+		},
+		"getTag": {
+			"this": "detect any tag opener before processing attributes and closure"
+		},
+		"getAutoTag": {
+			"this": "check current detected tag opener for an `automaton` implementation"
+		},
+		"getElement": {
+			"this": "generate new object element and append to any dom structure",
+			"return": "{type, closed, ending, attr, elements}"
+		},
+		"attrToObject": {
+			"aa": "non-parsed attributes from the tag",
+			"el": "element object to create `attr` into",
+			"cursor": "used in `debugCase`"
+		}
+	},
+	"static_examples": {},
+	"examples": {
+		"query": [
+			"htparser.query('#my-component .buttons', null, true)"
+		],
+		"getAutoTag": [
+			"<?xml prolog=\"attribute\" ?>",
+			"<@alias name=\"another\" @>",
+			"<#template file=\"path\" type=\"iterator\" #>",
+			"<=var method arguments=\"true, jsData.htmlParserInput\">",
+			"<%block wild text %>",
+			"<!-- comments in here-->",
+			"<![CDATA[my cdata content]]>",
+			"<!DOCTYPE HTML>"
+		]
+	},
+	"imports": ["zetaret.node.utils.html::HTMLDomElement"]
+}

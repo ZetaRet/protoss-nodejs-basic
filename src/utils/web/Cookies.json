@@ -1,0 +1,49 @@
+{
+	"author": "Zeta Ret",
+	"description": "Cookies - parse, read, write, delete",
+	"text": "Configurable Cookie class",
+	"requires": null,
+	"version": "1.4.1",
+	"date": "2019 - Today",
+	"supername": "zetaret.node.utils.web::Cookies",
+	"inherits": null,
+	"interfaces": null,
+	"static": {
+		"public_properties": {},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {
+		"headerName": "String: 'cookie'",
+		"setHeaderKey": "String: set-cookie'",
+		"setObjectHeaderKey": "String: 'set-cookie-object'",
+		"cookiePath": "String: '/'",
+		"setCookiePath": "Boolean: false",
+		"setCookieExpires": "Boolean: false",
+		"cookieExpirePeriod": "Number: 24h",
+		"cookie": "String: ''",
+		"cookieMap": "Object: {}"
+	},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {
+		"Cookies": "",
+		"parseCookie": "cookie*: String; return Object",
+		"parseCookieRequest": "request*: http.ClientRequest|http.IncomingMessage; return String",
+		"readCookieRequest": "request*: http.ClientRequest|http.IncomingMessage, key*: String; return String",
+		"readCookie": "headers*: Object, key*: String, headerName: String; return String",
+		"writeCookie": "headers*: Object, key*: String, value*: String, expires: Number, useObject: Boolean, options: Object; return Cookies",
+		"deleteCookie": "headers*: Object, key*: String, useObject: Boolean; return Cookies",
+		"deleteCookieObject": "headers*: Object, key*: String; return Cookies",
+		"transformCookieObject": "headers*: Object, remove: Boolean; return Cookies"
+	},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {},
+	"static_examples": {},
+	"examples": {}
+}

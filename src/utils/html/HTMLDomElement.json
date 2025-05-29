@@ -1,0 +1,46 @@
+{
+	"author": "Zeta Ret",
+	"description": "Simple XML DOM Element",
+	"text": "Wrapper class used as facade of the element and extends logic",
+	"requires": "events",
+	"version": "1.1.1",
+	"date": "2020 - Today",
+	"supername": "zetaret.node.utils.html::HTMLDomElement",
+	"inherits": ["Array"],
+	"interfaces": null,
+	"static": {
+		"public_properties": {},
+		"protected_properties": {},
+		"private_properties": {},
+		"public_methods": {},
+		"protected_methods": {},
+		"private_methods": {}
+	},
+	"public_properties": {
+		"dom": "String|Object: init",
+		"type": "String: init",
+		"data": "Object: {}",
+		"events": "events.EventEmitter: new",
+		"id": "String: getter",
+		"classList": "Array: getter"
+	},
+	"protected_properties": {},
+	"private_properties": {},
+	"public_methods": {
+		"HTMLDomElement": "dom*: Object",
+		"convert": "classes: Object, sub: Boolean, subc: Boolean; return zetaret.node.utils.html::HTMLDomElement"
+	},
+	"protected_methods": {},
+	"private_methods": {},
+	"static_descriptions": {},
+	"descriptions": {
+		"convert": {
+			"this": "build classes on element index position",
+			"classes": "map of type/class to instance dom elements",
+			"sub": "cast convert on element instances",
+			"subc": "continuously sub-channel elements"
+		}
+	},
+	"static_examples": {},
+	"examples": {}
+}

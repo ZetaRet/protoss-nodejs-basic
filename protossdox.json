@@ -4,11 +4,11 @@
 	"url": "https://github.com/ZetaRet/protoss-nodejs-basic",
 	"author": "Zeta Ret",
 	"path": "",
-	"src": "",
+	"src": "src/",
 	"namespace": "zetaret.node",
 	"relative": true,
 	"markdown": true,
 	"ext": ["js", "ts"],
-	"version": "2.18.0",
+	"version": "3.0.0",
 	"license": "MIT"
 }

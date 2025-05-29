@@ -12,17 +12,8 @@
 		"newLine": "lf",
 		"outDir": "dist/"
 	},
-	"files": [
-		"indexTS.ts",
-		"indexUtilsTS.ts",
-		"indexPremiseTS.ts"
-	],
 	"include": [
-		"index.js",
-		"ProtoSSChe.js",
-		"api/**/*",
-		"modules/**/*",
-		"utils/**/*"
+		"src/**/*"
 	],
 	"exclude": [
 		"node_modules"
