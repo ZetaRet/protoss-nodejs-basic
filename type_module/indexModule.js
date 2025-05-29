@@ -1,5 +1,5 @@
 import "./indexModulePrefix.js";
-import * as mod from "./../ProtoSSChe.js";
+import * as mod from "./../dist/ProtoSSChe.js";
 
 if (!global.DisableAutoStartOfProtoSSChe) mod.StartUp();
 

@@ -1,4 +1,4 @@
-const rsn = require("./../../utils/nano/RequireSupername.js");
+const rsn = require("./../../dist/utils/nano/RequireSupername.js");
 rsn.initRequireSupername();
 rsn.loadFromJSON("namespacemap.json", __dirname);
 
@@ -11,7 +11,7 @@ var mod = require("zetaret.node::index");
 const server = mod.serverche();
 console.log(server);
 
-const { APIController } = require("zetaret.node.examples.apiprovider::APIController");
+const { APIController } = require("zetaret.examples.apiprovider::APIController");
 var apiController = new APIController();
 
 const LoggingMod = require("zetaret.node.utils.web::Logging");

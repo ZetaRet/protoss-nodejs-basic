@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { join } = require("path");
 
-const rsn = require("./../../utils/nano/RequireSupername.js");
+const rsn = require("./../../dist/utils/nano/RequireSupername.js");
 rsn.initRequireSupername();
 rsn.loadFromJSON("namespacemap.json", __dirname);
 

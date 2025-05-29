@@ -9,7 +9,7 @@
 global.EnableGlobalStatsFile = true;
 global.GlobalStatsFile = { reqnum: 0, xserver: true, xserverModule: "#Subserver", htport: 7003 };
 
-var protossche = require("./../../index.js");
+var protossche = require("./../../dist/index.js");
 
 var serv = protossche.serverche();
 console.log(serv);

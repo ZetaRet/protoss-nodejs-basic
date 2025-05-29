@@ -1,3 +1,4 @@
 {
-	"zetaret.node": ["./../../"]
+	"zetaret.node": ["./../../dist/"],
+	"zetaret.examples": ["./../../examples/"]
 }
