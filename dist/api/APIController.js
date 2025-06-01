@@ -1,4 +1,4 @@
-class APIController {
+export class APIController {
 	constructor() {
 		this.ctype = "application/json";
 		this.api = [];
@@ -20,4 +20,3 @@ class APIController {
 		else response.__data.push(JSON.stringify(data));
 	}
 }
-module.exports.APIController = APIController;

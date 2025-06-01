@@ -1,5 +1,5 @@
 declare module "zetaret.node.api::DataValidator";
-declare module "protoss-nodejs-basic/api/DataValidator.js";
+declare module "protoss-nodejs-basic/dist/api/DataValidator.js";
 
 class DataValidator implements zetaret.node.api.DataValidator {
 	public log: boolean = false;
