@@ -1,7 +1,7 @@
 declare module "zetaret.node.api::APIController";
-declare module "protoss-nodejs-basic/api/APIController.js";
+declare module "protoss-nodejs-basic/dist/api/APIController.js";
 
-class APIController implements zetaret.node.api.APIController {
+export class APIController implements zetaret.node.api.APIController {
 	public ctype: string;
 	public api: Array<string>;
 	public server: zetaret.node.modules.Subserver;
@@ -32,5 +32,3 @@ class APIController implements zetaret.node.api.APIController {
 		else response.__data.push(JSON.stringify(data));
 	}
 }
-
-module.exports.APIController = APIController;

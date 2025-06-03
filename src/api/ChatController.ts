@@ -1,8 +1,7 @@
 import { EventEmitter } from "events";
+import { APIController } from "./APIController";
 
-const APIModule: zetaret.node.api.APIControllerModule = require("./APIController");
-
-class ChatController extends APIModule.APIController implements zetaret.node.api.ChatController {
+export class ChatController extends APIController implements zetaret.node.api.ChatController {
 	static EVENTS: zetaret.node.api.ChatEvents = {
 		INSTALL: "install",
 		ERROR: "error",
@@ -271,5 +270,3 @@ class ChatController extends APIModule.APIController implements zetaret.node.api
 
 	}
 }
-
-module.exports.ChatController = ChatController;
