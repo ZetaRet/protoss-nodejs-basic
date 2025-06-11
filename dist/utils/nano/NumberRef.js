@@ -1,17 +1,12 @@
-/**
- * Author: Zeta Ret
- * Date: 2023 - Today
- * Reference to Number object, strict equality is false
- **/
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.NumberRef = void 0;
 class NumberRef extends Number {
-	constructor(s) {
-		super(s);
+	constructor(n) {
+		super(n);
 	}
-
 	valueOfObj() {
 		return this;
 	}
 }
-
-module.exports.NumberRef = NumberRef;
+exports.NumberRef = NumberRef;

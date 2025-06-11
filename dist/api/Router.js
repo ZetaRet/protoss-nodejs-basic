@@ -1,9 +1,7 @@
 class Router {
-	constructor() {
-		this.prefix = "";
-		this.adds = [];
-		this.returns = [];
-	}
+	prefix = "";
+	adds = [];
+	returns = [];
 	addPathListener(path, callback) {
 		var routerAdd = {
 			method: "addPathListener",

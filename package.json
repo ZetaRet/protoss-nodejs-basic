@@ -1,6 +1,6 @@
 {
 	"name": "protoss-nodejs-basic",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"author": "Zeta Ret",
 	"license": "MIT",
 	"type": "commonjs",
@@ -14,6 +14,7 @@
 		"prettier-ts-check": "prettier --check \"dist/**/*.js\"",
 		"prettier-ts-write": "prettier --write \"dist/**/*.js\"",
 		"tsc": "tsc --project ./tsconfig.json",
+		"tsc-watch": "tsc -w ./tsconfig.json",
 		"tsc-pretty": "npm run tsc & npm run prettier-ts-write",
 		"start": "node dist/index.js",
 		"start-module": "node type_module/indexModule.js",

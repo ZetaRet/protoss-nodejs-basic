@@ -1,4 +1,12 @@
-export class APIController {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.APIController = void 0;
+class APIController {
+	ctype;
+	api;
+	server;
+	db;
+	apiPrefix;
 	constructor() {
 		this.ctype = "application/json";
 		this.api = [];
@@ -20,3 +28,4 @@ export class APIController {
 		else response.__data.push(JSON.stringify(data));
 	}
 }
+exports.APIController = APIController;

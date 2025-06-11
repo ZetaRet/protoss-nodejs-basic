@@ -1,4 +1,11 @@
 class Randomizer {
+	Seed;
+	Count;
+	SEED_CONST;
+	TIME_CONST;
+	NUMBER_SEED_CONST;
+	OVERFLOW_CONST;
+	randomSeedCount;
 	constructor(seed, count) {
 		this.Seed = seed || 0;
 		this.Count = count || 0;
@@ -61,5 +68,4 @@ class Randomizer {
 		return c;
 	}
 }
-
 module.exports.Randomizer = Randomizer;

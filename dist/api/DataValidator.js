@@ -1,7 +1,5 @@
 class DataValidator {
-	constructor() {
-		this.log = false;
-	}
+	log = false;
 	validate(data, validation, keychain) {
 		let k;
 		let v;

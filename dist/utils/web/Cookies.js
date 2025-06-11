@@ -1,10 +1,19 @@
-/**
- * Author: Zeta Ret
- * Date: 2019 - Today
- * Cookies - parse, read, write, delete
- **/
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Cookies = void 0;
 class Cookies {
+	headerName;
+	setHeaderKey;
+	setObjectHeaderKey;
+	cookiePath;
+	setCookiePath;
+	setCookieExpires;
+	cookieExpirePeriod;
+	cookie;
+	cookieMap;
+	reserved;
+	responseHeaders;
+	debug;
 	constructor() {
 		var o = this;
 		o.headerName = "cookie";
@@ -20,7 +29,6 @@ class Cookies {
 		o.responseHeaders = {};
 		o.debug = false;
 	}
-
 	parseCookie(cookie) {
 		var o = this;
 		o.cookie = cookie || "";
@@ -40,24 +48,20 @@ class Cookies {
 		o.cookieMap = p;
 		return p;
 	}
-
 	parseCookieRequest(request) {
 		var o = this;
 		return o.parseCookie(request.headers[o.headerName]);
 	}
-
 	readCookieRequest(request, key) {
 		var o = this;
 		return o.readCookie(request.headers, key);
 	}
-
 	readCookie(headers, key, headerName) {
 		var o = this;
 		var cv = headers[headerName || o.headerName],
 			r = RegExp("(^|;" + " " + ")" + encodeURIComponent(key) + "=([^;]*)").exec(cv);
 		return r ? r[2] : null;
 	}
-
 	writeCookie(headers, key, value, expires, useObject, options) {
 		var o = this;
 		var k, dd, c;
@@ -66,7 +70,7 @@ class Cookies {
 		if (o.setCookieExpires && expires) {
 			dd = new Date();
 			dd.setTime(dd.getTime() + expires * o.cookieExpirePeriod);
-			c += "; Expires=" + dd.toGMTString();
+			c += "; Expires=" + dd.toUTCString();
 		}
 		if (o.setCookiePath) c += "; Path=" + o.cookiePath;
 		for (k in options) c += "; " + k + (options[k] ? "=" + options[k] : "");
@@ -80,19 +84,16 @@ class Cookies {
 		}
 		return o;
 	}
-
 	deleteCookie(headers, key, useObject) {
 		var o = this;
 		o.writeCookie(headers, key, "", -1, useObject);
 		return o;
 	}
-
 	deleteCookieObject(headers, key) {
 		var o = this;
 		delete headers[o.setObjectHeaderKey][key];
 		return o;
 	}
-
 	transformCookieObject(headers, remove, response) {
 		var o = this;
 		var s = [],
@@ -107,5 +108,4 @@ class Cookies {
 		return o;
 	}
 }
-
-module.exports.Cookies = Cookies;
+exports.Cookies = Cookies;

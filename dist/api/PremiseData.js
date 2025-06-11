@@ -8,6 +8,9 @@ class Premise extends Promise {
 }
 exports.Premise = Premise;
 class ArguableMaterial {
+	predicate;
+	subject;
+	proposition;
 	constructor(predicate, subject, proposition) {
 		this.predicate = predicate;
 		this.subject = subject;
@@ -17,6 +20,8 @@ class ArguableMaterial {
 }
 exports.ArguableMaterial = ArguableMaterial;
 class Refutation {
+	conclusion;
+	failedPromises;
 	constructor(conclusion, failed) {
 		this.conclusion = conclusion;
 		this.failedPromises = failed;

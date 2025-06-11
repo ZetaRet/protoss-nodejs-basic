@@ -1,17 +1,12 @@
-/**
- * Author: Zeta Ret
- * Date: 2023 - Today
- * Reference to Boolean object, strict equality is false
- **/
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BooleanRef = void 0;
 class BooleanRef extends Boolean {
-	constructor(s) {
-		super(s);
+	constructor(b) {
+		super(b);
 	}
-
 	valueOfObj() {
 		return this;
 	}
 }
-
-module.exports.BooleanRef = BooleanRef;
+exports.BooleanRef = BooleanRef;

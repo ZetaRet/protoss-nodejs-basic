@@ -1,21 +1,15 @@
-/**
- * Author: Zeta Ret
- * Date: 2019 - Today
- * Length based Computational String
- **/
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StringLength = void 0;
 class StringLength extends String {
 	constructor(s) {
 		super(s);
 	}
-
-	concat() {
+	concat(value, ...rest) {
 		return new StringLength(super.concat.apply(this, arguments));
 	}
-
 	valueOf() {
 		return this.length;
 	}
 }
-
-module.exports.StringLength = StringLength;
+exports.StringLength = StringLength;

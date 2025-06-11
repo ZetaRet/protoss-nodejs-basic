@@ -33,7 +33,7 @@ export class ChatController extends APIController implements zetaret.node.api.Ch
 
 	public messages: { [msgid: string]: Array<zetaret.node.api.ChatMessage> };
 	public autoDelete: WeakMap<object, zetaret.node.api.ChatMessage>;
-	public db: zetaret.node.api.ChatDB;
+	declare public db: zetaret.node.api.ChatDB | object;
 	public install: Function;
 	public error: Function;
 	public defaults: Function;
