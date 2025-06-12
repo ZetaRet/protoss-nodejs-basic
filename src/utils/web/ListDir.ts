@@ -1,5 +1,9 @@
+declare module "protoss-nodejs-basic/dist/utils/web/ListDir.js";
+declare module "zetaret.node.utils.web::ListDir";
+
 const fs = require("fs");
-const MIME_TYPES = {
+
+const MIME_TYPES: any = {
 	js: "text/javascript",
 	json: "application/json",
 	xml: "application/xml",
@@ -17,10 +21,11 @@ const MIME_TYPES = {
 	woff: "font/woff",
 	woff2: "font/woff2",
 };
-function ListDir(serverobj, path, dir, config) {
+
+function ListDir(serverobj: zetaret.node.modules.Subserver | zetaret.node.api.Router, path: string, dir: string, config: zetaret.node.utils.web.ListDirConfig) {
 	return serverobj.addParamsPathListener(
 		path + "/:fileid",
-		(server, robj, routeData, request, response) => {
+		(server: any, robj: any, routeData: any, request: any, response: any) => {
 			var fileid = robj.vars.fileid,
 				nofile = false,
 				stream = false,
@@ -32,14 +37,17 @@ function ListDir(serverobj, path, dir, config) {
 				se = config.streamExt,
 				sf = config.streamFiles;
 			var c, ccn, stats, filename;
-			var ext = fileid.split(".").pop();
+			var ext: string = fileid.split(".").pop();
+
 			if (!fileid || fileid.indexOf("\\") >= 0) nofile = true;
 			if ((bl && bl.indexOf(fileid) >= 0) || (wl && wl.indexOf(fileid) === -1)) nofile = true;
 			filename = dir + "/" + fileid;
 			if (config.ext.indexOf(ext) === -1 || (fnf && fnf(fileid, filename, ext))) nofile = true;
+
 			if (!nofile && fs.existsSync(filename)) {
 				stream = (se && se[ext]) || (sf && sf[fileid]);
 				ccn = cc ? cc[ext] : null;
+
 				if (stream) {
 					response.__disablePipeline = true;
 					response.setHeader("Content-Type", MIME_TYPES[ext]);
@@ -50,6 +58,7 @@ function ListDir(serverobj, path, dir, config) {
 					fs.createReadStream(filename).pipe(response);
 				} else {
 					c = fs.readFileSync(filename, "binary");
+
 					response.__headers["Content-Type"] = MIME_TYPES[ext];
 					response.__headers["Content-Length"] = c.length;
 					if (ccn) response.__headers["Cache-Control"] = "max-age=" + ccn;
@@ -65,5 +74,6 @@ function ListDir(serverobj, path, dir, config) {
 		true
 	);
 }
+
 module.exports.MIME_TYPES = MIME_TYPES;
 module.exports.ListDir = ListDir;

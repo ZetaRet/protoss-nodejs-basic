@@ -4,6 +4,9 @@
  * Cookies - parse, read, write, delete
  **/
 
+declare module "protoss-nodejs-basic/dist/utils/web/Cookies.js";
+declare module "zetaret.node.utils.web::Cookies";
+
 export class Cookies implements zetaret.node.utils.web.Cookies {
 	public headerName: string;
 	public setHeaderKey: string;
@@ -15,7 +18,7 @@ export class Cookies implements zetaret.node.utils.web.Cookies {
 	public cookie: string;
 	public cookieMap: object;
 	public reserved: string[];
-	public responseHeaders: object;
+	public responseHeaders: any;
 	public debug: boolean;
 
 	constructor() {

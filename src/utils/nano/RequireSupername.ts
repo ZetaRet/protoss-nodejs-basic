@@ -1,35 +1,50 @@
+/**
+ * Author: Zeta Ret
+ * Date: 2019 - Today
+ * Require by Supername
+ **/
+
+declare module "protoss-nodejs-basic/dist/utils/nano/RequireSupername.js";
+
 var fsmod = require("fs"),
 	path = require("path");
-var rf,
-	maps = {},
-	supernames = {},
-	namespaces = {},
-	verified = {},
-	ext = ["js"];
-function setPathSupername(supername, paths) {
+
+var rf: any,
+	maps: any = {},
+	supernames: any = {},
+	namespaces: any = {},
+	verified: any = {},
+	ext: string[] = ["js"];
+
+function setPathSupername(supername: string, paths: Array<string>): void {
 	paths.forEach((p) => (maps[p] = supername));
 }
-function setSupername(supername, path) {
+
+function setSupername(supername: string, path: string): void {
 	supernames[supername] = path;
 }
-function setNamespace(ns, paths) {
+
+function setNamespace(ns: string, paths: Array<Array<string>>): void {
 	namespaces[ns] = (namespaces[ns] || []).concat(paths);
 }
-function setNamespaceMap(nsmap) {
-	for (var ns in nsmap) setNamespace(ns, nsmap[ns]);
+
+function setNamespaceMap(nsmap: object) {
+	for (var ns in nsmap) setNamespace(ns, (nsmap as any)[ns]);
 }
+
 function resolveFilename() {
 	var a = RequireSupername.apply(this, arguments);
 	return rf.apply(this, a);
 }
-function verifySupername(id) {
+
+function verifySupername(id: string): void {
 	var mid = id.match(new RegExp("[\\w|.]*[:]?[:]?[\\w]*"));
 	if (mid) {
 		var found,
 			ns,
 			nsa,
 			ex,
-			fd,
+			fd: string,
 			midr = id.replace(new RegExp("[:]+"), "."),
 			midrspl = midr.split("."),
 			cls = midrspl.pop(),
@@ -38,7 +53,7 @@ function verifySupername(id) {
 		for (ns in namespaces) {
 			nsa = namespaces[ns];
 			if (("." + midrns + ".").startsWith("." + ns + ".")) {
-				found = nsa.find((p) => {
+				found = nsa.find((p: any) => {
 					fd = path.resolve(p, (midrspl.length > 1 ? "." : "") + midr.substr(ns.length).split(".").join(path.sep));
 					if ((ex = ext.find((e) => fsmod.existsSync(fd + "." + e)))) {
 						supernames[id] = fd + "." + ex;
@@ -50,22 +65,26 @@ function verifySupername(id) {
 		}
 	}
 }
-function RequireSupername() {
+
+function RequireSupername(): Array<object> {
 	var a = [].slice.call(arguments);
 	if (!verified[a[0]]) verifySupername(a[0]);
 	if (maps[a[0]]) a[0] = maps[a[0]];
 	if (supernames[a[0]]) a[0] = supernames[a[0]];
 	return a;
 }
-function initRequireSupername() {
-	rf = module.constructor._resolveFilename;
-	module.constructor._resolveFilename = resolveFilename;
+
+function initRequireSupername(): void {
+	rf = (module.constructor as any)._resolveFilename;
+	(module.constructor as any)._resolveFilename = resolveFilename;
 }
-function loadFromJSON(json, dir) {
+
+function loadFromJSON(json: string, dir: string): void {
 	var nsmap = JSON.parse(fsmod.readFileSync(path.resolve(dir, json)));
-	for (var ns in nsmap) nsmap[ns].forEach((e, i, a) => (a[i] = path.resolve(dir, e)));
+	for (var ns in nsmap) nsmap[ns].forEach((e: any, i: number, a: any) => (a[i] = path.resolve(dir, e)));
 	setNamespaceMap(nsmap);
 }
+
 module.exports.RequireSupername = RequireSupername;
 module.exports.initRequireSupername = initRequireSupername;
 module.exports.verifySupername = verifySupername;
