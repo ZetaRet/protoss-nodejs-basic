@@ -1,8 +1,17 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Author: Zeta Ret
+ * Date: 2019 - Today
+ * HTML cache from parser
+ **/
+declare module "protoss-nodejs-basic/dist/utils/html/HTMLCache.js";
+declare module "zetaret.node.utils.html::HTMLCache";
+
+export { }
+
 var fs = require("fs"),
 	path = require("path"),
 	events = require("events");
+
 const EVENTS = {
 	SET_STRUCT: "setStruct",
 	ADD_PAGE: "addPage",
@@ -16,17 +25,19 @@ const EVENTS = {
 	WATCH_FILE: "watchFile",
 	RESET_WATCHERS: "resetWatchers",
 };
-class HTMLCache {
-	structs;
-	autoStructPage;
-	pages;
-	despaceChars;
-	despaceRules;
-	watchFiles;
-	watchOptions;
-	watchListener;
-	watchMap;
-	events;
+
+class HTMLCache implements zetaret.node.utils.html.HTMLCache {
+	structs: { [page: string]: string | Array<string> };
+	autoStructPage: boolean;
+	pages: { [page: string]: zetaret.node.utils.html.HTMLCachePage };
+	despaceChars: { [type: string]: string };
+	despaceRules: { [rule: string]: boolean | number };
+	watchFiles: boolean;
+	watchOptions: object;
+	watchListener: Function;
+	watchMap: { [path: string]: zetaret.node.utils.Watcher };
+	events: zetaret.node.utils.Emitter;
+
 	constructor() {
 		var o = this;
 		o.structs = {};
@@ -40,23 +51,26 @@ class HTMLCache {
 		o.watchMap = {};
 		o.events = new events.EventEmitter();
 	}
-	setStruct(id, pagesOrStructIds) {
+
+	setStruct(id: string, pagesOrStructIds: Array<string>): zetaret.node.utils.html.HTMLCache {
 		var o = this;
 		o.structs[id] = pagesOrStructIds;
 		o.events.emit(EVENTS.SET_STRUCT, id, o);
-		return o;
+		return o as any;
 	}
-	getStruct(id) {
+
+	getStruct(id: string): string {
 		var o = this;
 		var c,
 			s = o.structs[id];
 		if (s.constructor === Array) c = s.map((e) => o.getStruct(e)).join("");
-		else c = o.getPage(s);
+		else c = o.getPage(s as string);
 		return c;
 	}
-	addPage(page, parser, hfile, dir) {
+
+	addPage(page: string, parser: zetaret.node.utils.html.HTMLParser, hfile: string, dir: string): zetaret.node.utils.html.HTMLCachePage {
 		var o = this;
-		var pdata = {
+		var pdata: zetaret.node.utils.html.HTMLCachePage = {
 			parser: parser,
 			hfile: hfile,
 			dir: dir,
@@ -74,10 +88,12 @@ class HTMLCache {
 		o.events.emit(EVENTS.ADD_PAGE, page, pdata, o);
 		return pdata;
 	}
-	getPage(page) {
+
+	getPage(page: string): string {
 		return this.pages[page].content || this.renderContent(page);
 	}
-	exePage(page, cfg) {
+
+	exePage(page: string, cfg?: zetaret.node.utils.html.HTMLCacheCFG): zetaret.node.utils.html.HTMLCachePage {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
@@ -92,10 +108,11 @@ class HTMLCache {
 		o.events.emit(EVENTS.EXE_PAGE, page, pdata, o);
 		return pdata;
 	}
-	renderContent(page) {
+
+	renderContent(page: string): string {
 		var o = this;
 		var c,
-			pdata = o.pages[page],
+			pdata: zetaret.node.utils.html.HTMLCachePage = o.pages[page],
 			hpinst = pdata.parser,
 			cfg = pdata.execfg;
 		o.events.emit(EVENTS.RENDER_CONTENT, page, pdata, o);
@@ -104,18 +121,20 @@ class HTMLCache {
 		if (!cfg.nocontent) pdata.content = c;
 		return c;
 	}
-	resetBinders(page) {
+
+	resetBinders(page: string): void {
 		var o = this;
 		var p, pdata;
 		for (p in o.pages) {
 			pdata = o.pages[p];
-			if (pdata.binders && pdata.binders[page]) {
+			if (pdata.binders && (pdata.binders as any)[page]) {
 				pdata.content = "";
 				o.resetBinders(p);
 			}
 		}
 	}
-	recache(page) {
+
+	recache(page: string): void {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
@@ -123,15 +142,16 @@ class HTMLCache {
 		hpinst.parseFromFile(hpinst.file, hpinst.dir);
 		o.exePage(page, pdata.execfg);
 	}
-	execDom(hpinst, id, pdata) {
+
+	execDom(hpinst: zetaret.node.utils.html.HTMLParser, id: string, pdata: any) {
 		var o = this;
 		var exes = hpinst.search(null, hpinst.exeOn, hpinst.exeAttr);
 		if (exes.length > 0) {
-			exes.forEach((el) => {
+			exes.forEach((el: any) => {
 				let method = el.attr[hpinst.exeJS];
 				if (!method) return;
 				let marr = method.split(" ");
-				marr.forEach((mel) => {
+				marr.forEach((mel: any) => {
 					if (hpinst.exeMethods[mel]) {
 						hpinst.exeMethods[mel](el, o, hpinst, id, pdata);
 					}
@@ -143,12 +163,14 @@ class HTMLCache {
 			});
 		}
 	}
-	setPages(pages, HTMLParser, watchers, log, decorateParser) {
+
+	setPages(pages: { [page: string]: zetaret.node.utils.html.HTMLCachePageEnum }, HTMLParser: zetaret.node.utils.html.HTMLParser, watchers?: object, log?: boolean, decorateParser?: Function): void {
 		var o = this;
-		var hpinst, p, op;
+		var hpinst, p: string, op: zetaret.node.utils.html.HTMLCachePageEnum;
+
 		for (p in pages) {
 			op = pages[p];
-			hpinst = new HTMLParser();
+			hpinst = new (HTMLParser as any)();
 			if (decorateParser) decorateParser(hpinst, o, p, op);
 			hpinst.useAutomaton = op.useAutomaton || false;
 			hpinst.debug = op.debug || false;
@@ -163,18 +185,19 @@ class HTMLCache {
 				console.log(hpinst.domToString());
 			}
 		}
-		if (watchers) o.watch(watchers.watchmethod);
+		if (watchers) o.watch((watchers as any).watchmethod);
 		for (p in pages) {
 			op = pages[p];
 			o.exePage(op.id, op.exe);
 		}
 	}
-	swapCSS(page, handler, despace) {
+
+	swapCSS(page: string, handler?: Function, despace?: Function): void {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
 		o.events.emit(EVENTS.SWAP_CSS, page, pdata, o);
-		hpinst.search("link", "type", "text/css").forEach((e) => {
+		hpinst.search("link", "type", "text/css").forEach((e: any) => {
 			var swap,
 				browserpath,
 				pr,
@@ -182,6 +205,7 @@ class HTMLCache {
 				fileid = f.split("/").pop(),
 				prefix = e.attr.prefix,
 				base = e.attr.base;
+
 			if (base) {
 				browserpath = path.join(base, fileid).split("\\").join("/");
 				delete e.attr.base;
@@ -207,12 +231,13 @@ class HTMLCache {
 			if (handler) handler(page, pdata, e, swap);
 		});
 	}
-	swapJS(page, handler, despace) {
+
+	swapJS(page: string, handler?: Function, despace?: Function): void {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
 		o.events.emit(EVENTS.SWAP_JS, page, pdata, o);
-		hpinst.search("script", "type", "text/javascript").forEach((e) => {
+		hpinst.search("script", "type", "text/javascript").forEach((e: any) => {
 			var swap,
 				browserpath,
 				pr,
@@ -220,6 +245,7 @@ class HTMLCache {
 				fileid = f.split("/").pop(),
 				prefix = e.attr.prefix,
 				base = e.attr.base;
+
 			if (base) {
 				browserpath = path.join(base, fileid).split("\\").join("/");
 				delete e.attr.base;
@@ -241,16 +267,18 @@ class HTMLCache {
 			if (handler) handler(page, pdata, e, swap);
 		});
 	}
-	defaultRenderTemplate(hcache, page, pdata, hpinst, cfg) {
-		hpinst.search("#template").forEach((t) => {
-			var sp = t.attr.section;
+
+	defaultRenderTemplate(hcache: HTMLCache, page: string, pdata: zetaret.node.utils.html.HTMLCachePage, hpinst: zetaret.node.utils.html.HTMLParser, cfg: object | any): void {
+		hpinst.search("#template").forEach((t: any) => {
+			var sp: string = t.attr.section;
 			t.norender = true;
-			if (pdata.binders) pdata.binders[sp] = true;
+			if (pdata.binders) (pdata.binders as any)[sp] = true;
 			if (cfg.exetemplate) cfg.exetemplate(t, sp, hcache, page, pdata, hpinst, cfg);
 			if (!t.attr.nodom) t.elements = !cfg.domtemplate ? [hcache.getPage(sp)] : hcache.pages[sp].parser.dom.elements;
 		});
 	}
-	watch(listener, options) {
+
+	watch(listener: Function, options?: object): void {
 		var o = this;
 		var k, pdata, hpinst;
 		o.watchFiles = true;
@@ -266,11 +294,13 @@ class HTMLCache {
 		}
 		o.events.emit(EVENTS.WATCH, o);
 	}
-	getWatchers(listener, interval, debug, recacheOnChange) {
+
+	getWatchers(listener?: Function, interval?: number, debug?: boolean, recacheOnChange?: boolean): object {
 		var o = this;
-		var watchers = {},
+		var watchers: any = {},
 			watchinterval = interval || 0;
-		function watchmethod(e, f, longfile, page, type, stats) {
+
+		function watchmethod(e: any, f: any, longfile: string, page: string, type: string, stats: any) {
 			if (watchers[longfile] !== undefined) return;
 			watchers[longfile] = setTimeout(() => {
 				delete watchers[longfile];
@@ -280,18 +310,21 @@ class HTMLCache {
 				o.events.emit(EVENTS.ON_WATCH, e, f, longfile, page, type, stats, o);
 			}, watchinterval);
 		}
+
 		return {
 			watchers,
 			watchinterval,
 			watchmethod,
 		};
 	}
-	watchFile(pr, page, type) {
+
+	watchFile(pr: string, page: string, type: string): void {
 		var o = this;
 		if (o.watchMap[pr]) o.watchMap[pr].close();
-		o.watchMap[pr] = fs.watch(pr, o.watchOptions, (e, f) => o.watchListener(e, f, pr, page, type, fs.statSync(pr)));
+		o.watchMap[pr] = fs.watch(pr, o.watchOptions, (e: any, f: any) => o.watchListener(e, f, pr, page, type, fs.statSync(pr)));
 		o.events.emit(EVENTS.WATCH_FILE, pr, page, type, o);
 	}
+
 	resetWatchers() {
 		var o = this;
 		var k;
@@ -299,7 +332,8 @@ class HTMLCache {
 		for (k in o.watchMap) o.watchMap[k].close();
 		o.watchMap = {};
 	}
-	despace(v, type) {
+
+	despace(v: string, type?: string): string {
 		var o = this;
 		if (!o.despaceRules[" "]) v = v.replace(new RegExp("[\\s]+", "g"), " ");
 		var i,
@@ -315,5 +349,6 @@ class HTMLCache {
 		return v;
 	}
 }
+
 module.exports.EVENTS = EVENTS;
 module.exports.HTMLCache = HTMLCache;

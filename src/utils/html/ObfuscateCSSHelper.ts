@@ -1,6 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const settings = {
+declare module "protoss-nodejs-basic/dist/utils/html/ObfuscateCSSHelper.js";
+declare module "zetaret.node.utils.html::ObfuscateCSSHelper";
+
+export { }
+
+const settings: any = {
 	prefix: "_",
 	suffix: "",
 	length: 16,
@@ -9,12 +12,14 @@ const settings = {
 	cssinSuffix: "",
 	cssinJoin: "",
 };
-const ob_classes = {};
-const ob_output_css = {};
-function setClassName(id, obj) {
+const ob_classes: any = {};
+const ob_output_css: any = {};
+
+function setClassName(id: string, obj: any): void {
 	ob_classes[id] = obj;
 }
-function obfuscateCSS(id, rnd) {
+
+function obfuscateCSS(id: string, rnd: Function): string {
 	var css = ob_classes[id];
 	var cssout = [];
 	ob_output_css[id] = {};
@@ -32,11 +37,13 @@ function obfuscateCSS(id, rnd) {
 	}
 	return cssout.join(settings.cssoutJoin);
 }
-function applyObCSS(el, hpinst) {
+
+function applyObCSS(el: any, hpinst: zetaret.node.utils.html.HTMLParser): void {
 	if (!el.attr.class) el.attr.class = "";
 	el.attr.class += ob_output_css[el.attr.obcls];
 	if (hpinst.exeDeleteOnSet) delete el.attr.obcls;
 }
+
 module.exports.settings = settings;
 module.exports.ob_classes = ob_classes;
 module.exports.ob_output_css = ob_output_css;
