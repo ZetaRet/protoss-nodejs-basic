@@ -1,15 +1,25 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-if (!require) var require = global.require;
+/**
+ * Author: Zeta Ret
+ * Date: 2019 - Today
+ * XeltoSS Node Print of Basic ProtoSS Server
+ **/
+declare module "zetaret.node::ProtoSSChe";
+declare module "protoss-nodejs-basic/dist/ProtoSSChe.js";
+
+export { }
+
+if (!require) var require: Function = global.require;
+
 var http = require("http"),
 	https = require("https"),
 	http2 = require("http2"),
 	fs = require("fs"),
 	Buffer = require("buffer").Buffer;
-var env = {},
+
+var env: zetaret.node.ServerEnvironment = {},
 	dumpall = false,
 	dumpkeys = ["__reqid", "complete", "headers", "url", "method"],
-	omit = {
+	omit: any = {
 		headers: {
 			"connection": 1,
 			"user-agent": 1,
@@ -27,15 +37,16 @@ var env = {},
 	reqnum = 0,
 	contenttype = "text/plain",
 	cookieid = "zetaretpid",
-	sid,
+	sid: number | any,
 	sidinterval = 5000,
-	sfile = global.ProtoSSCheStatsFile || "stats.json",
+	sfile = (global as zetaret.node.BasicServerGlobal).ProtoSSCheStatsFile || "stats.json",
 	useXServer = false,
 	xserverModule = "./modules/XProtoSSChe.js",
-	stats = {
+	stats: zetaret.node.ServerStats = {
 		reqnum: null,
 	};
-var instance;
+var instance: zetaret.node.ModuleInstance;
+
 const ERRORS = {
 	UNCAUGHT_EXCEPTION: "uncaughtException",
 	UNCAUGHT_EXCEPTION_MONITOR: "uncaughtExceptionMonitor",
@@ -44,27 +55,32 @@ const ERRORS = {
 	WARNING: "warning",
 	ABORT: "abort",
 };
+
 const EVENTS = {
 	DATA: "data",
 	ERROR: "error",
 	END: "end",
 };
-const ServerEnum = {
+
+const ServerEnum: any = {
 	XProtoSSChe: "./modules/XProtoSSChe.js",
 	Subserver: "./modules/Subserver.js",
 	Voyage: "./modules/Voyage.js",
 	LobbyServer: "./modules/LobbyServer.js",
 	CardServer: "./modules/CardServer.js",
 };
-http.ServerResponse.prototype.__json = http2.Http2ServerResponse.prototype.__json = function (data, code) {
+
+http.ServerResponse.prototype.__json = http2.Http2ServerResponse.prototype.__json = function (data: any, code: number) {
 	this.__headers["content-type"] = "application/json";
 	this.__data.push(JSON.stringify(data));
 	if (code !== undefined) this.__rcode = code;
 };
-function setEnv(envobj) {
-	for (var k in envobj) env[k] = envobj[k];
+
+function setEnv(envobj: any) {
+	for (var k in envobj) (env as any)[k] = envobj[k];
 	updateEnv();
 }
+
 function updateEnv() {
 	if (env.dumpall !== undefined) dumpall = env.dumpall;
 	if (env.dumpkeys !== undefined) dumpkeys = env.dumpkeys;
@@ -73,25 +89,26 @@ function updateEnv() {
 	if (env.contenttype !== undefined) contenttype = env.contenttype;
 	if (env.sidinterval !== undefined) {
 		sidinterval = env.sidinterval;
-		if (!global.EnableGlobalStatsFile) resetFSInterval();
+		if (!(global as zetaret.node.BasicServerGlobal).EnableGlobalStatsFile) resetFSInterval();
 	}
 }
-const globalExceptionsAndErrors = {};
-function onGlobalError(error) {
+
+const globalExceptionsAndErrors: any = {};
+function onGlobalError(error: any) {
 	process.on(error, function (err) {
 		pushGlobalError(error, err);
 	});
 }
-function pushGlobalError(error, err) {
+function pushGlobalError(error: any, err: any) {
 	if (!globalExceptionsAndErrors[error]) globalExceptionsAndErrors[error] = [];
 	globalExceptionsAndErrors[error].push(err);
 	console.log("\x1b[31m #Global " + error + "\x1b[0m:", err.name, err.stack);
 }
 function uncaughtExceptionGlobal() {
-	if (!global.onGlobalError) {
-		global.onGlobalError = onGlobalError;
-		global.pushGlobalError = pushGlobalError;
-		global.globalExceptionsAndErrors = globalExceptionsAndErrors;
+	if (!(global as zetaret.node.BasicServerGlobal).onGlobalError) {
+		(global as zetaret.node.BasicServerGlobal).onGlobalError = onGlobalError;
+		(global as zetaret.node.BasicServerGlobal).pushGlobalError = pushGlobalError;
+		(global as zetaret.node.BasicServerGlobal).globalExceptionsAndErrors = globalExceptionsAndErrors;
 	} else return;
 	onGlobalError(ERRORS.UNCAUGHT_EXCEPTION);
 	onGlobalError(ERRORS.UNCAUGHT_EXCEPTION_MONITOR);
@@ -99,21 +116,24 @@ function uncaughtExceptionGlobal() {
 	onGlobalError(ERRORS.UNHANDLED_PROMISE_REJECTION_WARNING);
 	onGlobalError(ERRORS.WARNING);
 }
+
 function resetFSInterval() {
 	clearInterval(sid);
 	sid = setInterval(function () {
 		if (stats.reqnum !== reqnum) {
 			try {
 				stats.reqnum = reqnum;
-				fs.writeFile(sfile, JSON.stringify(stats), function (err) {});
-			} catch (e) {}
+				fs.writeFile(sfile, JSON.stringify(stats), function (err: any) { });
+			} catch (e) { }
 		}
 	}, sidinterval);
 }
+
 function stopFSInterval() {
 	clearInterval(sid);
 }
-function applyExternalFile(sj) {
+
+function applyExternalFile(sj: any) {
 	if (sj) {
 		env.statsout = sj;
 		if (sj.reqnum !== undefined && sj.reqnum.constructor === Number) {
@@ -139,6 +159,7 @@ function applyExternalFile(sj) {
 		}
 	}
 }
+
 function initFS() {
 	env.statsin = stats;
 	try {
@@ -147,41 +168,49 @@ function initFS() {
 			try {
 				sj = JSON.parse(sj) || {};
 				applyExternalFile(sj);
-			} catch (e) {}
+			} catch (e) { }
 		}
-	} catch (e) {}
+	} catch (e) { }
 	resetFSInterval();
 }
+
 function initGlobalFile() {
 	env.statsin = stats;
-	applyExternalFile(global.GlobalStatsFile);
+	applyExternalFile((global as zetaret.node.BasicServerGlobal).GlobalStatsFile);
 }
+
 function StartUp() {
-	if (global.EnableGlobalExceptions) uncaughtExceptionGlobal();
-	if (!global.EnableGlobalStatsFile) initFS();
+	if ((global as zetaret.node.BasicServerGlobal).EnableGlobalExceptions) uncaughtExceptionGlobal();
+
+	if (!(global as zetaret.node.BasicServerGlobal).EnableGlobalStatsFile) initFS();
 	else initGlobalFile();
-	instance = getModuleInstance(useXServer ? (global.ProtoSSCheXServerPath || "") + xserverModule : null);
+
+	instance = getModuleInstance(useXServer ? ((global as zetaret.node.BasicServerGlobal).ProtoSSCheXServerPath || "") + xserverModule : null);
 }
+
 function ShutDown() {
 	stopFSInterval();
+
 	instance.serverche.htserv.close();
 }
+
 class ProtoSSChe {
-	env;
-	htserv;
-	acceptAppRequests;
-	apps;
-	cookieMethod;
-	requestMethod;
-	onErrorBody;
-	onEndBody;
-	dataJoin;
-	reqIdLength;
-	keepBufferPerContentType;
-	requestBodyMethods;
-	readRequestOnError;
-	requestMiddleware;
-	responseMiddleware;
+	env: zetaret.node.ServerEnvironment;
+	htserv: zetaret.node.XServer;
+	acceptAppRequests: boolean;
+	apps: object | any;
+	cookieMethod: Function;
+	requestMethod: Function;
+	onErrorBody: Function;
+	onEndBody: Function;
+	dataJoin: string;
+	reqIdLength: number;
+	keepBufferPerContentType: { [ctype: string]: boolean };
+	requestBodyMethods: Array<string>;
+	readRequestOnError: boolean;
+	requestMiddleware: Array<zetaret.node.utils.RequestMiddlewareFunction>;
+	responseMiddleware: Array<zetaret.node.utils.ResponseMiddlewareFunction>;
+
 	constructor() {
 		this.env = null;
 		this.htserv = null;
@@ -199,36 +228,39 @@ class ProtoSSChe {
 		this.requestMiddleware = [];
 		this.responseMiddleware = [];
 	}
-	getAppRequest(request) {
+
+	getAppRequest(request: zetaret.node.XRequest): zetaret.node.Input {
 		var o = this;
-		var app = o.apps[request.headers.protossappid];
+		var app = o.apps[(request as any).headers.protossappid];
 		return app ? app(o, request) : request;
 	}
-	onRequest(request, response) {
+
+	onRequest(request: zetaret.node.Input, response: zetaret.node.Output): void {
 		var o = this;
-		request.__reqid = o.getReqId();
-		response.__data = [];
+		(request as zetaret.node.AugmentRequest).__reqid = o.getReqId();
+		(response as zetaret.node.AugmentResponse).__data = [];
 		if (o.requestMethod) o.requestMethod(o, request, response);
 		o.pushProtoSSResponse(request, response).readRequestBody(request, response);
 	}
-	onReadRequestBody(request, body, response) {
+
+	onReadRequestBody(request: zetaret.node.Input, body: string, response: zetaret.node.Output): ProtoSSChe | Promise<ProtoSSChe> {
 		var o = this;
-		var k, a, v, vv, vk;
+		var k, a, v, vv: any, vk;
 		if (dumpall) {
 			for (k in request) {
 				try {
-					v = request[k];
+					v = (request as any)[k];
 					if (v.constructor !== Function) {
-						response.__data.push(k + ": " + JSON.stringify(v));
-						response.__data.push("\n");
+						(response as zetaret.node.AugmentResponse).__data.push(k + ": " + JSON.stringify(v));
+						(response as zetaret.node.AugmentResponse).__data.push("\n");
 					}
-				} catch (e) {}
+				} catch (e) { }
 			}
 		} else {
 			for (a = 0; a < dumpkeys.length; a++) {
 				k = dumpkeys[a];
 				try {
-					v = request[k];
+					v = (request as any)[k];
 					if (v.constructor !== Function) {
 						if (omit[k]) {
 							vv = {};
@@ -237,31 +269,33 @@ class ProtoSSChe {
 							}
 							v = vv;
 						}
-						response.__data.push(k + ": " + JSON.stringify(v));
-						response.__data.push("\n");
+						(response as zetaret.node.AugmentResponse).__data.push(k + ": " + JSON.stringify(v));
+						(response as zetaret.node.AugmentResponse).__data.push("\n");
 					}
-				} catch (e) {}
+				} catch (e) { }
 			}
 		}
-		if (request.url) {
-			response.__data.push("Route Object: " + JSON.stringify(o.splitUrl(request.url)));
-			response.__data.push("\n");
+		if ((request as Http2Request).url) {
+			(response as zetaret.node.AugmentResponse).__data.push("Route Object: " + JSON.stringify(o.splitUrl((request as Http2Request).url)));
+			(response as zetaret.node.AugmentResponse).__data.push("\n");
 		}
-		response.__data.push("Request Body: \n");
-		response.__data.push(body);
-		response.__data.push("\n");
+		(response as zetaret.node.AugmentResponse).__data.push("Request Body: \n");
+		(response as zetaret.node.AugmentResponse).__data.push(body);
+		(response as zetaret.node.AugmentResponse).__data.push("\n");
 		o.endResponse(request, response);
 		return o;
 	}
-	splitUrl(url) {
+
+	splitUrl(url: string): zetaret.node.SplitURL {
 		var i,
 			vk,
-			surl = {},
+			surl: zetaret.node.SplitURL = {},
 			durl = decodeURI(url),
 			uro = durl.split("?"),
 			p = uro[0],
 			v = uro[1],
 			vs = v ? v.split("&") : [];
+
 		surl.url = durl;
 		surl.query = v;
 		surl.path = p;
@@ -275,65 +309,73 @@ class ProtoSSChe {
 		surl.vars = {};
 		for (i = 0; i < vs.length; i++) {
 			vk = vs[i].split("=");
-			surl.vars[vk[0]] = vk[1];
+			(surl.vars as any)[vk[0]] = vk[1];
 		}
+
 		return surl;
 	}
-	rndstr(l) {
+
+	rndstr(l: number): string {
 		var ch = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
 			str = "",
 			chl = ch.length - 1;
 		while (l--) str += ch.charAt(Math.round(Math.random() * chl));
 		return str;
 	}
-	getReqId() {
+
+	getReqId(): string {
 		var o = this;
 		reqnum = (reqnum + 1) % Number.MAX_SAFE_INTEGER;
 		return o.rndstr(o.reqIdLength) + "-" + reqnum.toString(36);
 	}
-	pushProtoSSResponse(request, response) {
+
+	pushProtoSSResponse(request: zetaret.node.Input, response: zetaret.node.Output): ProtoSSChe {
 		var o = this;
-		response.__data.push("ProtoSS Node.js Server: https://github.com/ZetaRet/protoss-nodejs-basic \n");
-		response.__data.push("Request Method: " + request.method + " \n");
+		(response as zetaret.node.AugmentResponse).__data.push("ProtoSS Node.js Server: https://github.com/ZetaRet/protoss-nodejs-basic \n");
+		(response as zetaret.node.AugmentResponse).__data.push("Request Method: " + request.method + " \n");
 		return o;
 	}
-	readRequestBody(request, response) {
+
+	readRequestBody(request: zetaret.node.Input, response: zetaret.node.Output): ProtoSSChe {
 		var o = this;
 		var ended = false,
-			bodyBuffer = [],
+			bodyBuffer: any[] = [],
 			bodyLength = 0,
-			body = "";
-		var ctype = request.headers["content-type"];
+			body: any = "";
+		var ctype = (request as any).headers["content-type"];
 		if (ctype) ctype = ctype.split(";")[0];
 		var myenv = o.env || env;
 		var keepbuffer = (myenv.keepBodyBuffer && o.keepBufferPerContentType[ctype]) || myenv.swapBodyBuffer ? true : false;
-		if (request.headers["request_url"]) request.url = request.headers["request_url"];
-		if (request.headers["request_method"]) request.method = request.headers["request_method"];
+
+		if ((request as any).headers["request_url"]) (request as Http2Request).url = (request as any).headers["request_url"];
+		if ((request as any).headers["request_method"]) (request as any).method = (request as any).headers["request_method"];
+
 		if (!request.aborted) {
 			if (!o.requestBodyMethods || o.requestBodyMethods.indexOf(request.method) !== -1) {
-				request.on(EVENTS.DATA, function (data) {
+				request.on(EVENTS.DATA, function (data: any) {
 					if (ended) return;
 					if (keepbuffer) bodyBuffer.push(data);
 					bodyLength += data.length;
 					body += data;
 					if (bodyLength > maxBodyLength) {
 						ended = true;
-						request.abort();
+						(request as any).abort();
 						if (o.onErrorBody) o.onErrorBody(o, request, response, body, new Error("size"));
 						if (o.readRequestOnError) o.onReadRequestBody(request, body, response);
 					}
 				});
 			}
-			request.on(EVENTS.ERROR, function (error) {
+			request.on(EVENTS.ERROR, function (error: any) {
 				if (o.onErrorBody) o.onErrorBody(o, request, response, body, error);
 				if (o.readRequestOnError) o.onReadRequestBody(request, body, response);
 			});
 			request.on(EVENTS.END, async function () {
 				if (!ended) {
-					if (keepbuffer) request.__bodyBuffer = Buffer.concat(bodyBuffer);
-					if (myenv.swapBodyBuffer) body = request.__bodyBuffer;
+					if (keepbuffer) (request as zetaret.node.AugmentRequest).__bodyBuffer = Buffer.concat(bodyBuffer);
+					if (myenv.swapBodyBuffer) body = (request as zetaret.node.AugmentRequest).__bodyBuffer;
 					ended = true;
-					if (request.url) response.__splitUrl = o.splitUrl(request.url);
+					if ((request as Http2Request).url) (response as zetaret.node.AugmentResponse).__splitUrl = o.splitUrl((request as Http2Request).url);
+
 					if (o.requestMiddleware.length > 0) {
 						var m, r;
 						const input = { data: body, ctype };
@@ -344,6 +386,7 @@ class ProtoSSChe {
 						}
 						body = input.data;
 					}
+
 					if (o.onEndBody) o.onEndBody(o, request, response, body);
 					o.onReadRequestBody(request, body, response);
 				}
@@ -354,28 +397,32 @@ class ProtoSSChe {
 		}
 		return o;
 	}
-	updateCookies(request, response, headers) {
+
+	updateCookies(request: zetaret.node.Input, response: zetaret.node.Output, headers: object | any): ProtoSSChe {
 		var o = this;
 		if (o.cookieMethod) o.cookieMethod(o, request, response, headers);
-		else if (!request.headers.cookie) headers["set-cookie"] = cookieid + "=" + o.rndstr(32);
+		else if (!(request as any).headers.cookie) headers["set-cookie"] = cookieid + "=" + o.rndstr(32);
 		return o;
 	}
-	endResponse(request, response) {
+
+	endResponse(request: zetaret.node.Input, response: zetaret.node.Output): ProtoSSChe | Promise<ProtoSSChe> {
 		var o = this;
-		var input = response.__data.join(o.dataJoin || ""),
+		var input = (response as zetaret.node.AugmentResponse).__data.join(o.dataJoin || ""),
 			headers = {
 				"content-type": contenttype,
 			};
 		o.updateCookies(request, response, headers);
-		response.writeHead(200, headers);
+		(response as any).writeHead(200, headers);
 		response.end(input);
 		return o;
 	}
 }
-function getNodeServer(requestListener, envd, port) {
-	var sk, httpsop, htserv;
+
+function getNodeServer(requestListener: Function, envd?: zetaret.node.ServerEnvironment, port?: number): zetaret.node.NodeServerData {
+	var sk, httpsop: zetaret.node.ServerOptions, htserv;
 	if (!envd) envd = env;
 	if (!port) port = htport;
+
 	if (envd.statsout && envd.statsout.https === true) {
 		envd.statsin.https = true;
 		httpsop = {};
@@ -384,7 +431,7 @@ function getNodeServer(requestListener, envd, port) {
 			httpsop.certPath = "cert.pem";
 		} else {
 			envd.statsin.httpsop = envd.statsout.httpsop;
-			for (sk in envd.statsout.httpsop) httpsop[sk] = envd.statsout.httpsop[sk];
+			for (sk in envd.statsout.httpsop) (httpsop as any)[sk] = (envd.statsout.httpsop as any)[sk];
 		}
 		if (httpsop.keyPath) httpsop.key = fs.readFileSync(httpsop.keyPath);
 		if (httpsop.certPath) httpsop.cert = fs.readFileSync(httpsop.certPath);
@@ -393,7 +440,7 @@ function getNodeServer(requestListener, envd, port) {
 		if (httpsop.h2) htserv = http2.createSecureServer(httpsop, requestListener);
 		else htserv = https.createServer(httpsop, requestListener);
 	} else {
-		if (envd.statsout && envd.statsout.h2) htserv = http2.createServer(envd.statsout.h2op, requestListener);
+		if (envd.statsout && (envd.statsout as any).h2) htserv = http2.createServer(envd.statsout.h2op, requestListener);
 		else htserv = http.createServer(requestListener);
 	}
 	if (!htserv.request) htserv.request = http.request;
@@ -403,15 +450,17 @@ function getNodeServer(requestListener, envd, port) {
 		if (envd.statsout.keepAliveTimeout) htserv.keepAliveTimeout = envd.statsout.keepAliveTimeout * 1000;
 		if (envd.statsout.headersTimeout) htserv.headersTimeout = envd.statsout.headersTimeout * 1000;
 	}
+
 	return {
 		httpsop,
 		htserv,
 	};
 }
-function getModuleInstance(xmodule) {
-	var serverche, xpro, xprocls;
+
+function getModuleInstance(xmodule: string): zetaret.node.ModuleInstance {
+	var serverche: ProtoSSChe, xpro, xprocls;
 	if (xmodule) {
-		if (global.ProtoSSCheRequire) xpro = global.ProtoSSCheRequire(xmodule);
+		if ((global as zetaret.node.BasicServerGlobal).ProtoSSCheRequire) xpro = (global as zetaret.node.BasicServerGlobal).ProtoSSCheRequire(xmodule);
 		else xpro = require(xmodule);
 		xprocls = xpro.getExtendedServerProtoSS(ProtoSSChe);
 		serverche = new xprocls();
@@ -419,14 +468,17 @@ function getModuleInstance(xmodule) {
 		serverche = new ProtoSSChe();
 	}
 	serverche.env = env;
-	function requestListener(req, res) {
+
+	function requestListener(req: any, res: any) {
 		try {
 			if (serverche.acceptAppRequests) req = serverche.getAppRequest(req);
 			serverche.onRequest(req, res);
-		} catch (e) {}
+		} catch (e) { }
 	}
+
 	var { htserv } = getNodeServer(requestListener);
 	serverche.htserv = htserv;
+
 	return {
 		serverche,
 		xpro,
@@ -434,6 +486,7 @@ function getModuleInstance(xmodule) {
 		xmodule,
 	};
 }
+
 module.exports.serverclass = ProtoSSChe;
 module.exports.ServerEnum = ServerEnum;
 module.exports.loadedModule = () => instance.xpro;
