@@ -194,7 +194,7 @@ function ShutDown() {
 	instance.serverche.htserv.close();
 }
 
-class ProtoSSChe {
+class ProtoSSChe implements zetaret.node.ProtoSSChe {
 	env: zetaret.node.ServerEnvironment;
 	htserv: zetaret.node.XServer;
 	acceptAppRequests: boolean;
