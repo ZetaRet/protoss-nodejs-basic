@@ -1,13 +1,8 @@
-/**
- * Author: Zeta Ret
- * Date: 2019 - Today
- * Subserver of extended Server loaded as module.
- **/
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var XProtoSSChe,
-	xpros = require(global.SubserverRequireModule || "./XProtoSSChe.js"),
+	xpros = require(global.SubserverRequireModule || "./XProtoSSChe"),
 	events = require("events");
-
 const EVENTS = {
 	VOID: "",
 };
@@ -17,10 +12,26 @@ const ROUTER_SWITCH = {
 	AddParamsPathListener: "addParamsPathListener",
 };
 const SERVERID = "zetaret.node.modules::Subserver";
-
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!XProtoSSChe) XProtoSSChe = xpros.getExtendedServerProtoSS(ProtoSSChe);
 	return class Subserver extends XProtoSSChe {
+		routeMap;
+		codeMap;
+		noRouteCode;
+		noRouteEvent;
+		debugRoute;
+		debugRouteList;
+		listener;
+		pathEmitter;
+		routeRegMap;
+		routeRegExp;
+		routeRegGet;
+		useProxy;
+		proxyPaths;
+		proxyMask;
+		noProxyCode;
+		noProxyEvent;
+		emitExacts;
 		constructor() {
 			super(null, null, {});
 			var o = this;
@@ -43,7 +54,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.emitExacts = false;
 			o.initRouteListener();
 		}
-
 		addPathListener(path, callback) {
 			var o = this;
 			if (o.debugRouteList) o.debugRouteList.push(path);
@@ -51,7 +61,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.pathEmitter.on(path, callback);
 			return callback;
 		}
-
 		removePathListener(path, callback) {
 			var o = this;
 			o.pathEmitter.remove(path, callback);
@@ -62,12 +71,10 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.pathEmitter.remove(starpath, callback);
 			return o;
 		}
-
 		pathListener(server, robj, routeData, request, response) {
 			var o = this;
 			if (o.debugRoute) console.log(robj, request.url, request.method);
 		}
-
 		addMethodPathListener(method, path, callback) {
 			var o = this;
 			const methodup = method.toUpperCase();
@@ -77,7 +84,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				}
 			});
 		}
-
 		addParamsPathListener(path, callback, method, autoRoute) {
 			var o = this;
 			if (o.debugRouteList) o.debugRouteList.push(path);
@@ -109,7 +115,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 					return "*";
 				})
 				.join("/");
-
 			return o.addPathListener(listenPath, function (server, robj, routeData, request, response) {
 				if (!methodup || request.method.toUpperCase() === methodup) {
 					var pcsplit = robj.pageCurrent.split("/");
@@ -117,7 +122,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 						param,
 						paramc,
 						vars = {};
-
 					if (paramPath.length <= pcsplit.length) {
 						for (i = 0; i < paramPath.length; i++) {
 							param = paramPath[i];
@@ -146,7 +150,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				}
 			});
 		}
-
 		addRegPathListener(path, callback) {
 			var o = this;
 			if (o.debugRouteList) o.debugRouteList.push(path);
@@ -164,7 +167,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				}
 			});
 		}
-
 		setRouteRegExp(path) {
 			var o = this;
 			var r = o.routeMap,
@@ -184,7 +186,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			r[o.proxyPaths][path] = {};
 			return new RegExp(path);
 		}
-
 		routeCallback(routeData, body, request, response) {
 			var o = this;
 			var cp,
@@ -208,7 +209,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 					robj.pageProxy = null;
 					if (o.useProxy && (p === o.proxyPaths || o.proxyMask[cp] || o.proxyMask[p])) r = null;
 					else r = r[p] || r["*"];
-
 					if (!r) {
 						response.__rcode = o.noRouteCode;
 						if (o.noRouteEvent) o.listener.emit(o.noRouteEvent, o, robj, routeData, request, response);
@@ -232,12 +232,10 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			}
 			if (o.codeMap[rawpath]) response.__rcode = o.codeMap[rawpath];
 		}
-
 		initRoute() {
 			var o = this;
 			o.routeScope = o;
 		}
-
 		initRouteListener() {
 			var o = this;
 			o.pathListenerX = o.pathListener.bind(o);
@@ -248,7 +246,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.listener.on(o.noRouteEvent, o.pathListenerX);
 			return o;
 		}
-
 		addRouter(router) {
 			var o = this;
 			var prefix = router.prefix;
@@ -256,7 +253,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				var c,
 					m = routerAdd.method,
 					a = routerAdd.arguments;
-
 				switch (m) {
 					case ROUTER_SWITCH.AddPathListener:
 						c = o.addPathListener(prefix + a[0], a[1]);
@@ -268,24 +264,20 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 						c = o.addParamsPathListener(prefix + a[0], a[1], a[2], a[3]);
 						break;
 				}
-
 				router.returns.push({ add: routerAdd, server: o, callback: c });
 			});
 		}
-
 		pushProtoSSResponse(request, response) {
 			var o = this;
 			if (!response.__headers) response.__headers = {};
 			return o;
 		}
-
 		addHeaders(request, response) {
 			var headers = response.__headers || {};
 			return headers;
 		}
 	};
 }
-
 module.exports.xpros = xpros;
 module.exports.EVENTS = EVENTS;
 module.exports.SERVERID = SERVERID;

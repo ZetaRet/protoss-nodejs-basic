@@ -1,14 +1,8 @@
-/**
- * Author: Zeta Ret
- * Date: 2019 - Today
- * Extended ProtoSSChe Server loaded as module.
- **/
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var http = require("http"),
 	http2 = require("http2");
-
 var ExtendProtoSSChe;
-
 const EVENTS = {
 	INIT_REQUEST: "initRequest",
 	ROUTE: "route",
@@ -16,7 +10,6 @@ const EVENTS = {
 	END_RESPONSE: "endResponse",
 };
 const SERVERID = "zetaret.node.modules::XProtoSSChe";
-
 var h1srpro = http.ServerResponse.prototype,
 	h2srpro = http2.Http2ServerResponse.prototype;
 h1srpro.__asyncEnd = h2srpro.__asyncEnd = function (code) {
@@ -34,10 +27,21 @@ h1srpro.__asyncJsonEnd = h2srpro.__asyncJsonEnd = function (data, code) {
 	if (code !== undefined) this.__rcode = code;
 	this.emit(EVENTS.ASYNC_RESPONSE);
 };
-
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!ExtendProtoSSChe) ExtendProtoSSChe = ProtoSSChe;
 	return class XProtoSSChe extends ExtendProtoSSChe {
+		routeScope;
+		routeData;
+		autoCookie;
+		postJSON;
+		contentParsers;
+		layerServer;
+		middleware;
+		emitRR;
+		asyncGrid;
+		asyncBuffer;
+		asyncInterval;
+		asyncId;
 		constructor(routeCallback, routeScope, routeData) {
 			super();
 			var o = this;
@@ -57,20 +61,17 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.initRoute();
 			o.initAsyncGrid();
 		}
-
+		routeCallback(routeData, body, request, response) {}
 		initRoute() {}
-
 		initAsyncGrid() {
 			var o = this;
 			o.asyncId = setInterval(() => o.flushAsyncBuffer(), o.asyncInterval);
 		}
-
 		stopAsyncGrid() {
 			var o = this;
 			clearInterval(o.asyncId);
 			o.asyncId = null;
 		}
-
 		flushAsyncBuffer() {
 			var o = this;
 			if (o.asyncBuffer.length > 0) {
@@ -81,10 +82,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				o.asyncBuffer = [];
 			}
 		}
-
 		async onReadRequestBody(request, body, response) {
 			var o = this;
-
 			if (o.emitRR) request.emit(EVENTS.INIT_REQUEST, o, request, response);
 			if (o.layerServer) body = o.layerInitRequest(request, response, body);
 			if (request.url) {
@@ -108,7 +107,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				}
 			}
 			response.__body = body;
-
 			if (o.middleware.length > 0) {
 				var m, r;
 				const midobj = { body };
@@ -118,7 +116,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 					if (r === true) break;
 				}
 			}
-
 			if (o.emitRR) response.emit(EVENTS.ROUTE, o, request, response);
 			if (o.routeCallback && !response.__breakRoute) {
 				if (o.asyncGrid && o.asyncGrid(o, request, response)) {
@@ -130,38 +127,30 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			else response.on(EVENTS.ASYNC_RESPONSE, () => o.endResponse(request, response));
 			return o;
 		}
-
 		pushProtoSSResponse(request, response) {
 			var o = this;
 			return o;
 		}
-
 		addHeaders(request, response) {
 			var headers = {};
 			return headers;
 		}
-
 		layerInitRequest(request, response, body) {
 			return body;
 		}
-
 		layerEndResponse(request, response, input, headers) {
 			return input;
 		}
-
 		wrapResponseString(response, data) {
 			var o = this;
 			var input = (response.__dataPrefix || "") + data + (response.__dataSuffix || "");
 			return input;
 		}
-
 		async endResponse(request, response) {
 			if (response.__disablePipeline) return;
 			var o = this;
-
 			if (response.__await) await response.__await;
 			if (o.emitRR) response.emit(EVENTS.END_RESPONSE, o, request, response);
-
 			var input;
 			var typeofdata = response.__data[0] ? response.__data[0].constructor : null;
 			if (typeofdata === Promise) {
@@ -180,11 +169,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			} else if (response.__data.length > 0) {
 				input = o.wrapResponseString(response, response.__data.join(response.__dataJoin || o.dataJoin || ""));
 			}
-
 			var headers = o.addHeaders(request, response);
 			if (o.autoCookie) o.updateCookies(request, response, headers);
 			if (o.layerServer) input = o.layerEndResponse(request, response, input, headers);
-
 			if (o.responseMiddleware.length > 0) {
 				var m, r;
 				const output = { data: input, headers };
@@ -195,14 +182,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				}
 				input = output.data;
 			}
-
 			if (!response.headersSent) response.writeHead(response.__rcode || 200, headers);
 			response.end(input, response.__encoding);
 			return o;
 		}
 	};
 }
-
 module.exports.EVENTS = EVENTS;
 module.exports.SERVERID = SERVERID;
 module.exports.resetExtends = () => (ExtendProtoSSChe = null);

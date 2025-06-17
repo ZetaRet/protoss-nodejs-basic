@@ -1,19 +1,20 @@
-/**
- * Author: Zeta Ret
- * Date: 2019 - Today
- * Card server based on lobby connectivity with micro apps
- **/
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var LobbyServer,
-	xpros = require(global.CardServerRequireModule || "./LobbyServer.js"),
+	xpros = require(global.CardServerRequireModule || "./LobbyServer"),
 	events = require("events");
-
 const EVENTS = {
 	DRAW_CARD: "drawCard",
 };
 const SERVERID = "zetaret.node.modules::CardServer";
-
 class Card extends Array {
+	cardId;
+	cardData;
+	cardInDeck;
+	cardOnTable;
+	cardFlipped;
+	sharedCard;
+	cardPool;
 	constructor() {
 		super();
 		var o = this;
@@ -25,34 +26,37 @@ class Card extends Array {
 		o.sharedCard = false;
 		o.cardPool = null;
 	}
-
 	get cardColor() {
 		var o = this;
 		return o.cardData.cardColor;
 	}
-
 	get cardType() {
 		var o = this;
 		return o.cardData.cardType;
 	}
-
 	get cardNumber() {
 		var o = this;
 		return o.cardData.cardNumber;
 	}
-
 	get cardMeta() {
 		var o = this;
 		return o.cardData.metaData;
 	}
-
 	get cardBack() {
 		var o = this;
 		return o.cardData.backData;
 	}
 }
-
 class CardApp extends xpros.lobbyAppClass {
+	cards;
+	tableCards;
+	sideCards;
+	userCards;
+	poolCards;
+	removedCards;
+	cardEvents;
+	hasSupport;
+	isMonetary;
 	constructor() {
 		super();
 		var o = this;
@@ -66,14 +70,14 @@ class CardApp extends xpros.lobbyAppClass {
 		o.hasSupport = false;
 		o.isMonetary = false;
 	}
-
 	drawCard(card, user) {
 		var o = this;
 		o.cardEvents.emit(EVENTS.DRAW_CARD, card, user, o);
 	}
 }
-
 class SideCardApp extends CardApp {
+	sideData;
+	isLimited;
 	constructor() {
 		super();
 		var o = this;
@@ -81,10 +85,10 @@ class SideCardApp extends CardApp {
 		o.isLimited = false;
 	}
 }
-
 function getExtendedServerProtoSS(ProtoSSChe) {
 	if (!LobbyServer) LobbyServer = xpros.getExtendedServerProtoSS(ProtoSSChe);
 	return class CardServer extends LobbyServer {
+		decks;
 		constructor() {
 			super();
 			var o = this;
@@ -92,13 +96,10 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.initCards();
 			o.initCardAppServer();
 		}
-
 		initCards() {}
-
 		initCardAppServer() {}
 	};
 }
-
 module.exports.xpros = xpros;
 module.exports.EVENTS = EVENTS;
 module.exports.SERVERID = SERVERID;
