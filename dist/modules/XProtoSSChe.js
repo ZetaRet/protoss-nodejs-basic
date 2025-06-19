@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var http = require("http"),
-	http2 = require("http2");
+	http2 = require("http2"),
+	os = require("os");
 var ExtendProtoSSChe;
 const EVENTS = {
 	INIT_REQUEST: "initRequest",
@@ -42,6 +43,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		asyncBuffer;
 		asyncInterval;
 		asyncId;
+		collectionRR;
+		collectionStats;
+		collectionMax;
 		constructor(routeCallback, routeScope, routeData) {
 			super();
 			var o = this;
@@ -58,6 +62,9 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.asyncBuffer = [];
 			o.asyncInterval = 1000;
 			o.asyncId = null;
+			o.collectionRR = [];
+			o.collectionStats = [];
+			o.collectionMax = 300;
 			o.initRoute();
 			o.initAsyncGrid();
 		}
@@ -72,7 +79,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			clearInterval(o.asyncId);
 			o.asyncId = null;
 		}
-		flushAsyncBuffer() {
+		exeAsyncBuffer() {
 			var o = this;
 			if (o.asyncBuffer.length > 0) {
 				o.asyncBuffer.forEach((e) => o.routeCallback.call(o.routeScope, o.routeData, e[1].__body, e[0], e[1]));
@@ -81,6 +88,47 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				});
 				o.asyncBuffer = [];
 			}
+		}
+		exeCollection() {
+			var o = this;
+			if (o.collectionRR.length > 0) {
+				let count = o.collectionRR.length;
+				let stats = {
+					requests: count,
+					time: 0,
+					avrgTime: 0,
+					average: 0,
+					units: 0,
+					cpus: 0,
+					cpuTypes: [],
+					memory: os.totalmem(),
+				};
+				let firstin = o.collectionRR[0][0];
+				let lastout = o.collectionRR[count - 1][1];
+				stats.time = lastout.__timestamp - firstin.__timestamp;
+				o.collectionRR.forEach((e) => {
+					stats.avrgTime += e[1].__timestamp - e[0].__timestamp;
+					stats.units += e[0].__units || 0;
+					stats.units += e[1].__units || 0;
+				});
+				stats.average = stats.avrgTime / count;
+				o.collectionRR = [];
+				o.collectionStats.push(stats);
+				if (o.collectionStats.length > o.collectionMax) o.collectionStats.shift();
+				var cpus = os.cpus();
+				var i, type, cpu, total;
+				stats.cpus = cpus.length;
+				for (i = 0; i < stats.cpus; i++) {
+					(cpu = cpus[i]), (total = 0);
+					for (type in cpu.times) total += cpu.times[type];
+					for (type in cpu.times) stats.cpuTypes.push([type, Math.round((100 * cpu.times[type]) / total)]);
+				}
+			}
+		}
+		flushAsyncBuffer() {
+			var o = this;
+			o.exeAsyncBuffer();
+			o.exeCollection();
 		}
 		async onReadRequestBody(request, body, response) {
 			var o = this;
@@ -184,6 +232,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			}
 			if (!response.headersSent) response.writeHead(response.__rcode || 200, headers);
 			response.end(input, response.__encoding);
+			response.__timestamp = new Date().getTime();
+			o.collectionRR.push([request, response]);
 			return o;
 		}
 	};

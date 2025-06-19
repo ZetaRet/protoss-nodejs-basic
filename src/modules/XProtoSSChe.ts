@@ -9,7 +9,8 @@ declare module "protoss-nodejs-basic/dist/modules/XProtoSSChe.js";
 export { }
 
 var http = require("http"),
-	http2 = require("http2");
+	http2 = require("http2"),
+	os = require("os");
 
 var ExtendProtoSSChe: zetaret.node.ProtoSSCheCTOR;
 
@@ -54,6 +55,9 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 		asyncBuffer: Array<object>;
 		asyncInterval: number;
 		asyncId: number | object | any;
+		collectionRR: any[];
+		collectionStats: any[];
+		collectionMax: number;
 
 		constructor(routeCallback?: Function, routeScope?: object, routeData?: object) {
 			super();
@@ -71,11 +75,14 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 			o.asyncBuffer = [];
 			o.asyncInterval = 1000;
 			o.asyncId = null;
+			o.collectionRR = [];
+			o.collectionStats = [];
+			o.collectionMax = 300;
 			o.initRoute();
 			o.initAsyncGrid();
 		}
 
-		routeCallback(routeData: object, body: string, request: zetaret.node.Input, response: zetaret.node.Output): void {}
+		routeCallback(routeData: object, body: string, request: zetaret.node.Input, response: zetaret.node.Output): void { }
 
 		initRoute(): void { }
 
@@ -90,7 +97,7 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 			o.asyncId = null;
 		}
 
-		flushAsyncBuffer(): void {
+		exeAsyncBuffer(): void {
 			var o = this;
 			if (o.asyncBuffer.length > 0) {
 				o.asyncBuffer.forEach((e: any) => o.routeCallback.call(o.routeScope, o.routeData, e[1].__body, e[0], e[1]));
@@ -99,6 +106,43 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 				});
 				o.asyncBuffer = [];
 			}
+		}
+
+		exeCollection(): void {
+			var o = this;
+			if (o.collectionRR.length > 0) {
+				let count = o.collectionRR.length;
+				let stats: any = {
+					requests: count, time: 0, avrgTime: 0, average: 0, units: 0,
+					cpus: 0, cpuTypes: [], memory: os.totalmem()
+				};
+				let firstin = o.collectionRR[0][0];
+				let lastout = o.collectionRR[count - 1][1];
+				stats.time = lastout.__timestamp - firstin.__timestamp;
+				o.collectionRR.forEach((e: any) => {
+					stats.avrgTime += e[1].__timestamp - e[0].__timestamp;
+					stats.units += e[0].__units || 0;
+					stats.units += e[1].__units || 0;
+				});
+				stats.average = stats.avrgTime / count;
+				o.collectionRR = [];
+				o.collectionStats.push(stats);
+				if (o.collectionStats.length > o.collectionMax) o.collectionStats.shift();
+				var cpus = os.cpus();
+				var i, type, cpu, total;
+				stats.cpus = cpus.length;
+				for (i = 0; i < stats.cpus; i++) {
+					cpu = cpus[i], total = 0;
+					for (type in cpu.times) total += cpu.times[type];
+					for (type in cpu.times) stats.cpuTypes.push([type, Math.round(100 * cpu.times[type] / total)]);
+				}
+			}
+		}
+
+		flushAsyncBuffer(): void {
+			var o = this;
+			o.exeAsyncBuffer();
+			o.exeCollection();
 		}
 
 		async onReadRequestBody(request: zetaret.node.Input, body: string, response: zetaret.node.Output): Promise<zetaret.node.modules.XProtoSSChe> {
@@ -217,6 +261,8 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 
 			if (!response.headersSent) (response as Http2Response).writeHead((response as zetaret.node.AugmentResponse).__rcode || 200, headers);
 			response.end(input, (response as zetaret.node.AugmentResponse).__encoding as any);
+			(response as zetaret.node.AugmentResponse).__timestamp = new Date().getTime();
+			o.collectionRR.push([request, response]);
 			return o;
 		}
 	};

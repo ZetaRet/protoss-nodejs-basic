@@ -368,6 +368,7 @@ class ProtoSSChe {
 			};
 		o.updateCookies(request, response, headers);
 		response.writeHead(200, headers);
+		response.__timestamp = new Date().getTime();
 		response.end(input);
 		return o;
 	}
@@ -421,6 +422,7 @@ function getModuleInstance(xmodule) {
 	serverche.env = env;
 	function requestListener(req, res) {
 		try {
+			req.__timestamp = new Date().getTime();
 			if (serverche.acceptAppRequests) req = serverche.getAppRequest(req);
 			serverche.onRequest(req, res);
 		} catch (e) {}

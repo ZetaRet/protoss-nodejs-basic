@@ -413,6 +413,7 @@ class ProtoSSChe implements zetaret.node.ProtoSSChe {
 			};
 		o.updateCookies(request, response, headers);
 		(response as any).writeHead(200, headers);
+		(response as zetaret.node.AugmentResponse).__timestamp = new Date().getTime();
 		response.end(input);
 		return o;
 	}
@@ -471,6 +472,7 @@ function getModuleInstance(xmodule: string): zetaret.node.ModuleInstance {
 
 	function requestListener(req: any, res: any) {
 		try {
+			(req as zetaret.node.AugmentRequest).__timestamp = new Date().getTime();
 			if (serverche.acceptAppRequests) req = serverche.getAppRequest(req);
 			serverche.onRequest(req, res);
 		} catch (e) { }
