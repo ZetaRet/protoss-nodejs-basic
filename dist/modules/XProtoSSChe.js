@@ -105,12 +105,13 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				};
 				let firstin = o.collectionRR[0][0];
 				let lastout = o.collectionRR[count - 1][1];
-				stats.time = lastout.__timestamp - firstin.__timestamp;
 				o.collectionRR.forEach((e) => {
 					stats.avrgTime += e[1].__timestamp - e[0].__timestamp;
 					stats.units += e[0].__units || 0;
 					stats.units += e[1].__units || 0;
+					if (e[1].__timestamp > lastout.__timestamp) lastout = e[1];
 				});
+				stats.time = lastout.__timestamp - firstin.__timestamp;
 				stats.average = stats.avrgTime / count;
 				o.collectionRR = [];
 				o.collectionStats.push(stats);
@@ -233,7 +234,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			if (!response.headersSent) response.writeHead(response.__rcode || 200, headers);
 			response.end(input, response.__encoding);
 			response.__timestamp = new Date().getTime();
-			o.collectionRR.push([request, response]);
+			if (o.collectionMax > 0) o.collectionRR.push([request, response]);
 			return o;
 		}
 	};

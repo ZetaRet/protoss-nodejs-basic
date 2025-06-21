@@ -1,6 +1,6 @@
 {
 	"name": "protoss-nodejs-basic",
-	"version": "3.1.0",
+	"version": "3.1.1",
 	"author": "Zeta Ret",
 	"license": "MIT",
 	"type": "commonjs",
@@ -21,6 +21,6 @@
 		"start-ts": "node dist/indexTS.js"
 	},
 	"dependencies": {
-		"@types/protoss-nodejs-basic": "git+https://github.com/ZetaRet/protoss-nodejs-basic-types.git#v3.1.0"
+		"@types/protoss-nodejs-basic": "git+https://github.com/ZetaRet/protoss-nodejs-basic-types.git#v3.1.1"
 	}
 }

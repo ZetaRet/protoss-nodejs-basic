@@ -56,6 +56,14 @@ const ERRORS = {
 	ABORT: "abort",
 };
 
+const PROCESS_EVENTS = {
+	EXIT: "exit",
+	BEFORE_EXIT: "beforeExit",
+	DISCONNECT: "disconnect",
+	MESSAGE: "message",
+	WORKER_MESSAGE: "workerMessage",
+};
+
 const EVENTS = {
 	DATA: "data",
 	ERROR: "error",
@@ -94,9 +102,11 @@ function updateEnv() {
 }
 
 const globalExceptionsAndErrors: any = {};
+const globalProcessListeners: any[] = [];
 function onGlobalError(error: any) {
 	process.on(error, function (err) {
 		pushGlobalError(error, err);
+		globalProcessListeners.forEach((cb) => cb(error, err));
 	});
 }
 function pushGlobalError(error: any, err: any) {
@@ -109,12 +119,18 @@ function uncaughtExceptionGlobal() {
 		(global as zetaret.node.BasicServerGlobal).onGlobalError = onGlobalError;
 		(global as zetaret.node.BasicServerGlobal).pushGlobalError = pushGlobalError;
 		(global as zetaret.node.BasicServerGlobal).globalExceptionsAndErrors = globalExceptionsAndErrors;
+		(global as zetaret.node.BasicServerGlobal).globalProcessListeners = globalProcessListeners;
 	} else return;
 	onGlobalError(ERRORS.UNCAUGHT_EXCEPTION);
 	onGlobalError(ERRORS.UNCAUGHT_EXCEPTION_MONITOR);
 	onGlobalError(ERRORS.UNHANDLED_REJECTION);
 	onGlobalError(ERRORS.UNHANDLED_PROMISE_REJECTION_WARNING);
 	onGlobalError(ERRORS.WARNING);
+	onGlobalError(PROCESS_EVENTS.EXIT);
+	onGlobalError(PROCESS_EVENTS.BEFORE_EXIT);
+	onGlobalError(PROCESS_EVENTS.DISCONNECT);
+	onGlobalError(PROCESS_EVENTS.MESSAGE);
+	onGlobalError(PROCESS_EVENTS.WORKER_MESSAGE);
 }
 
 function resetFSInterval() {

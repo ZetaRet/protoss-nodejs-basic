@@ -44,6 +44,13 @@ const ERRORS = {
 	WARNING: "warning",
 	ABORT: "abort",
 };
+const PROCESS_EVENTS = {
+	EXIT: "exit",
+	BEFORE_EXIT: "beforeExit",
+	DISCONNECT: "disconnect",
+	MESSAGE: "message",
+	WORKER_MESSAGE: "workerMessage",
+};
 const EVENTS = {
 	DATA: "data",
 	ERROR: "error",
@@ -77,9 +84,11 @@ function updateEnv() {
 	}
 }
 const globalExceptionsAndErrors = {};
+const globalProcessListeners = [];
 function onGlobalError(error) {
 	process.on(error, function (err) {
 		pushGlobalError(error, err);
+		globalProcessListeners.forEach((cb) => cb(error, err));
 	});
 }
 function pushGlobalError(error, err) {
@@ -92,12 +101,18 @@ function uncaughtExceptionGlobal() {
 		global.onGlobalError = onGlobalError;
 		global.pushGlobalError = pushGlobalError;
 		global.globalExceptionsAndErrors = globalExceptionsAndErrors;
+		global.globalProcessListeners = globalProcessListeners;
 	} else return;
 	onGlobalError(ERRORS.UNCAUGHT_EXCEPTION);
 	onGlobalError(ERRORS.UNCAUGHT_EXCEPTION_MONITOR);
 	onGlobalError(ERRORS.UNHANDLED_REJECTION);
 	onGlobalError(ERRORS.UNHANDLED_PROMISE_REJECTION_WARNING);
 	onGlobalError(ERRORS.WARNING);
+	onGlobalError(PROCESS_EVENTS.EXIT);
+	onGlobalError(PROCESS_EVENTS.BEFORE_EXIT);
+	onGlobalError(PROCESS_EVENTS.DISCONNECT);
+	onGlobalError(PROCESS_EVENTS.MESSAGE);
+	onGlobalError(PROCESS_EVENTS.WORKER_MESSAGE);
 }
 function resetFSInterval() {
 	clearInterval(sid);
