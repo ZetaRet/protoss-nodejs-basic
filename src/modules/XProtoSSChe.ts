@@ -77,7 +77,7 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 			o.asyncId = null;
 			o.collectionRR = [];
 			o.collectionStats = [];
-			o.collectionMax = 300;
+			o.collectionMax = 0;
 			o.initRoute();
 			o.initAsyncGrid();
 		}
@@ -114,7 +114,9 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 				let count = o.collectionRR.length;
 				let stats: any = {
 					requests: count, time: 0, avrgTime: 0, average: 0, units: 0,
-					cpus: 0, cpuTypes: [], memory: os.totalmem()
+					timestamp: new Date().getTime(), uptime: process.uptime(),
+					cpus: 0, cpuTypes: [], resource: process.resourceUsage(),
+					memory: os.totalmem(), freememory: os.freemem(), memoryUsage: process.memoryUsage(),
 				};
 				let firstin = o.collectionRR[0][0];
 				let lastout = o.collectionRR[count - 1][1];
@@ -122,6 +124,7 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 					stats.avrgTime += e[1].__timestamp - e[0].__timestamp;
 					stats.units += e[0].__units || 0;
 					stats.units += e[1].__units || 0;
+					if (e[0].__timestamp < firstin.__timestamp) firstin = e[0];
 					if (e[1].__timestamp > lastout.__timestamp) lastout = e[1];
 				});
 				stats.time = lastout.__timestamp - firstin.__timestamp;
@@ -133,7 +136,8 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 				var i, type, cpu, total;
 				stats.cpus = cpus.length;
 				for (i = 0; i < stats.cpus; i++) {
-					cpu = cpus[i], total = 0;
+					cpu = cpus[i];
+					total = 0;
 					for (type in cpu.times) total += cpu.times[type];
 					for (type in cpu.times) stats.cpuTypes.push([type, Math.round(100 * cpu.times[type] / total)]);
 				}
