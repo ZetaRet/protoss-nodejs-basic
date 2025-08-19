@@ -64,6 +64,14 @@ const PROCESS_EVENTS = {
 	WORKER_MESSAGE: "workerMessage",
 };
 
+const SIGNALS = {
+	SIGINT: "SIGINT",
+	SIGTERM: "SIGTERM",
+	SIGQUIT: "SIGQUIT",
+	SIGKILL: "SIGKILL",
+	SIGTSTP: "SIGTSTP",
+};
+
 const EVENTS = {
 	DATA: "data",
 	ERROR: "error",
@@ -131,6 +139,11 @@ function uncaughtExceptionGlobal() {
 	onGlobalError(PROCESS_EVENTS.DISCONNECT);
 	onGlobalError(PROCESS_EVENTS.MESSAGE);
 	onGlobalError(PROCESS_EVENTS.WORKER_MESSAGE);
+	onGlobalError(SIGNALS.SIGINT);
+	onGlobalError(SIGNALS.SIGKILL);
+	onGlobalError(SIGNALS.SIGQUIT);
+	onGlobalError(SIGNALS.SIGTERM);
+	onGlobalError(SIGNALS.SIGTSTP);
 }
 
 function resetFSInterval() {
@@ -139,7 +152,8 @@ function resetFSInterval() {
 		if (stats.reqnum !== reqnum) {
 			try {
 				stats.reqnum = reqnum;
-				fs.writeFile(sfile, JSON.stringify(stats), function (err: any) { });
+				if (!(global as zetaret.node.BasicServerGlobal).DisableStatsFileWrite)
+					fs.writeFile(sfile, JSON.stringify(stats), function (err: any) { });
 			} catch (e) { }
 		}
 	}, sidinterval);
