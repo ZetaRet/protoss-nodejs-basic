@@ -112,12 +112,6 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		initLobby() {
 			var o = this;
 			o.lobbyId = o.rndstr(10);
-			var bp = {};
-			bp.enumerable = false;
-			o.onConnectedX = o.onConnected.bind(o);
-			Object.defineProperty(o, "onConnectedX", bp);
-			o.onConnectErrorX = o.onConnectError.bind(o);
-			Object.defineProperty(o, "onConnectErrorX", bp);
 		}
 		initRooms() {}
 		initApps() {}
@@ -125,8 +119,31 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			if (!options.port) options.port = secure ? 443 : 80;
 			if (!options.method) options.method = "GET";
-			var req = (secure ? https : http).request(options, o.onConnectedX || o.onConnected.bind(o));
-			req.on("error", o.onConnectErrorX || o.onConnectError.bind(o));
+			function onConnectError(e) {
+				o.lobbyEvents.emit(EVENTS.CONNECT_ERROR, e, o);
+				if (o.debugRoute) {
+					console.log("Lobby connect error: " + o.lobbyId);
+					console.log(e);
+				}
+			}
+			function onConnected(res) {
+				var sbb = o.env.swapBodyBuffer;
+				var d = sbb ? [] : "";
+				res.setEncoding(res.req.__encoding || "utf8");
+				res.on("data", (chunk) => (sbb ? d.push(chunk) : (d += chunk)));
+				res.on("end", () => {
+					if (sbb) d = Buffer.concat(d);
+					if (o.debugRoute) {
+						console.log("Lobby connect data: ");
+						console.log(d);
+					}
+					if (res.headers["content-type"] === "application/json") d = JSON.parse(d);
+					req.emit(EVENTS.ON_CONNECTED, d, o);
+					o.lobbyEvents.emit(EVENTS.ON_CONNECTED, req, res, d, o);
+				});
+			}
+			var req = (secure ? https : http).request(options, onConnected);
+			req.on("error", onConnectError);
 			if (data) req.write(data);
 			req.end();
 			return req;
@@ -135,32 +152,8 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			var o = this;
 			return new Promise((resolve, reject) => {
 				const req = o.connectTo(options, data, secure);
-				req.addEventListener(EVENTS.ON_CONNECTED, (d) => resolve(d));
-				req.addEventListener("error", (e) => reject(req));
-			});
-		}
-		onConnectError(e) {
-			var o = this;
-			o.lobbyEvents.emit(EVENTS.CONNECT_ERROR, e, o);
-			if (o.debugRoute) {
-				console.log("Lobby connect error: " + o.lobbyId);
-				console.log(e);
-			}
-		}
-		onConnected(res) {
-			var o = this;
-			var sbb = o.env.swapBodyBuffer;
-			var d = sbb ? [] : "";
-			res.setEncoding(res.req.__encoding || "utf8");
-			res.on("data", (chunk) => (sbb ? d.push(chunk) : (d += chunk)));
-			res.on("end", () => {
-				if (sbb) d = Buffer.concat(d);
-				if (o.debugRoute) {
-					console.log("Lobby connect data: ");
-					console.log(d);
-				}
-				res.emit(EVENTS.ON_CONNECTED, d, o);
-				o.lobbyEvents.emit(EVENTS.ON_CONNECTED, res, d, o);
+				req.on(EVENTS.ON_CONNECTED, (d) => resolve(d));
+				req.on("error", (e) => reject(req));
 			});
 		}
 		lobby(data) {

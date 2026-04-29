@@ -132,12 +132,6 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 		initLobby(): void {
 			var o = this;
 			o.lobbyId = o.rndstr(10);
-			var bp: any = {};
-			bp.enumerable = false;
-			(o as any).onConnectedX = o.onConnected.bind(o);
-			Object.defineProperty(o, "onConnectedX", bp);
-			(o as any).onConnectErrorX = o.onConnectError.bind(o);
-			Object.defineProperty(o, "onConnectErrorX", bp);
 		}
 
 		initRooms(): void { }
@@ -148,8 +142,34 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 			var o = this;
 			if (!options.port) options.port = secure ? 443 : 80;
 			if (!options.method) options.method = "GET";
-			var req = (secure ? https : http).request(options, (o as any).onConnectedX || o.onConnected.bind(o));
-			req.on("error", (o as any).onConnectErrorX || o.onConnectError.bind(o));
+
+			function onConnectError(e: Error): void {
+				o.lobbyEvents.emit(EVENTS.CONNECT_ERROR, e, o);
+				if (o.debugRoute) {
+					console.log("Lobby connect error: " + o.lobbyId);
+					console.log(e);
+				}
+			}
+
+			function onConnected(res: zetaret.node.Cross): void {
+				var sbb = o.env.swapBodyBuffer;
+				var d: any = sbb ? [] : "";
+				(res as any).setEncoding((res as any).req.__encoding || "utf8");
+				res.on("data", (chunk) => (sbb ? d.push(chunk) : (d += chunk)));
+				res.on("end", () => {
+					if (sbb) d = Buffer.concat(d);
+					if (o.debugRoute) {
+						console.log("Lobby connect data: ");
+						console.log(d);
+					}
+					if ((res as any).headers["content-type"] === "application/json") d = JSON.parse(d);
+					req.emit(EVENTS.ON_CONNECTED, d, o);
+					o.lobbyEvents.emit(EVENTS.ON_CONNECTED, req, res, d, o);
+				});
+			}
+
+			var req = (secure ? https : http).request(options, onConnected);
+			req.on("error", onConnectError);
 			if (data) req.write(data);
 			req.end();
 			return req;
@@ -159,34 +179,8 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 			var o = this;
 			return new Promise((resolve, reject) => {
 				const req = o.connectTo(options, data, secure);
-				(req as any).addEventListener(EVENTS.ON_CONNECTED, (d: any) => resolve(d));
-				(req as any).addEventListener("error", (e: any) => reject(req));
-			});
-		}
-
-		onConnectError(e: Error): void {
-			var o = this;
-			o.lobbyEvents.emit(EVENTS.CONNECT_ERROR, e, o);
-			if (o.debugRoute) {
-				console.log("Lobby connect error: " + o.lobbyId);
-				console.log(e);
-			}
-		}
-
-		onConnected(res: zetaret.node.Cross): void {
-			var o = this;
-			var sbb = o.env.swapBodyBuffer;
-			var d: any = sbb ? [] : "";
-			(res as any).setEncoding((res as any).req.__encoding || "utf8");
-			res.on("data", (chunk) => (sbb ? d.push(chunk) : (d += chunk)));
-			res.on("end", () => {
-				if (sbb) d = Buffer.concat(d);
-				if (o.debugRoute) {
-					console.log("Lobby connect data: ");
-					console.log(d);
-				}
-				res.emit(EVENTS.ON_CONNECTED, d, o);
-				o.lobbyEvents.emit(EVENTS.ON_CONNECTED, res, d, o);
+				(req as any).on(EVENTS.ON_CONNECTED, (d: any) => resolve(d));
+				(req as any).on("error", (e: any) => reject(req));
 			});
 		}
 
