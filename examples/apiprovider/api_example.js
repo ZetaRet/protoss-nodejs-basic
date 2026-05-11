@@ -9,7 +9,6 @@ const fs = require("fs");
 
 var mod = require("zetaret.node::index");
 const server = mod.serverche();
-console.log(server);
 
 const { APIController } = require("zetaret.examples.apiprovider::APIController");
 var apiController = new APIController();
@@ -24,6 +23,14 @@ rinst.addParamsPathListener(
 	"profile/:profileid",
 	function (server, robj, routeData, request, response) {
 		console.log("profile:", robj.vars.profileid, robj, server.routeMap);
+	},
+	"GET",
+	true
+);
+rinst.addParamsPathListener(
+	"view-profile/:profileid",
+	function (server, robj, routeData, request, response) {
+		console.log("view-profile:", robj.vars.profileid, robj, server.routeMap);
 	},
 	"GET",
 	true

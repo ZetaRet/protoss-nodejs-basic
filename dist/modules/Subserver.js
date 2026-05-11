@@ -94,13 +94,16 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 				.split("/")
 				.map((e) => {
 					var param = e;
+					var starParam = false;
 					if (param.charAt(0) === "{" && param.charAt(param.length - 1) === "}") {
 						param = new RegExp(param.substring(1, param.length - 1));
+						starParam = true;
 						if (autoRoute) {
 							if (!r["*"]) r["*"] = {};
 							r = r["*"];
 						}
 					} else if (param.charAt(0) === ":") {
+						starParam = true;
 						if (autoRoute) {
 							if (!r["*"]) r["*"] = {};
 							r = r["*"];
@@ -112,7 +115,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 						}
 					}
 					paramPath.push(param);
-					return "*";
+					return starParam ? "*" : param;
 				})
 				.join("/");
 			return o.addPathListener(listenPath, function (server, robj, routeData, request, response) {
@@ -189,6 +192,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		routeCallback(routeData, body, request, response) {
 			var o = this;
 			var cp,
+				sp,
 				pp,
 				p,
 				i,
@@ -208,15 +212,30 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 					robj.pageCurrent = cp;
 					robj.pageProxy = null;
 					if (o.useProxy && (p === o.proxyPaths || o.proxyMask[cp] || o.proxyMask[p])) r = null;
-					else r = r[p] || r["*"];
+					else {
+						if (r[p]) {
+							r = r[p];
+							sp = sp ? sp + "/" + p : p;
+						} else if (r["*"]) {
+							r = r["*"];
+							sp = sp ? sp + "/*" : "*";
+						} else {
+							r = null;
+							sp = sp ? sp + "/" + p : p;
+						}
+					}
 					if (!r) {
 						response.__rcode = o.noRouteCode;
 						if (o.noRouteEvent) o.listener.emit(o.noRouteEvent, o, robj, routeData, request, response);
 						break;
 					} else {
 						robj.exact = cp === robj.rawpath;
-						o.pathEmitter.emit(stars, o, robj, routeData, request, response);
-						if (!o.emitExacts || robj.exact) o.pathEmitter.emit(cp, o, robj, routeData, request, response);
+						if (!o.emitExacts || robj.exact) {
+							if (o.pathEmitter.listenerCount(cp) > 0) o.pathEmitter.emit(cp, o, robj, routeData, request, response);
+							else if (o.pathEmitter.listenerCount(sp) > 0)
+								o.pathEmitter.emit(sp, o, robj, routeData, request, response);
+							else o.pathEmitter.emit(stars, o, robj, routeData, request, response);
+						}
 						if (o.useProxy && r[o.proxyPaths]) {
 							for (pp in r[o.proxyPaths]) {
 								robj.pageProxy = pp;
