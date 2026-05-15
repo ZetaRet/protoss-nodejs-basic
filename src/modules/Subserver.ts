@@ -42,6 +42,7 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 		noProxyCode: number;
 		noProxyEvent: string;
 		emitExacts: boolean;
+		emitStars: boolean;
 
 		constructor() {
 			super(null, null, {});
@@ -63,6 +64,7 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 			o.noProxyCode = 400;
 			o.noProxyEvent = "proxyNoRoute";
 			o.emitExacts = false;
+			o.emitStars = true;
 			o.initRouteListener();
 		}
 
@@ -255,12 +257,13 @@ function getExtendedServerProtoSS(ProtoSSChe: zetaret.node.ProtoSSCheCTOR): zeta
 						if (!o.emitExacts || robj.exact) {
 							if (o.pathEmitter.listenerCount(cp) > 0) o.pathEmitter.emit(cp, o, robj, routeData, request, response);
 							else if (o.pathEmitter.listenerCount(sp) > 0) o.pathEmitter.emit(sp, o, robj, routeData, request, response);
-							else o.pathEmitter.emit(stars, o, robj, routeData, request, response);
-						}
-						if (o.useProxy && r[o.proxyPaths]) {
-							for (pp in r[o.proxyPaths]) {
-								robj.pageProxy = pp;
-								o.pathEmitter.emit(pp, o, robj, routeData, request, response);
+							else if (o.emitStars) o.pathEmitter.emit(stars, o, robj, routeData, request, response);
+
+							if (o.useProxy && r[o.proxyPaths]) {
+								for (pp in r[o.proxyPaths]) {
+									robj.pageProxy = pp;
+									o.pathEmitter.emit(pp, o, robj, routeData, request, response);
+								}
 							}
 						}
 						if ((response as zetaret.node.RoutedResponse).__breakRoute) break;

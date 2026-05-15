@@ -32,6 +32,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 		noProxyCode;
 		noProxyEvent;
 		emitExacts;
+		emitStars;
 		constructor() {
 			super(null, null, {});
 			var o = this;
@@ -52,6 +53,7 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 			o.noProxyCode = 400;
 			o.noProxyEvent = "proxyNoRoute";
 			o.emitExacts = false;
+			o.emitStars = true;
 			o.initRouteListener();
 		}
 		addPathListener(path, callback) {
@@ -234,12 +236,12 @@ function getExtendedServerProtoSS(ProtoSSChe) {
 							if (o.pathEmitter.listenerCount(cp) > 0) o.pathEmitter.emit(cp, o, robj, routeData, request, response);
 							else if (o.pathEmitter.listenerCount(sp) > 0)
 								o.pathEmitter.emit(sp, o, robj, routeData, request, response);
-							else o.pathEmitter.emit(stars, o, robj, routeData, request, response);
-						}
-						if (o.useProxy && r[o.proxyPaths]) {
-							for (pp in r[o.proxyPaths]) {
-								robj.pageProxy = pp;
-								o.pathEmitter.emit(pp, o, robj, routeData, request, response);
+							else if (o.emitStars) o.pathEmitter.emit(stars, o, robj, routeData, request, response);
+							if (o.useProxy && r[o.proxyPaths]) {
+								for (pp in r[o.proxyPaths]) {
+									robj.pageProxy = pp;
+									o.pathEmitter.emit(pp, o, robj, routeData, request, response);
+								}
 							}
 						}
 						if (response.__breakRoute) break;

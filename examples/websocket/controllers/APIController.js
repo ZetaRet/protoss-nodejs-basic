@@ -101,7 +101,7 @@ class APIController {
 			msg,
 			sent;
 
-		if (o.db.users[u] /* && (!o.secureUid || o.db.users[u].uid === uid)*/) {
+		if (o.db.users[u] && (!o.secureUid || o.db.users[u].uid === uid)) {
 			data.err = "0";
 			data.text = "message sent";
 			msg = {
@@ -140,7 +140,7 @@ class APIController {
 			u = robj.vars.username,
 			uid = robj.vars.uid;
 
-		if (o.db.users[u] /* && (!o.secureUid || o.db.users[u].uid === uid)*/) {
+		if (o.db.users[u] && (!o.secureUid || o.db.users[u].uid === uid)) {
 			data.err = 0;
 			if (o.db.messages[u]) {
 				if (g) data.messages = o.db.messages[u].filter((m) => m.group === g);
@@ -169,7 +169,7 @@ class APIController {
 			data.group = g;
 			if (!o.db.groups[g]) o.db.groups[g] = [];
 			if (u && o.db.users[u] && o.db.groups[g].indexOf(u) === -1) {
-				if (true /*!o.secureUid || o.db.users[u].uid === uid*/) {
+				if (!o.secureUid || o.db.users[u].uid === uid) {
 					o.db.groups[g].push(u);
 					data.username = u;
 					data.text = "user added to group";

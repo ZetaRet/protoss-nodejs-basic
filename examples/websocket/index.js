@@ -24,8 +24,6 @@ var route = {
 server.autoCookie = true;
 server.voya(route);
 
-console.log(server);
-
 const FECMod = require("websocket.example.controllers::FrontEndController");
 const fec = new FECMod.FrontEndController();
 fec.addServer(server);

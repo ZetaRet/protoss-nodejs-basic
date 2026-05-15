@@ -47,36 +47,11 @@ var env: zetaret.node.ServerEnvironment = {},
 	};
 var instance: zetaret.node.ModuleInstance;
 
-const ERRORS = {
-	UNCAUGHT_EXCEPTION: "uncaughtException",
-	UNCAUGHT_EXCEPTION_MONITOR: "uncaughtExceptionMonitor",
-	UNHANDLED_REJECTION: "unhandledRejection",
-	UNHANDLED_PROMISE_REJECTION_WARNING: "UnhandledPromiseRejectionWarning",
-	WARNING: "warning",
-	ABORT: "abort",
-};
-
-const PROCESS_EVENTS = {
-	EXIT: "exit",
-	BEFORE_EXIT: "beforeExit",
-	DISCONNECT: "disconnect",
-	MESSAGE: "message",
-	WORKER_MESSAGE: "workerMessage",
-};
-
-const SIGNALS = {
-	SIGINT: "SIGINT",
-	SIGTERM: "SIGTERM",
-	SIGQUIT: "SIGQUIT",
-	SIGKILL: "SIGKILL",
-	SIGTSTP: "SIGTSTP",
-};
-
-const EVENTS = {
-	DATA: "data",
-	ERROR: "error",
-	END: "end",
-};
+const fileConst = require("./ProtoSSCheConst");
+const ERRORS = fileConst.ERRORS;
+const PROCESS_EVENTS = fileConst.PROCESS_EVENTS;
+const SIGNALS = fileConst.SIGNALS;
+const EVENTS = fileConst.EVENTS;
 
 const ServerEnum: any = {
 	XProtoSSChe: "./modules/XProtoSSChe.js",

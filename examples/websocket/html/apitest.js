@@ -19,6 +19,7 @@ function sendWS(cmd, options) {
 	if (options) {
 		for (k in options) msg[k] = options[k];
 	}
+	console.log("#sendWS:", msg);
 	ws.send(JSON.stringify(msg));
 }
 
@@ -111,7 +112,7 @@ function init() {
 function addclientbtn() {
 	var uel = document.getElementById('username'),
 		v = uel.value;
-	if (v) {
+	if (v && !cd.username) {
 		sendWS('addclient', {
 			username: v
 		});

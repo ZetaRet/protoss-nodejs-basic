@@ -135,6 +135,14 @@ server.addParamsPathListener(
 
 server.addRouter(rinst);
 
+server.useProxy = true;
+server.proxyMask["api.v2/view-profile/99"] = true;
+server.proxyMask["zxc"] = true;
+server.routeMap["api.v2"]["view-profile"][server.proxyPaths] = { "api.v2/profile/zxc-3": 1 };
+server.addPathListener("api.v2/profile/zxc-3", function(server, robj, routeData, request, response) {
+	console.log("proxy:", robj, server.routeMap);
+})
+
 const DataValidator = require("zetaret.node.api.DataValidator").DataValidator;
 var dv = new DataValidator();
 dv.log = true;
