@@ -1,3 +1,6 @@
+declare module "zetaret.node.api::SocketController";
+declare module "protoss-nodejs-basic/dist/api/SocketController.js";
+
 class SocketController implements zetaret.node.api.SocketController {
 	public socket: zetaret.node.api.SocketServer;
 	public debug: boolean;

@@ -20,7 +20,6 @@ var route = {
 	},
 };
 server.routeMap = route;
-console.log(server);
 
 const multipart = require("zetaret.node.utils.web::Multipart");
 multipart.settings.debug = true;
@@ -53,7 +52,27 @@ server.addMethodPathListener("GET", "api/filedownload", function (server, robj, 
 	response.__data.push(filedata);
 });
 
-ListDir(server, "js", __dirname, { ext: ["js", "json"] });
+var access = {
+	"filestats.json": { login: true },
+	"namespacemap.json": { login: false },
+};
+async function accessHandler(fileid, cadata, request, response, endResponse) {
+	console.log(fileid);
+	if (cadata.login) {
+		//simulate db operation to check user session and role permissions using provided credentials
+		let dbresult = await new Promise((resolve) => {
+			setTimeout(()=> {
+				//user is a guest, can not access file
+				resolve(false);
+			}, 50);
+		});
+		endResponse(dbresult);
+	} else {
+		endResponse(true);
+	}
+}
+
+ListDir(server, "js", __dirname, { ext: ["js", "json"], access, accessHandler });
 ListDir(server, "images", join(__dirname, "/files"), {
 	ext: ["png"],
 	streamExt: { png: true },

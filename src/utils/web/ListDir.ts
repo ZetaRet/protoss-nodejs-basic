@@ -36,7 +36,7 @@ function ListDir(serverobj: zetaret.node.modules.Subserver | zetaret.node.api.Ro
 				cc = config.cacheControl,
 				se = config.streamExt,
 				sf = config.streamFiles;
-			var c, ccn, stats, filename;
+			var c, ccn, stats, filename: string;
 			var ext: string = fileid.split(".").pop();
 
 			if (!fileid || fileid.indexOf("\\") >= 0) nofile = true;
@@ -45,26 +45,37 @@ function ListDir(serverobj: zetaret.node.modules.Subserver | zetaret.node.api.Ro
 			if (config.ext.indexOf(ext) === -1 || (fnf && fnf(fileid, filename, ext))) nofile = true;
 
 			if (!nofile && fs.existsSync(filename)) {
-				stream = (se && se[ext]) || (sf && sf[fileid]);
-				ccn = cc ? cc[ext] : null;
+				response.__disablePipeline = true;
 
-				if (stream) {
-					response.__disablePipeline = true;
+				function endResponse() {
+					stream = (se && se[ext]) || (sf && sf[fileid]);
+					ccn = cc ? cc[ext] : null;
+
 					response.setHeader("Content-Type", MIME_TYPES[ext]);
 					stats = fs.statSync(filename);
 					response.setHeader("Content-Length", stats.size);
 					if (ccn) response.setHeader("Cache-Control", "max-age=" + ccn);
-					if (rf) rf(fileid, response, { filename, ext, stream, ccn, stats });
-					fs.createReadStream(filename).pipe(response);
-				} else {
-					c = fs.readFileSync(filename, "binary");
+					if (rf) rf(fileid, request, response, { filename, ext, stream, ccn, stats });
+					if (stream) fs.createReadStream(filename).pipe(response);
+					else {
+						c = fs.readFileSync(filename, "binary");
+						response.writeHead(200);
+						response.end(c, "binary");
+					}
+				}
+				function noAccess() {
+					response.writeHead(403);
+					response.end();
+				}
 
-					response.__headers["Content-Type"] = MIME_TYPES[ext];
-					response.__headers["Content-Length"] = c.length;
-					if (ccn) response.__headers["Cache-Control"] = "max-age=" + ccn;
-					if (rf) rf(fileid, response, { filename, ext, stream, ccn });
-					response.__encoding = "binary";
-					response.__data.push(c);
+				if (config.access && config.access[fileid] !== undefined) {
+					let cadata = config.access[fileid];
+					config.accessHandler(fileid, cadata, request, response, (allow: boolean) => {
+						if (allow) endResponse();
+						else noAccess()
+					});
+				} else {
+					endResponse();
 				}
 			} else {
 				response.__rcode = 404;

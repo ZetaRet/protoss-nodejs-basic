@@ -32,6 +32,8 @@ const ACMod = require("websocket.example.controllers::APIController");
 const apic = new ACMod.APIController();
 apic.addServer(server);
 
-const SCMod = require("websocket.example.controllers::SocketController");
+const WS = require("ws/index.js");
+const SCMod = require("zetaret.node.api::SocketController");
 const sc = new SCMod.SocketController(apic);
+sc.init(WS.Server);
 sc.debug = true;

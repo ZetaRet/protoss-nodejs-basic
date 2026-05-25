@@ -1,6 +1,6 @@
 {
 	"name": "protoss-nodejs-basic",
-	"version": "3.2.0",
+	"version": "3.3.0",
 	"author": "Zeta Ret",
 	"license": "MIT",
 	"type": "commonjs",
@@ -14,13 +14,13 @@
 		"prettier-ts-check": "prettier --check \"dist/**/*.js\"",
 		"prettier-ts-write": "prettier --write \"dist/**/*.js\"",
 		"tsc": "tsc --project ./tsconfig.json",
-		"tsc-watch": "tsc -w ./tsconfig.json",
+		"tsc-watch": "tsc --project ./tsconfig.json --w",
 		"tsc-pretty": "npm run tsc && npm run prettier-ts-write",
 		"start": "node dist/index.js",
 		"start-module": "node type_module/indexModule.js",
 		"start-ts": "node dist/indexTS.js"
 	},
 	"dependencies": {
-		"@types/protoss-nodejs-basic": "git+https://github.com/ZetaRet/protoss-nodejs-basic-types.git#v3.2.0"
+		"@types/protoss-nodejs-basic": "git+https://github.com/ZetaRet/protoss-nodejs-basic-types.git#v3.3.0"
 	}
 }
