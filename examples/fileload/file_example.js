@@ -55,13 +55,17 @@ server.addMethodPathListener("GET", "api/filedownload", function (server, robj, 
 var access = {
 	"filestats.json": { login: true },
 	"namespacemap.json": { login: false },
+	"chunk.welcome.js": { login: false },
 };
-async function accessHandler(fileid, cadata, request, response, endResponse) {
-	console.log(fileid);
+var access2 = {
+	"*": { login: false },
+};
+async function accessHandler(fileid, cadata, request, response, endResponse, options) {
+	console.log(fileid, cadata, options);
 	if (cadata.login) {
-		//simulate db operation to check user session and role permissions using provided credentials
+		//simulate db operation to check user session and role permissions using provided credentials of request cookie header
 		let dbresult = await new Promise((resolve) => {
-			setTimeout(()=> {
+			setTimeout(() => {
 				//user is a guest, can not access file
 				resolve(false);
 			}, 50);
@@ -72,9 +76,20 @@ async function accessHandler(fileid, cadata, request, response, endResponse) {
 	}
 }
 
-ListDir(server, "js", __dirname, { ext: ["js", "json"], access, accessHandler });
+var hashMap = { chunk: true };
+
+ListDir(server, "js", __dirname, {
+	ext: ["js", "json"],
+	access,
+	accessHandler,
+	cacheControl: { js: 60 * 60 * 1 },
+	nocache: { "file_nocache.js": 1 },
+	hashMap,
+});
 ListDir(server, "images", join(__dirname, "/files"), {
 	ext: ["png"],
 	streamExt: { png: true },
 	cacheControl: { png: 60 * 60 * 1 },
+	access: access2,
+	accessHandler,
 });

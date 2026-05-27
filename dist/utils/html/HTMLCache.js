@@ -178,19 +178,32 @@ class HTMLCache {
 			var swap,
 				browserpath,
 				pr,
+				stat,
 				f = e.attr.href,
 				fileid = f.split("/").pop(),
 				prefix = e.attr.prefix,
-				base = e.attr.base;
+				base = e.attr.base,
+				version = e.attr.version;
+			if (version) {
+				pr = path.resolve(pdata.hfileloc, f);
+				if (fs.existsSync(pr)) stat = fs.statSync(pr);
+				delete e.attr.version;
+				if (stat) {
+					version = "?v=" + stat.mtime.getTime().toString(36);
+					if (o.watchFiles) o.watchFile(pr, page, "css");
+				}
+			}
 			if (base) {
 				browserpath = path.join(base, fileid).split("\\").join("/");
+				if (version) browserpath += version;
 				delete e.attr.base;
 				e.attr.href = browserpath;
 			} else if (prefix) {
 				browserpath = path.join(prefix, f).split("\\").join("/");
+				if (version) browserpath += version;
 				delete e.attr.prefix;
 				e.attr.href = browserpath;
-			} else if (f) {
+			} else if (f && !version) {
 				pr = path.resolve(pdata.hfileloc, f);
 				if (fs.existsSync(pr)) {
 					delete e.attr.href;
@@ -216,19 +229,32 @@ class HTMLCache {
 			var swap,
 				browserpath,
 				pr,
+				stat,
 				f = e.attr.src,
 				fileid = f.split("/").pop(),
 				prefix = e.attr.prefix,
-				base = e.attr.base;
+				base = e.attr.base,
+				version = e.attr.version;
+			if (version) {
+				pr = path.resolve(pdata.hfileloc, f);
+				if (fs.existsSync(pr)) stat = fs.statSync(pr);
+				delete e.attr.version;
+				if (stat) {
+					version = "?v=" + stat.mtime.getTime().toString(36);
+					if (o.watchFiles) o.watchFile(pr, page, "js");
+				}
+			}
 			if (base) {
 				browserpath = path.join(base, fileid).split("\\").join("/");
+				if (version) browserpath += version;
 				delete e.attr.base;
 				e.attr.src = browserpath;
 			} else if (prefix) {
 				browserpath = path.join(prefix, f).split("\\").join("/");
+				if (version) browserpath += version;
 				delete e.attr.prefix;
 				e.attr.src = browserpath;
-			} else if (f) {
+			} else if (f && !version) {
 				pr = path.resolve(pdata.hfileloc, f);
 				if (fs.existsSync(pr)) {
 					delete e.attr.src;

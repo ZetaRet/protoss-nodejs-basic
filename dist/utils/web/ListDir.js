@@ -1,4 +1,5 @@
-const fs = require("fs");
+var fs = require("fs");
+var { join } = require("path");
 const MIME_TYPES = {
 	js: "text/javascript",
 	json: "application/json",
@@ -31,22 +32,28 @@ function ListDir(serverobj, path, dir, config) {
 				cc = config.cacheControl,
 				se = config.streamExt,
 				sf = config.streamFiles;
-			var c, ccn, stats, filename;
-			var ext = fileid.split(".").pop();
-			if (!fileid || fileid.indexOf("\\") >= 0) nofile = true;
-			if ((bl && bl.indexOf(fileid) >= 0) || (wl && wl.indexOf(fileid) === -1)) nofile = true;
-			filename = dir + "/" + fileid;
-			if (config.ext.indexOf(ext) === -1 || (fnf && fnf(fileid, filename, ext))) nofile = true;
+			var c, ccn, stats, cadata, filename;
+			var mainid = fileid;
+			var unpack = fileid.split(".");
+			var ext = unpack.pop() || "";
+			var prefix = unpack[0] || "";
+			var hash = config.hashMap && config.hashMap[prefix] ? unpack.pop() || "" : null;
+			if (hash) mainid = unpack.join(".") + (ext ? "." + ext : "");
+			if (!fileid || fileid.indexOf("\\") >= 0 || fileid === "*") nofile = true;
+			if ((bl && bl.indexOf(mainid) >= 0) || (wl && wl.indexOf(mainid) === -1)) nofile = true;
+			filename = join(dir, fileid);
+			if (config.ext.indexOf(ext) === -1 || (fnf && fnf(mainid, filename, ext, { fileid }))) nofile = true;
 			if (!nofile && fs.existsSync(filename)) {
 				response.__disablePipeline = true;
 				function endResponse() {
-					stream = (se && se[ext]) || (sf && sf[fileid]);
+					stream = (se && se[ext]) || (sf && sf[mainid]);
 					ccn = cc ? cc[ext] : null;
 					response.setHeader("Content-Type", MIME_TYPES[ext]);
 					stats = fs.statSync(filename);
 					response.setHeader("Content-Length", stats.size);
-					if (ccn) response.setHeader("Cache-Control", "max-age=" + ccn);
-					if (rf) rf(fileid, request, response, { filename, ext, stream, ccn, stats });
+					if (ccn && (!config.nocache || !config.nocache[mainid]))
+						response.setHeader("Cache-Control", "max-age=" + ccn);
+					if (rf) rf(fileid, request, response, { mainid, filename, ext, stream, ccn, stats });
 					if (stream) fs.createReadStream(filename).pipe(response);
 					else {
 						c = fs.readFileSync(filename, "binary");
@@ -58,12 +65,19 @@ function ListDir(serverobj, path, dir, config) {
 					response.writeHead(403);
 					response.end();
 				}
-				if (config.access && config.access[fileid] !== undefined) {
-					let cadata = config.access[fileid];
-					config.accessHandler(fileid, cadata, request, response, (allow) => {
-						if (allow) endResponse();
-						else noAccess();
-					});
+				if (config.access) cadata = config.access[mainid] || config.access["*"];
+				if (cadata !== undefined) {
+					config.accessHandler(
+						mainid,
+						cadata,
+						request,
+						response,
+						(allow) => {
+							if (allow) endResponse();
+							else noAccess();
+						},
+						{ fileid, filename, ext, prefix, hash }
+					);
 				} else {
 					endResponse();
 				}
