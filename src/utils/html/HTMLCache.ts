@@ -327,9 +327,10 @@ class HTMLCache implements zetaret.node.utils.html.HTMLCache {
 			watchinterval = interval || 0;
 
 		function watchmethod(e: any, f: any, longfile: string, page: string, type: string, stats: any) {
-			if (watchers[longfile] !== undefined) return;
-			watchers[longfile] = setTimeout(() => {
-				delete watchers[longfile];
+			var watchid = longfile + "|" + page + "|" + type;
+			if (watchers[watchid] !== undefined) return;
+			watchers[watchid] = setTimeout(() => {
+				delete watchers[watchid];
 				if (debug) console.log(e, f, longfile, page, type, stats);
 				if (recacheOnChange && e === "change") o.recache(page);
 				if (listener) listener(e, f, longfile, page, type, stats);
@@ -344,11 +345,13 @@ class HTMLCache implements zetaret.node.utils.html.HTMLCache {
 		};
 	}
 
-	watchFile(pr: string, page: string, type: string): void {
+	watchFile(pr: string, page: string, type: string): string {
 		var o = this;
-		if (o.watchMap[pr]) o.watchMap[pr].close();
-		o.watchMap[pr] = fs.watch(pr, o.watchOptions, (e: any, f: any) => o.watchListener(e, f, pr, page, type, fs.statSync(pr)));
+		var watchid = pr + "|" + page + "|" + type;
+		if (o.watchMap[watchid]) return watchid;
+		o.watchMap[watchid] = fs.watch(pr, o.watchOptions, (e: any, f: any) => o.watchListener(e, f, pr, page, type, fs.statSync(pr)));
 		o.events.emit(EVENTS.WATCH_FILE, pr, page, type, o);
+		return watchid;
 	}
 
 	resetWatchers() {
