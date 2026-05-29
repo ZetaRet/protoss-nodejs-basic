@@ -127,7 +127,7 @@ class HTMLCache implements zetaret.node.utils.html.HTMLCache {
 		var p, pdata;
 		for (p in o.pages) {
 			pdata = o.pages[p];
-			if (pdata.binders && (pdata.binders as any)[page]) {
+			if (pdata.binders && pdata.binders[page]) {
 				pdata.content = "";
 				o.resetBinders(p);
 			}
@@ -164,13 +164,18 @@ class HTMLCache implements zetaret.node.utils.html.HTMLCache {
 		}
 	}
 
-	setPages(pages: { [page: string]: zetaret.node.utils.html.HTMLCachePageEnum }, HTMLParser: zetaret.node.utils.html.HTMLParser, watchers?: object, log?: boolean, decorateParser?: Function): void {
+	setPages(pages: { [page: string]: zetaret.node.utils.html.HTMLCachePageEnum },
+		HTMLParser: zetaret.node.utils.html.HTMLParserCTOR,
+		watchers?: zetaret.node.utils.html.WatcherObj,
+		log?: boolean, decorateParser?: Function): void {
 		var o = this;
-		var hpinst, p: string, op: zetaret.node.utils.html.HTMLCachePageEnum;
+		var hpinst: zetaret.node.utils.html.HTMLParser,
+			p: string,
+			op: zetaret.node.utils.html.HTMLCachePageEnum;
 
 		for (p in pages) {
 			op = pages[p];
-			hpinst = new (HTMLParser as any)();
+			hpinst = new HTMLParser();
 			if (decorateParser) decorateParser(hpinst, o, p, op);
 			hpinst.useAutomaton = op.useAutomaton || false;
 			hpinst.debug = op.debug || false;
@@ -185,7 +190,7 @@ class HTMLCache implements zetaret.node.utils.html.HTMLCache {
 				console.log(hpinst.domToString());
 			}
 		}
-		if (watchers) o.watch((watchers as any).watchmethod);
+		if (watchers) o.watch(watchers.watchmethod);
 		for (p in pages) {
 			op = pages[p];
 			o.exePage(op.id, op.exe);
@@ -321,7 +326,7 @@ class HTMLCache implements zetaret.node.utils.html.HTMLCache {
 		o.events.emit(EVENTS.WATCH, o);
 	}
 
-	getWatchers(listener?: Function, interval?: number, debug?: boolean, recacheOnChange?: boolean): object {
+	getWatchers(listener?: Function, interval?: number, debug?: boolean, recacheOnChange?: boolean): zetaret.node.utils.html.WatcherObj {
 		var o = this;
 		var watchers: any = {},
 			watchinterval = interval || 0;

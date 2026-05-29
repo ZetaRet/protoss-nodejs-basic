@@ -169,6 +169,16 @@ var validator = {
 };
 console.log("Validator:", dv.validate(data, validator), data);
 
+var dv2 = new DataValidator();
+dv2.log = true;
+var data2 = {
+	key1: 3
+};
+var validator2 = {
+	key1: { required: true, type: "string", min: 0 }
+};
+console.log("Validator 2:", dv2.validate(data2, validator2), data2, dv2.error);
+
 const snippetExampleModule = require("./APISnippetExample");
 
 const router1 = new snippetExampleModule.Router();
