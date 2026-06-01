@@ -197,7 +197,7 @@ class HTMLCache implements zetaret.node.utils.html.HTMLCache {
 		}
 	}
 
-	swapCSS(page: string, handler?: Function, despace?: Function): void {
+	swapCSS(page: string, handler?: Function, despace?: boolean | Function): void {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
@@ -241,7 +241,7 @@ class HTMLCache implements zetaret.node.utils.html.HTMLCache {
 					e.closed = false;
 					e.ending = ">";
 					e.elements = [fs.readFileSync(pr).toString()];
-					if (despace) e.elements[0] = o.despace(e.elements[0], "css");
+					if (despace) e.elements[0] = despace.constructor === Boolean ? o.despace(e.elements[0], "css") : (despace as Function)(e.elements[0], "css");
 					swap = true;
 					if (o.watchFiles) o.watchFile(pr, page, "css");
 				}
@@ -250,7 +250,7 @@ class HTMLCache implements zetaret.node.utils.html.HTMLCache {
 		});
 	}
 
-	swapJS(page: string, handler?: Function, despace?: Function): void {
+	swapJS(page: string, handler?: Function, despace?: boolean | Function): void {
 		var o = this;
 		var pdata = o.pages[page],
 			hpinst = pdata.parser;
@@ -290,7 +290,7 @@ class HTMLCache implements zetaret.node.utils.html.HTMLCache {
 				if (fs.existsSync(pr)) {
 					delete e.attr.src;
 					e.elements = [fs.readFileSync(pr).toString()];
-					if (despace) e.elements[0] = o.despace(e.elements[0], "js");
+					if (despace) e.elements[0] = despace.constructor === Boolean ? o.despace(e.elements[0], "js") : (despace as Function)(e.elements[0], "js");
 					swap = true;
 					if (o.watchFiles) o.watchFile(pr, page, "js");
 				}

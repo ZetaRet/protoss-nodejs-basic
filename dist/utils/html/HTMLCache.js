@@ -212,7 +212,9 @@ class HTMLCache {
 					e.closed = false;
 					e.ending = ">";
 					e.elements = [fs.readFileSync(pr).toString()];
-					if (despace) e.elements[0] = o.despace(e.elements[0], "css");
+					if (despace)
+						e.elements[0] =
+							despace.constructor === Boolean ? o.despace(e.elements[0], "css") : despace(e.elements[0], "css");
 					swap = true;
 					if (o.watchFiles) o.watchFile(pr, page, "css");
 				}
@@ -259,7 +261,9 @@ class HTMLCache {
 				if (fs.existsSync(pr)) {
 					delete e.attr.src;
 					e.elements = [fs.readFileSync(pr).toString()];
-					if (despace) e.elements[0] = o.despace(e.elements[0], "js");
+					if (despace)
+						e.elements[0] =
+							despace.constructor === Boolean ? o.despace(e.elements[0], "js") : despace(e.elements[0], "js");
 					swap = true;
 					if (o.watchFiles) o.watchFile(pr, page, "js");
 				}

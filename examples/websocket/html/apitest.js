@@ -90,7 +90,7 @@ function initCommands() {
 			});
 		}
 	};
-	cmd.addmessage = function(msg) {
+	cmd.addMessage = function(msg) {
 		var msgsel = document.getElementById('message-history');
 		if (msg.message) {
 			var mel = document.createElement('div');

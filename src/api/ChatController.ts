@@ -1,3 +1,6 @@
+declare module "zetaret.node.api::ChatController";
+declare module "protoss-nodejs-basic/dist/api/ChatController.js";
+
 import { EventEmitter } from "events";
 import { APIController } from "./APIController";
 
@@ -17,7 +20,7 @@ export class ChatController extends APIController implements zetaret.node.api.Ch
 		API_MOUNT: "apiMount"
 	};
 
-	static RESPONSE_TEXT: any = {
+	static RESPONSE_TEXT = {
 		USER_ADDED: "user added",
 		USER_EXISTS: "user exists",
 		NO_USER: "no username in request",
@@ -33,7 +36,7 @@ export class ChatController extends APIController implements zetaret.node.api.Ch
 
 	public messages: { [msgid: string]: Array<zetaret.node.api.ChatMessage> };
 	public autoDelete: WeakMap<object, zetaret.node.api.ChatMessage>;
-	declare public db: zetaret.node.api.ChatDB | object;
+	declare public db: zetaret.node.api.ChatDB;
 	public install: Function;
 	public error: Function;
 	public defaults: Function;
