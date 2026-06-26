@@ -31,15 +31,19 @@ class DataValidator {
 					min = v.min;
 					max = v.max;
 					re = v.regexp;
-					if (min !== undefined && value.length < min) {
+					if (value === null && (min !== undefined || max !== undefined || re)) {
+						this.error = { error: { type: "string.null", key: k, value, keychain }, validation: v };
+						return false;
+					}
+					if (min !== undefined && value && value.length < min) {
 						this.error = { error: { type: "string.min", key: k, value, keychain }, validation: v };
 						return false;
 					}
-					if (max !== undefined && value.length > max) {
+					if (max !== undefined && value && value.length > max) {
 						this.error = { error: { type: "string.max", key: k, value, keychain }, validation: v };
 						return false;
 					}
-					if (re && !re.test(value)) {
+					if (re && value && !re.test(value)) {
 						this.error = { error: { type: "string.test", key: k, value, keychain }, validation: v };
 						return false;
 					}
@@ -51,6 +55,10 @@ class DataValidator {
 				if (value === null || value.constructor === Number) {
 					min = v.min;
 					max = v.max;
+					if (value === null && (min !== undefined || max !== undefined)) {
+						this.error = { error: { type: "number.null", key: k, value, keychain }, validation: v };
+						return false;
+					}
 					if (min !== undefined && value < min) {
 						this.error = { error: { type: "number.min", key: k, value, keychain }, validation: v };
 						return false;
