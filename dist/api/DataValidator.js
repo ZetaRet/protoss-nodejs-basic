@@ -13,6 +13,10 @@ class DataValidator {
 		let min;
 		let max;
 		let re;
+		if (!data) {
+			this.error = { error: { type: "data.null", key: null, value: null, keychain }, validation: v };
+			return false;
+		}
 		for (k in validation) {
 			v = validation[k];
 			t = v.type;
@@ -82,9 +86,15 @@ class DataValidator {
 					return false;
 				}
 			} else if (t === "array") {
-				if (value.constructor === Array) {
+				if (value === null || value.constructor === Array) {
 					min = v.min;
 					max = v.max;
+					let elementV = v.element;
+					let validation = v.validation;
+					if (value === null && (min !== undefined || max !== undefined || elementV)) {
+						this.error = { error: { type: "array.null", key: k, value, keychain }, validation: v };
+						return false;
+					}
 					if (min !== undefined && value.length < min) {
 						this.error = { error: { type: "array.min", key: k, value, keychain }, validation: v };
 						return false;
@@ -93,12 +103,11 @@ class DataValidator {
 						this.error = { error: { type: "array.max", key: k, value, keychain }, validation: v };
 						return false;
 					}
-					let elementV = v.element;
 					if (elementV)
 						value.forEach((e, i) => {
-							if (!v.validation[i]) v.validation[i] = elementV;
+							if (!validation[i]) validation[i] = elementV;
 						});
-					if (!this.validate(value, v.validation, (keychain || []).concat(k))) {
+					if (!this.validate(value, validation, (keychain || []).concat(k))) {
 						if (!this.error)
 							this.error = { error: { type: "array.validation", key: k, value, keychain }, validation: v };
 						return false;

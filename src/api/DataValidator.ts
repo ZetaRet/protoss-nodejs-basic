@@ -19,6 +19,10 @@ class DataValidator implements zetaret.node.api.DataValidator {
 		let max: number;
 		let re: RegExp;
 
+		if (!data) {
+			this.error = { error: { type: "data.null", key: null, value: null, keychain }, validation: v };
+			return false;
+		}
 		for (k in validation) {
 			v = validation[k];
 			t = v.type;
@@ -89,9 +93,15 @@ class DataValidator implements zetaret.node.api.DataValidator {
 					return false;
 				}
 			} else if (t === "array") {
-				if (value.constructor === Array) {
+				if (value === null || value.constructor === Array) {
 					min = (v as zetaret.node.api.ArrayValidatorObject).min;
 					max = (v as zetaret.node.api.ArrayValidatorObject).max;
+					let elementV: zetaret.node.api.ValidatorObject = (v as zetaret.node.api.ArrayValidatorObject).element;
+					let validation = (v as zetaret.node.api.ArrayValidatorObject).validation;
+					if (value === null && (min !== undefined || max !== undefined || elementV)) {
+						this.error = { error: { type: "array.null", key: k, value, keychain }, validation: v };
+						return false;
+					}
 					if (min !== undefined && value.length < min) {
 						this.error = { error: { type: "array.min", key: k, value, keychain }, validation: v };
 						return false;
@@ -100,11 +110,8 @@ class DataValidator implements zetaret.node.api.DataValidator {
 						this.error = { error: { type: "array.max", key: k, value, keychain }, validation: v };
 						return false;
 					}
-					let elementV: zetaret.node.api.ValidatorObject = (v as zetaret.node.api.ArrayValidatorObject).element;
-					if (elementV) value.forEach((e, i) => {
-						if (!(v as zetaret.node.api.ArrayValidatorObject).validation[i]) (v as zetaret.node.api.ArrayValidatorObject).validation[i] = elementV
-					});
-					if (!this.validate(value, (v as zetaret.node.api.ArrayValidatorObject).validation, (keychain || []).concat(k))) {
+					if (elementV) value.forEach((e: any, i: number) => { if (!validation[i]) validation[i] = elementV });
+					if (!this.validate(value, validation, (keychain || []).concat(k))) {
 						if (!this.error) this.error = { error: { type: "array.validation", key: k, value, keychain }, validation: v };
 						return false;
 					}
